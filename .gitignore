@@ -1,52 +1,42 @@
-# Prerequisites
-*.d
-
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
-
-# Linker output
-*.ilk
+*.pyc
 *.map
-*.exp
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
+*.dblite
+*.elf
+*.bin
 *.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
+*.axf
+*.exe
 *.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+*.idb
+*.ilk
+*.old
+build
+Debug
+documentation/html
+packages/
+*~
+*.o
+*.obj
+*.out
+*.bak
+*.dep
+*.lib
+*.i
+*.d
+.DS_Stor*
+.config 3
+.config 4
+.config 5
+Midea-X1
+*.uimg
+GPATH
+GRTAGS
+GTAGS
+.vscode
+JLinkLog.txt
+JLinkSettings.ini
+DebugConfig/
+RTE/
+settings/
+*.uvguix*
+cconfig.h
