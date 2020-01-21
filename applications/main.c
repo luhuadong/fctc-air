@@ -6,6 +6,7 @@
  * Change Logs:
  * Date           Author       Notes
  * 2018-11-06     SummerGift   first version
+ * 2020-01-20     RudyLo       fctc-air
  */
 
 #include <rtthread.h>
@@ -14,15 +15,13 @@
 
 #include "dhtxx.h"
 
-/* defined the LED1 pin: PC7 */
-#define LED1_PIN    GET_PIN(C, 7)
-/* defined the LED2 pin: PB7 */
-#define LED2_PIN    GET_PIN(B, 7)
-/* defined the LED3 pin: PB14 */
-#define LED3_PIN    GET_PIN(B, 14)
 
-#define DHT22_PIN   GET_PIN(F, 15)    /* D2 */
-#define DHT11_PIN   GET_PIN(E, 9)    /* D6 */
+#define LED1_PIN         GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
+#define LED2_PIN         GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
+#define LED3_PIN         GET_PIN(B, 14)  /* defined the LED3 pin: PB14 */
+
+#define DHT22_DATA_PIN   GET_PIN(F, 15)  /* D2 */
+#define DHT11_DATA_PIN   GET_PIN(E, 9)   /* D6 */
 
 #define LED_RUN_PIN	LED3_PIN
 
@@ -63,10 +62,10 @@ static void led_thread_entry(void *parameter)
 static void dht22_thread_entry(void *parameter)
 {
     static struct dhtxx_device dht22;
-    dhtxx_init(&dht22, SENSOR_DHT22, DHT22_PIN);
+    dhtxx_init(&dht22, SENSOR_DHT22, DHT22_DATA_PIN);
 
     static struct dhtxx_device dht11;
-    dhtxx_init(&dht11, SENSOR_DHT11, DHT11_PIN);
+    dhtxx_init(&dht11, SENSOR_DHT11, DHT11_DATA_PIN);
 
     while(1)
     {
@@ -77,11 +76,11 @@ static void dht22_thread_entry(void *parameter)
             float t = dhtxx_get_temperature(&dht11);
             float h = dhtxx_get_humidity(&dht11);
 
-            rt_kprintf("(DHT11) temperture: %d.%d'C, humidity: %d.%d%\n", 
+            rt_kprintf("(DHT11) temperture: %d.%02d'C, humidity: %d.%02d%\n", 
                        (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
         }
         else {
-            rt_kprintf("hello\n");
+            rt_kprintf("(DHT11) error\n");
         }
 
         if(dhtxx_read(&dht22)) {
@@ -93,7 +92,7 @@ static void dht22_thread_entry(void *parameter)
                        (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
         }
         else {
-            rt_kprintf("hello\n");
+            rt_kprintf("(DHT22) error\n");
         }
     }
 }

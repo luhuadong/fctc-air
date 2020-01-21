@@ -44,7 +44,7 @@ struct dhtxx_device
 };
 typedef struct dhtxx_device *dhtxx_device_t;
 
-dhtxx_device_t dhtxx_init(dhtxx_device_t this, dhtxx_type type, rt_base_t pin);
+dhtxx_device_t dhtxx_init(dhtxx_device_t dev, dhtxx_type type, rt_base_t pin);
 rt_bool_t dhtxx_read(dhtxx_device_t dev);
 float dhtxx_get_humidity(dhtxx_device_t dev);
 float dhtxx_get_temperature(dhtxx_device_t dev);
