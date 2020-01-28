@@ -14,16 +14,23 @@
 #include <board.h>
 
 #include "dhtxx.h"
+#include "gp2y10.h"
+#include "sgp30.h"
 
 
 #define LED1_PIN         GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
 #define LED2_PIN         GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
 #define LED3_PIN         GET_PIN(B, 14)  /* defined the LED3 pin: PB14 */
+#define LED_RUN_PIN LED3_PIN
 
 #define DHT22_DATA_PIN   GET_PIN(F, 15)  /* D2 */
 #define DHT11_DATA_PIN   GET_PIN(E, 9)   /* D6 */
 
-#define LED_RUN_PIN	LED3_PIN
+#define GP2Y10_ILED_PIN  GET_PIN(E, 13)  /* D3 */
+#define GP2Y10_AOUT_PIN  GET_PIN(C, 3)   /* A2 */
+
+#define SGP30_SCL_PIN    GET_PIN(B, 8)   /* D15 I2C_A_SCL */
+#define SGP30_SDA_PIN    GET_PIN(B, 9)   /* D14 I2C_A_SDA */
 
 #define LED_THREAD_PRIORITY      15
 #define LED_THREAD_STACK_SIZE    512
@@ -32,6 +39,14 @@
 #define DHT22_THREAD_PRIORITY    5
 #define DHT22_THREAD_STACK_SIZE  1024
 #define DHT22_THREAD_TIMESLICE   5
+
+#define GP2Y10_THREAD_PRIORITY   10
+#define GP2Y10_THREAD_STACK_SIZE 1024
+#define GP2Y10_THREAD_TIMESLICE  5
+
+#define SGP30_THREAD_PRIORITY    10
+#define SGP30_THREAD_STACK_SIZE  1024
+#define SGP30_THREAD_TIMESLICE   5
 
 
 static void led_thread_entry(void *parameter)
@@ -76,7 +91,7 @@ static void dht22_thread_entry(void *parameter)
             float t = dhtxx_get_temperature(&dht11);
             float h = dhtxx_get_humidity(&dht11);
 
-            rt_kprintf("(DHT11) temperture: %d.%02d'C, humidity: %d.%02d%\n", 
+            rt_kprintf("(DHT11) temperature: %d.%02d'C, humidity: %d.%02d%\n", 
                        (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
         }
         else {
@@ -88,12 +103,35 @@ static void dht22_thread_entry(void *parameter)
             float t = dhtxx_get_temperature(&dht22);
             float h = dhtxx_get_humidity(&dht22);
 
-            rt_kprintf("(DHT22) temperture: %d.%d'C, humidity: %d.%d%\n", 
+            rt_kprintf("(DHT22) temperature: %d.%02d'C, humidity: %d.%02d%\n", 
                        (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
         }
         else {
             rt_kprintf("(DHT22) error\n");
         }
+    }
+}
+FINSH_FUNCTION_EXPORT(dhtxx, read humidity and temperature)
+
+static void gp2y10_thread_entry(void *parameter)
+{
+    struct gp2y10_device gp2y10;
+
+    gp2y10_init(&gp2y10, GP2Y10_ILED_PIN, GP2Y10_AOUT_PIN);
+
+    while(1)
+    {
+        rt_thread_mdelay(1000);
+        float dust = gp2y10_get_dust_density(&gp2y10);
+        rt_kprintf("(GP2Y10) Dust: %d.%02d ppm\n", (int)dust, (int)(dust*100)%100);
+    }
+}
+
+static void sgp30_thread_entry(void *parameter)
+{
+    while(1)
+    {
+        rt_thread_mdelay(1000);
     }
 }
 
@@ -102,6 +140,14 @@ static rt_thread_t led_thread = RT_NULL;
 ALIGN(RT_ALIGN_SIZE)
 static char dht22_thread_stack[DHT22_THREAD_STACK_SIZE];
 static struct rt_thread dht22_thread;
+
+ALIGN(RT_ALIGN_SIZE)
+static char gp2y10_thread_stack[GP2Y10_THREAD_STACK_SIZE];
+static struct rt_thread gp2y10_thread;
+
+ALIGN(RT_ALIGN_SIZE)
+static char sgp30_thread_stack[SGP30_THREAD_STACK_SIZE];
+static struct rt_thread sgp30_thread;
 
 int main(void)
 {
