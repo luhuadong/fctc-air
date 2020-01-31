@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2018, RT-Thread Development Team
+ * Copyright (c) 2006-2020, RT-Thread Development Team
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -13,7 +13,7 @@
 #include <rtdevice.h>
 #include <board.h>
 
-#include "dhtxx.h"
+#include "dht.h"
 #include "gp2y10.h"
 #include "sgp30.h"
 
@@ -62,34 +62,34 @@ static void led_thread_entry(void *parameter)
         rt_pin_write(LED1_PIN, PIN_HIGH);
         rt_pin_write(LED2_PIN, PIN_LOW);
         rt_pin_write(LED3_PIN, PIN_LOW);
-        rt_thread_mdelay(300);
+        rt_thread_mdelay(3000);
         rt_pin_write(LED1_PIN, PIN_LOW);
         rt_pin_write(LED2_PIN, PIN_HIGH);
-        rt_pin_write(LED3_PIN, PIN_LOW);
-        rt_thread_mdelay(300);
-        rt_pin_write(LED1_PIN, PIN_LOW);
+        //rt_pin_write(LED3_PIN, PIN_LOW);
+        rt_thread_mdelay(3000);
+        //rt_pin_write(LED1_PIN, PIN_LOW);
         rt_pin_write(LED2_PIN, PIN_LOW);
         rt_pin_write(LED3_PIN, PIN_HIGH);
-        rt_thread_mdelay(300);
+        rt_thread_mdelay(3000);
     }
 }
 
 static void dht22_thread_entry(void *parameter)
 {
-    static struct dhtxx_device dht22;
-    dhtxx_init(&dht22, SENSOR_DHT22, DHT22_DATA_PIN);
+    static struct dht_device dht22;
+    dht_init(&dht22, SENSOR_DHT22, DHT22_DATA_PIN);
 
-    static struct dhtxx_device dht11;
-    dhtxx_init(&dht11, SENSOR_DHT11, DHT11_DATA_PIN);
+    static struct dht_device dht11;
+    dht_init(&dht11, SENSOR_DHT11, DHT11_DATA_PIN);
 
     while(1)
     {
         rt_thread_mdelay(1000);
 
-        if(dhtxx_read(&dht11)) {
+        if(dht_read(&dht11)) {
 
-            float t = dhtxx_get_temperature(&dht11);
-            float h = dhtxx_get_humidity(&dht11);
+            float t = dht_get_temperature(&dht11);
+            float h = dht_get_humidity(&dht11);
 
             rt_kprintf("(DHT11) temperature: %d.%02d'C, humidity: %d.%02d%\n", 
                        (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
@@ -98,10 +98,10 @@ static void dht22_thread_entry(void *parameter)
             rt_kprintf("(DHT11) error\n");
         }
 
-        if(dhtxx_read(&dht22)) {
+        if(dht_read(&dht22)) {
 
-            float t = dhtxx_get_temperature(&dht22);
-            float h = dhtxx_get_humidity(&dht22);
+            float t = dht_get_temperature(&dht22);
+            float h = dht_get_humidity(&dht22);
 
             rt_kprintf("(DHT22) temperature: %d.%02d'C, humidity: %d.%02d%\n", 
                        (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
@@ -111,7 +111,6 @@ static void dht22_thread_entry(void *parameter)
         }
     }
 }
-FINSH_FUNCTION_EXPORT(dhtxx, read humidity and temperature)
 
 static void gp2y10_thread_entry(void *parameter)
 {
@@ -167,8 +166,71 @@ int main(void)
                    &dht22_thread_stack[0], sizeof(dht22_thread_stack), 
                    DHT22_THREAD_PRIORITY, DHT22_THREAD_TIMESLICE);
 
-    rt_thread_startup(&dht22_thread);
+    //rt_thread_startup(&dht22_thread);
 
 
     return RT_EOK;
 }
+
+
+/*
+ * EXPORT FUNCTIONS
+ */
+
+/* cat_dht11 */
+static void cat_dht11(void)
+{
+    struct dht_device dht11;
+    dht_init(&dht11, SENSOR_DHT11, DHT11_DATA_PIN);
+
+    if(dht_read(&dht11)) {
+
+        float t = dht_get_temperature(&dht11);
+        float h = dht_get_humidity(&dht11);
+
+        rt_kprintf("(DHT11) temperature: %d.%02d'C, humidity: %d.%02d%\n", 
+                    (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
+    }
+    else {
+        rt_kprintf("(DHT11) error\n");
+    }
+}
+MSH_CMD_EXPORT(cat_dht11, read dht11 humidity and temperature);
+
+/* cat_dht22 */
+static void cat_dht22(void)
+{
+    struct dht_device dht22;
+    dht_init(&dht22, SENSOR_DHT22, DHT22_DATA_PIN);
+
+    if(dht_read(&dht22)) {
+
+        float t = dht_get_temperature(&dht22);
+        float h = dht_get_humidity(&dht22);
+
+        rt_kprintf("(DHT22) temperature: %d.%02d'C, humidity: %d.%02d%\n", 
+                    (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
+    }
+    else {
+        rt_kprintf("(DHT22) error\n");
+    }
+}
+MSH_CMD_EXPORT(cat_dht22, read dht22 humidity and temperature);
+
+/* cat_gp2y10 */
+static void cat_gp2y10(void)
+{
+    struct gp2y10_device gp2y10;
+
+    gp2y10_init(&gp2y10, GP2Y10_ILED_PIN, GP2Y10_AOUT_PIN);
+    float dust = gp2y10_get_dust_density(&gp2y10);
+    rt_kprintf("(GP2Y10) Dust: %d.%02d ppm\n", (int)dust, (int)(dust*100)%100);
+}
+MSH_CMD_EXPORT(cat_gp2y10, read gp2y10 dust density);
+
+/* cat_hello */
+void cat_hello(void)
+{
+    rt_kprintf("hello RT-Thread\n");
+}
+MSH_CMD_EXPORT(cat_hello, say hello to RT-Thread);

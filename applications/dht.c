@@ -8,7 +8,7 @@
  * 2020-01-20     RudyLo       the first version
  */
 
-#include "dhtxx.h"
+#include "dht.h"
 
 RT_WEAK void rt_hw_us_delay(rt_uint32_t us)
 {
@@ -27,7 +27,7 @@ RT_WEAK void rt_hw_us_delay(rt_uint32_t us)
  *
  * @return the bit value
  */
-static uint8_t dhtxx_read_bit(rt_base_t pin)
+static uint8_t dht_read_bit(rt_base_t pin)
 {
 	uint8_t retry = 0;
 
@@ -56,14 +56,14 @@ static uint8_t dhtxx_read_bit(rt_base_t pin)
  *
  * @return the byte
  */
-static uint8_t dhtxx_read_byte(rt_base_t pin)
+static uint8_t dht_read_byte(rt_base_t pin)
 {
 	uint8_t i, byte = 0;
 
     for(i=0; i<8; i++)
     {
         byte <<= 1;
-		byte |= dhtxx_read_bit(pin);
+		byte |= dht_read_bit(pin);
     }
 
     return byte;
@@ -78,7 +78,7 @@ static uint8_t dhtxx_read_byte(rt_base_t pin)
  *
  * @return the device handler
  */
-dhtxx_device_t dhtxx_init(dhtxx_device_t dev, dhtxx_type type, rt_base_t pin)
+dht_device_t dht_init(dht_device_t dev, dht_type type, rt_base_t pin)
 {
 	if(dev == NULL) return RT_NULL;
 	
@@ -100,7 +100,7 @@ dhtxx_device_t dhtxx_init(dhtxx_device_t dev, dhtxx_type type, rt_base_t pin)
  *
  * @return RT_TRUE if read successfully, otherwise return RT_FALSE.
  */
-rt_bool_t dhtxx_read(dhtxx_device_t dev)
+rt_bool_t dht_read(dht_device_t dev)
 {
 	uint8_t i, retry = 0, sum = 0;
 
@@ -146,7 +146,7 @@ rt_bool_t dhtxx_read(dhtxx_device_t dev)
     /* Read data */
     for(i=0; i<DHT_DATA_SIZE; i++)
 	{
-		dev->data[i] = dhtxx_read_byte(dev->pin);
+		dev->data[i] = dht_read_byte(dev->pin);
 	}
 
 	//rt_kprintf("(I) here 4\n");
@@ -168,7 +168,7 @@ rt_bool_t dhtxx_read(dhtxx_device_t dev)
  *
  * @return the humidity value
  */
-float dhtxx_get_humidity(dhtxx_device_t dev)
+float dht_get_humidity(dht_device_t dev)
 {
 	float h = 0.0;
 
@@ -195,7 +195,7 @@ float dhtxx_get_humidity(dhtxx_device_t dev)
  *
  * @return the temperature value
  */
-float dhtxx_get_temperature(dhtxx_device_t dev)
+float dht_get_temperature(dht_device_t dev)
 {
 	float t = 0.0;
 

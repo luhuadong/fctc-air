@@ -37,7 +37,8 @@ struct gp2y10_device
 typedef struct gp2y10_device *gp2y10_device_t;
 
 gp2y10_device_t gp2y10_init(gp2y10_device_t dev, rt_base_t iled_pin, rt_base_t aout_pin);
+rt_uint32_t gp2y10_get_adc_value(gp2y10_device_t dev);
+float gp2y10_get_voltage(gp2y10_device_t dev);
 float gp2y10_get_dust_density(gp2y10_device_t dev);
-
 
 #endif /* __GP2Y10_H__ */

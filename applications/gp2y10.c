@@ -33,14 +33,13 @@ gp2y10_device_t gp2y10_init(gp2y10_device_t dev, rt_base_t iled_pin, rt_base_t a
 	return dev;
 }
 
-float gp2y10_get_dust_density(gp2y10_device_t dev)
+rt_uint32_t gp2y10_get_adc_value(gp2y10_device_t dev)
 {
-	rt_uint32_t adc_value;
-	float voltage, density;
+    rt_uint32_t adc_value;
 
-	rt_adc_device_t adc_dev;            /* ADC 设备句柄 */ 
+    rt_adc_device_t adc_dev;            /* ADC 设备句柄 */ 
 
-	/* Get ADC value */
+    /* Get ADC value */
     rt_pin_write(dev->iled_pin, PIN_HIGH);
     rt_hw_us_delay(PULSE_TIME);
 
@@ -51,9 +50,31 @@ float gp2y10_get_dust_density(gp2y10_device_t dev)
     /* 读取采样值 */
     adc_value = rt_adc_read(adc_dev, ADC_DEV_CHANNEL);
 
+    rt_kprintf("(GP2Y10) ADC:%d\n", adc_value);
+
+    return adc_value;
+}
+
+float gp2y10_get_voltage(gp2y10_device_t dev)
+{
+    rt_uint32_t adc_value;
+    float voltage;
+
+    adc_value = gp2y10_get_adc_value(dev);
 
     /* convert */
     voltage = (SYS_VOLTAGE / CONVERT_BITS) * adc_value * 11;
+
+    rt_kprintf("(GP2Y10) ADC:%d, Voltage:%dmv\n", adc_value, (int)voltage);
+
+    return voltage;
+}
+
+float gp2y10_get_dust_density(gp2y10_device_t dev)
+{
+	float voltage, density;
+
+    voltage = gp2y10_get_voltage(dev);
 
     if(voltage >= NO_DUST_VOLTAGE)
     {
@@ -61,6 +82,8 @@ float gp2y10_get_dust_density(gp2y10_device_t dev)
     	density  = voltage * COV_RATIO;
     }
     else density = 0.0;
+
+    rt_kprintf("(GP2Y10) Voltage:%dmv, Dust:%dppm\n", (int)voltage, (int)density);
 
     return density;
 }
