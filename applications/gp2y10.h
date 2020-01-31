@@ -19,14 +19,15 @@
 #define GP2Y10LIB_VERSION   "0.0.1"
 
 #define ADC_DEV_NAME        "adc1"      /* ADC device name */
-#define ADC_DEV_CHANNEL     5           /* ADC channel */
-#define REFER_VOLTAGE       330         /* 参考电压 3.3V,数据精度乘以100保留2位小数*/
+#define ADC_DEV_CHANNEL     4           /* ADC channel */
+#define REFER_VOLTAGE       3300        /* 参考电压 3.3V,数据精度乘以100保留2位小数*/
 #define CONVERT_BITS        (1 << 12)   /* 转换位数为12位 */
 
 #define PULSE_TIME          280         /* us */
 #define COV_RATIO           0.17        /* (ug/m3)/mV */
 #define NO_DUST_VOLTAGE     600         /* mV */
-#define SYS_VOLTAGE         5000
+#define SYS_VOLTAGE         5000        /* mV */
+#define VOLTAGE_RATIO       11
 
 struct gp2y10_device
 {

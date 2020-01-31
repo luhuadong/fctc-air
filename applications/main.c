@@ -168,6 +168,14 @@ int main(void)
 
     //rt_thread_startup(&dht22_thread);
 
+    /* gp2y10 thread */
+
+    rt_thread_init(&gp2y10_thread, "gp2y10", gp2y10_thread_entry, RT_NULL, 
+                   &gp2y10_thread_stack[0], sizeof(gp2y10_thread_stack), 
+                   GP2Y10_THREAD_PRIORITY, GP2Y10_THREAD_TIMESLICE);
+
+    rt_thread_startup(&gp2y10_thread);
+
 
     return RT_EOK;
 }
