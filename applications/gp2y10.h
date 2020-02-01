@@ -20,8 +20,8 @@
 
 #define ADC_DEV_NAME        "adc1"      /* ADC device name */
 #define ADC_DEV_CHANNEL     4           /* ADC channel */
-#define REFER_VOLTAGE       3300        /* 参考电压 3.3V,数据精度乘以100保留2位小数*/
 #define CONVERT_BITS        (1 << 12)   /* 转换位数为12位 */
+#define REFER_VOLTAGE       3300        /* 参考电压 3.3V,数据精度乘以100保留2位小数*/
 
 #define PULSE_TIME          280         /* us */
 #define COV_RATIO           0.17        /* (ug/m3)/mV */

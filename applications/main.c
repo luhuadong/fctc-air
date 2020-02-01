@@ -18,19 +18,24 @@
 #include "sgp30.h"
 
 
-#define LED1_PIN         GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
-#define LED2_PIN         GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
-#define LED3_PIN         GET_PIN(B, 14)  /* defined the LED3 pin: PB14 */
-#define LED_RUN_PIN LED3_PIN
+#define LED1_PIN                 GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
+#define LED2_PIN                 GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
+#define LED3_PIN                 GET_PIN(B, 14)  /* defined the LED3 pin: PB14 */
+#define LED_RUN_PIN              LED3_PIN
 
-#define DHT22_DATA_PIN   GET_PIN(F, 15)  /* D2 */
-#define DHT11_DATA_PIN   GET_PIN(E, 9)   /* D6 */
+#define DHT22_DATA_PIN           GET_PIN(E, 13)  /* D3 */
+#define DHT11_DATA_PIN           GET_PIN(E, 9)   /* D6 */
 
-#define GP2Y10_ILED_PIN  GET_PIN(E, 13)  /* D3 */
-#define GP2Y10_AOUT_PIN  GET_PIN(C, 3)   /* A2 */
+#define GP2Y10_ILED_PIN          GET_PIN(F, 15)  /* D2 */
+#define GP2Y10_AOUT_PIN          GET_PIN(C, 3)   /* A2 */
 
-#define SGP30_SCL_PIN    GET_PIN(B, 8)   /* D15 I2C_A_SCL */
-#define SGP30_SDA_PIN    GET_PIN(B, 9)   /* D14 I2C_A_SDA */
+#define SGP30_SCL_PIN            GET_PIN(B, 8)   /* D15 I2C_A_SCL */
+#define SGP30_SDA_PIN            GET_PIN(B, 9)   /* D14 I2C_A_SDA */
+
+#define ADC_DEV_NAME             "adc1"      /* ADC device name */
+#define ADC_DEV_CHANNEL          4           /* ADC channel */
+#define ADC_CONVERT_BITS         12          /* 转换位数为12位 */
+#define SGP30_I2C_BUS_NAME       "i2c1"
 
 #define LED_THREAD_PRIORITY      15
 #define LED_THREAD_STACK_SIZE    512
@@ -76,28 +81,11 @@ static void led_thread_entry(void *parameter)
 
 static void dht22_thread_entry(void *parameter)
 {
-    static struct dht_device dht22;
+    struct dht_device dht22;
     dht_init(&dht22, SENSOR_DHT22, DHT22_DATA_PIN);
-
-    static struct dht_device dht11;
-    dht_init(&dht11, SENSOR_DHT11, DHT11_DATA_PIN);
 
     while(1)
     {
-        rt_thread_mdelay(1000);
-
-        if(dht_read(&dht11)) {
-
-            float t = dht_get_temperature(&dht11);
-            float h = dht_get_humidity(&dht11);
-
-            rt_kprintf("(DHT11) temperature: %d.%02d'C, humidity: %d.%02d%\n", 
-                       (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
-        }
-        else {
-            rt_kprintf("(DHT11) error\n");
-        }
-
         if(dht_read(&dht22)) {
 
             float t = dht_get_temperature(&dht22);
@@ -109,6 +97,8 @@ static void dht22_thread_entry(void *parameter)
         else {
             rt_kprintf("(DHT22) error\n");
         }
+
+        rt_thread_mdelay(1000);
     }
 }
 
@@ -120,17 +110,54 @@ static void gp2y10_thread_entry(void *parameter)
 
     while(1)
     {
-        rt_thread_mdelay(1000);
         float dust = gp2y10_get_dust_density(&gp2y10);
-        rt_kprintf("(GP2Y10) Dust: %d.%02d ppm\n", (int)dust, (int)(dust*100)%100);
+        rt_kprintf("(GP2Y10) Dust: %d.%02d ug/m3\n", (int)dust, (int)(dust*100)%100);
+
+        rt_thread_mdelay(1000);
     }
 }
 
 static void sgp30_thread_entry(void *parameter)
 {
+    sgp30_device_t sgp30 = RT_NULL;
+    int counter = 0;
+
+    sgp30 = sgp30_init(SGP30_I2C_BUS_NAME);
+    if(!sgp30) {
+        sgp30_deinit(sgp30);
+        rt_kprintf("(SGP30) Init failed\n");
+        return;
+    }
+
     while(1)
     {
+        /* Read TVOC and eCO2 */
+        if(!sgp30_measure(sgp30)) {
+            rt_kprintf("(SGP30) Measurement failed\n");
+            continue;
+        }
+        rt_kprintf("(SGP30) TVOC: %d ppb, eCO2: %d ppm\n", sgp30->TVOC, sgp30->eCO2);
+
+        /* Read rawH2 and rawEthanol */
+        if(!sgp30_measure_raw(sgp30)) {
+            rt_kprintf("(SGP30) Raw Measurement failed\n");
+            continue;
+        }
+        rt_kprintf("(SGP30) Raw H2: %d, Raw Ethanol: %d\n", sgp30->rawH2, sgp30->rawEthanol);
+
         rt_thread_mdelay(1000);
+
+        counter++;
+        if(counter == 30) {
+            counter = 0;
+
+            rt_uint16_t TVOC_base, eCO2_base;
+            if(!sgp30_get_baseline(sgp30, &eCO2_base, &TVOC_base)) {
+                rt_kprintf("(SGP30) Failed to get baseline readings\n");
+                return;
+            }
+            rt_kprintf("(SGP30) ****Baseline values: eCO2: 0x%x & TVOC: 0x%x", eCO2_base, TVOC_base);
+        }
     }
 }
 
@@ -174,7 +201,7 @@ int main(void)
                    &gp2y10_thread_stack[0], sizeof(gp2y10_thread_stack), 
                    GP2Y10_THREAD_PRIORITY, GP2Y10_THREAD_TIMESLICE);
 
-    rt_thread_startup(&gp2y10_thread);
+    //rt_thread_startup(&gp2y10_thread);
 
 
     return RT_EOK;
@@ -203,7 +230,9 @@ static void cat_dht11(void)
         rt_kprintf("(DHT11) error\n");
     }
 }
+#ifdef FINSH_USING_MSH
 MSH_CMD_EXPORT(cat_dht11, read dht11 humidity and temperature);
+#endif
 
 /* cat_dht22 */
 static void cat_dht22(void)
@@ -223,7 +252,9 @@ static void cat_dht22(void)
         rt_kprintf("(DHT22) error\n");
     }
 }
+#ifdef FINSH_USING_MSH
 MSH_CMD_EXPORT(cat_dht22, read dht22 humidity and temperature);
+#endif
 
 /* cat_gp2y10 */
 static void cat_gp2y10(void)
@@ -232,13 +263,26 @@ static void cat_gp2y10(void)
 
     gp2y10_init(&gp2y10, GP2Y10_ILED_PIN, GP2Y10_AOUT_PIN);
     float dust = gp2y10_get_dust_density(&gp2y10);
-    rt_kprintf("(GP2Y10) Dust: %d.%02d ppm\n", (int)dust, (int)(dust*100)%100);
+    rt_kprintf("(GP2Y10) Dust: %d.%02d ug/m3\n", (int)dust, (int)(dust*100)%100);
 }
+#ifdef FINSH_USING_MSH
 MSH_CMD_EXPORT(cat_gp2y10, read gp2y10 dust density);
+#endif
+
+/* cat_sgp30 */
+void cat_sgp30(void)
+{
+    rt_kprintf("hello RT-Thread\n");
+}
+#ifdef FINSH_USING_MSH
+MSH_CMD_EXPORT(cat_sgp30, read sgp30 TVOC and eCO2);
+#endif
 
 /* cat_hello */
 void cat_hello(void)
 {
     rt_kprintf("hello RT-Thread\n");
 }
+#ifdef FINSH_USING_MSH
 MSH_CMD_EXPORT(cat_hello, say hello to RT-Thread);
+#endif
