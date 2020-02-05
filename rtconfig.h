@@ -81,6 +81,8 @@
 #define RT_PIPE_BUFSZ 512
 #define RT_USING_SERIAL
 #define RT_SERIAL_RB_BUFSZ 64
+#define RT_USING_I2C
+#define RT_USING_I2C_BITOPS
 #define RT_USING_PIN
 #define RT_USING_ADC
 
@@ -167,6 +169,10 @@
 #define BSP_USING_LPUART1
 #define BSP_USING_ADC
 #define BSP_USING_ADC1
+#define BSP_USING_I2C
+#define BSP_USING_I2C1
+#define BSP_I2C1_SCL_PIN 24
+#define BSP_I2C1_SDA_PIN 25
 
 /* Board extended module Drivers */
 

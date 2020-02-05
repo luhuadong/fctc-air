@@ -203,6 +203,14 @@ int main(void)
 
     //rt_thread_startup(&gp2y10_thread);
 
+    /* sgp30 thread */
+
+    rt_thread_init(&sgp30_thread, "sgp30", sgp30_thread_entry, RT_NULL, 
+                   &sgp30_thread_stack[0], sizeof(sgp30_thread_stack), 
+                   SGP30_THREAD_PRIORITY, SGP30_THREAD_TIMESLICE);
+
+    //rt_thread_startup(&gp2y10_thread);
+
 
     return RT_EOK;
 }
@@ -272,7 +280,45 @@ MSH_CMD_EXPORT(cat_gp2y10, read gp2y10 dust density);
 /* cat_sgp30 */
 void cat_sgp30(void)
 {
-    rt_kprintf("hello RT-Thread\n");
+    rt_kprintf("hello SGP30\n");
+
+    sgp30_device_t sgp30 = RT_NULL;
+
+    sgp30 = sgp30_init(SGP30_I2C_BUS_NAME);
+    if(!sgp30) {
+        rt_kprintf("(SGP30) Init failed\n");
+        sgp30_deinit(sgp30);
+        return;
+    }
+
+    rt_kprintf("(SGP30) Serial number: %x.%x.%x\n", sgp30->serialnumber[0], 
+               sgp30->serialnumber[1], sgp30->serialnumber[2]);
+
+    rt_uint16_t loop = 20;
+
+    while(loop--)
+    {
+        /* Read TVOC and eCO2 */
+        if(!sgp30_measure(sgp30)) {
+            rt_kprintf("(SGP30) Measurement failed\n");
+            sgp30_deinit(sgp30);
+            break;
+        }
+
+        /* Read rawH2 and rawEthanol */
+        if(!sgp30_measure_raw(sgp30)) {
+            rt_kprintf("(SGP30) Raw Measurement failed\n");
+            sgp30_deinit(sgp30);
+            break;
+        }
+
+        rt_kprintf("[%2u] TVOC: %d ppb, eCO2: %d ppm; Raw H2: %d, Raw Ethanol: %d\n", 
+                   loop, sgp30->TVOC, sgp30->eCO2, sgp30->rawH2, sgp30->rawEthanol);
+
+        rt_thread_mdelay(1500);
+    }
+    
+    sgp30_deinit(sgp30);
 }
 #ifdef FINSH_USING_MSH
 MSH_CMD_EXPORT(cat_sgp30, read sgp30 TVOC and eCO2);

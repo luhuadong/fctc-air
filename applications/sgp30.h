@@ -19,7 +19,7 @@
 #define SGP30LIB_VERSION           "0.0.1"
 
 // the i2c address
-#define SGP30_I2CADDR_DEFAULT      0x58    /* SGP30 has only one I2C address */
+#define SGP30_I2CADDR              0x58    /* SGP30 has only one I2C address */
 
 // commands and constants
 #define SGP30_FEATURESET           0x0020  /* The required set for this library */
@@ -37,21 +37,20 @@
 #define Get_feature_set_version    0x202f
 #define Measure_raw_signals        0x2050
 
+#define Get_Serial_ID              0x3682
+
 struct sgp30_device
 {
-	uint16_t TVOC;
-	uint16_t eCO2;
-	uint16_t rawH2;
-	uint16_t rawEthanol;
-	uint16_t serialnumber[3];
+	struct rt_i2c_bus_device *i2c;
 
-	//TwoWire *_i2c;
-	struct   rt_i2c_bus_device *i2c;
-	uint8_t  _i2caddr;
+	rt_uint16_t TVOC;
+	rt_uint16_t eCO2;
+	rt_uint16_t rawH2;
+	rt_uint16_t rawEthanol;
+	rt_uint16_t serialnumber[3];
 
-	rt_base_t  scl_pin;
-	rt_base_t  sda_pin;
-	rt_mutex_t lock;
+	rt_bool_t   is_ready;
+	rt_mutex_t  lock;
 };
 typedef struct sgp30_device *sgp30_device_t;
 
