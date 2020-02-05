@@ -287,7 +287,6 @@ void cat_sgp30(void)
     sgp30 = sgp30_init(SGP30_I2C_BUS_NAME);
     if(!sgp30) {
         rt_kprintf("(SGP30) Init failed\n");
-        sgp30_deinit(sgp30);
         return;
     }
 
