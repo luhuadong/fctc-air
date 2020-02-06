@@ -21,7 +21,8 @@
 #define LED1_PIN                 GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
 #define LED2_PIN                 GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
 #define LED3_PIN                 GET_PIN(B, 14)  /* defined the LED3 pin: PB14 */
-#define LED_RUN_PIN              LED3_PIN
+#define LED_RUNNING              LED1_PIN
+#define LED_WARNING              LED3_PIN
 
 #define DHT22_DATA_PIN           GET_PIN(E, 13)  /* D3 */
 #define DHT11_DATA_PIN           GET_PIN(E, 9)   /* D6 */
@@ -37,7 +38,7 @@
 #define ADC_CONVERT_BITS         12          /* 转换位数为12位 */
 #define SGP30_I2C_BUS_NAME       "i2c1"
 
-#define LED_THREAD_PRIORITY      15
+#define LED_THREAD_PRIORITY      20
 #define LED_THREAD_STACK_SIZE    512
 #define LED_THREAD_TIMESLICE     15
 
@@ -53,29 +54,48 @@
 #define SGP30_THREAD_STACK_SIZE  1024
 #define SGP30_THREAD_TIMESLICE   5
 
+#define SYNC_THREAD_PRIORITY     15
+#define SYNC_THREAD_STACK_SIZE   512
+#define SYNC_THREAD_TIMESLICE    5
+
+
+
+static void sync(char *TAG, void *data)
+{
+    rt_mb_send(&mb, (rt_ubase_t)&data);
+}
+
+static void sync_thread_entry(void *parameter)
+{
+    struct air_data
+    {
+        float       temp;
+        float       humi;
+        float       dust;
+        rt_uint16_t tvoc;
+        rt_uint16_t eco2;
+    }air;
+
+    while (1)
+    {
+        rt_mb_recv(&mb, )
+    }
+}
 
 static void led_thread_entry(void *parameter)
 {
     int count = 1;
-        
-    rt_pin_mode(LED1_PIN, PIN_MODE_OUTPUT);
+
+    rt_pin_mode(LED_RUNNING, PIN_MODE_OUTPUT);
     rt_pin_mode(LED2_PIN, PIN_MODE_OUTPUT);
     rt_pin_mode(LED3_PIN, PIN_MODE_OUTPUT);
 
     while (count++)
     {
-        rt_pin_write(LED1_PIN, PIN_HIGH);
-        rt_pin_write(LED2_PIN, PIN_LOW);
-        rt_pin_write(LED3_PIN, PIN_LOW);
-        rt_thread_mdelay(3000);
-        rt_pin_write(LED1_PIN, PIN_LOW);
-        rt_pin_write(LED2_PIN, PIN_HIGH);
-        //rt_pin_write(LED3_PIN, PIN_LOW);
-        rt_thread_mdelay(3000);
-        //rt_pin_write(LED1_PIN, PIN_LOW);
-        rt_pin_write(LED2_PIN, PIN_LOW);
-        rt_pin_write(LED3_PIN, PIN_HIGH);
-        rt_thread_mdelay(3000);
+        rt_pin_write(LED_RUNNING, PIN_HIGH);
+        rt_thread_mdelay(500);
+        rt_pin_write(LED_RUNNING, PIN_LOW);
+        rt_thread_mdelay(500);
     }
 }
 
@@ -161,7 +181,8 @@ static void sgp30_thread_entry(void *parameter)
     }
 }
 
-static rt_thread_t led_thread = RT_NULL;
+static rt_thread_t led_thread  = RT_NULL;
+static rt_thread_t sync_thread = RT_NULL;
 
 ALIGN(RT_ALIGN_SIZE)
 static char dht22_thread_stack[DHT22_THREAD_STACK_SIZE];
