@@ -29,8 +29,13 @@
 #define SYS_VOLTAGE         5000        /* mV */
 #define VOLTAGE_RATIO       11
 
+/* Remember delete after tesing */
+#define GP2Y10_USING_SOFT_FILTER
+
 struct gp2y10_device
 {
+	rt_adc_device_t adc_dev;            /* ADC 设备句柄 */ 
+
 	rt_base_t  iled_pin;
 	rt_base_t  aout_pin;
 	rt_mutex_t lock;
@@ -38,6 +43,8 @@ struct gp2y10_device
 typedef struct gp2y10_device *gp2y10_device_t;
 
 gp2y10_device_t gp2y10_init(gp2y10_device_t dev, rt_base_t iled_pin, rt_base_t aout_pin);
+void gp2y10_deinit(gp2y10_device_t dev);
+
 rt_uint32_t gp2y10_get_adc_value(gp2y10_device_t dev);
 float gp2y10_get_voltage(gp2y10_device_t dev);
 float gp2y10_get_dust_density(gp2y10_device_t dev);

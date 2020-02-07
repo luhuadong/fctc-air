@@ -58,27 +58,104 @@
 #define SYNC_THREAD_STACK_SIZE   512
 #define SYNC_THREAD_TIMESLICE    5
 
+/* 邮箱控制块 */
+static struct rt_mailbox mb;
+/* 用于放邮件的内存池 */
+static char mb_pool[128];
 
+typedef enum { 
+    SENSOR_TEMP  = 0x01, 
+    SENSOR_HUMI  = 0x02, 
+    SENSOR_DUST  = 0x04, 
+    SENSOR_TVOC  = 0x08,
+    SENSOR_ECO2  = 0x10,
+} sensor_type;
 
-static void sync(char *TAG, void *data)
+struct sensor_msg
 {
-    rt_mb_send(&mb, (rt_ubase_t)&data);
+    sensor_type tag;
+    union {
+        rt_uint32_t i;
+        float       f;
+    }data;
+};
+
+struct air_data
+{
+    float       temp;
+    float       humi;
+    float       dust;
+    rt_uint32_t tvoc;
+    rt_uint32_t eco2;
+};
+
+/*
+ * param data using float because the sensor data include int and float
+*/
+static void sync(sensor_type TAG, float data)
+{
+    struct sensor_msg *msg;
+    msg = (struct sensor_msg*)rt_malloc(sizeof(struct sensor_msg));
+
+    msg->tag = TAG;
+
+    if( TAG == SENSOR_TEMP || TAG == SENSOR_HUMI || TAG == SENSOR_DUST) {
+        msg->data.f = (float)data;
+    }
+    else {
+        msg->data.i = (rt_uint32_t)data;
+    }
+    
+    rt_mb_send(&mb, (rt_ubase_t)msg);
 }
 
 static void sync_thread_entry(void *parameter)
 {
-    struct air_data
-    {
-        float       temp;
-        float       humi;
-        float       dust;
-        rt_uint16_t tvoc;
-        rt_uint16_t eco2;
-    }air;
+    struct sensor_msg *msg;
+    struct air_data   air;
+    rt_uint32_t flag = 0;
 
-    while (1)
+    while(1)
     {
-        rt_mb_recv(&mb, )
+        if(rt_mb_recv(&mb, (rt_ubase_t *)&msg, RT_WAITING_FOREVER) == RT_EOK)
+        {
+            switch (msg->tag) 
+            {
+            case SENSOR_TEMP: 
+                air.temp = msg->data.f; 
+                flag |= SENSOR_TEMP;
+                break;
+            case SENSOR_HUMI: 
+                air.humi = msg->data.f;
+                flag |= SENSOR_HUMI;
+                break;
+            case SENSOR_DUST: 
+                air.dust = msg->data.f;
+                flag |= SENSOR_DUST;
+                break;
+            case SENSOR_TVOC: 
+                air.tvoc = msg->data.i;
+                flag |= SENSOR_TVOC;
+                break;
+            case SENSOR_ECO2: 
+                air.eco2 = msg->data.i;
+                flag |= SENSOR_ECO2;
+                break;
+            default: 
+                break;
+            }
+            rt_free(msg);
+        }
+
+        if (flag == 0x1F) {
+            /* print the % symbol should add the escape character '%' or '\' */
+            rt_kprintf("[Air] Temp: %d.%02d'C, Humi: %d.%02d%%, Dust: %d.%02dug/m3, TVOC: %dppb, eCO2: %dppm\n",
+                        (int)air.temp, (int)(air.temp*100)%100, 
+                        (int)air.humi, (int)(air.humi*100)%100,
+                        (int)air.dust, (int)(air.dust*100)%100,
+                        air.tvoc, air.eco2);
+            flag = 0;
+        }
     }
 }
 
@@ -111,14 +188,18 @@ static void dht22_thread_entry(void *parameter)
             float t = dht_get_temperature(&dht22);
             float h = dht_get_humidity(&dht22);
 
+            /*
             rt_kprintf("(DHT22) temperature: %d.%02d'C, humidity: %d.%02d%\n", 
                        (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
+            */
+            sync(SENSOR_TEMP, t);
+            sync(SENSOR_HUMI, h);
         }
         else {
-            rt_kprintf("(DHT22) error\n");
+            //rt_kprintf("(DHT22) error\n");
         }
 
-        rt_thread_mdelay(1000);
+        rt_thread_mdelay(3000);
     }
 }
 
@@ -131,9 +212,11 @@ static void gp2y10_thread_entry(void *parameter)
     while(1)
     {
         float dust = gp2y10_get_dust_density(&gp2y10);
-        rt_kprintf("(GP2Y10) Dust: %d.%02d ug/m3\n", (int)dust, (int)(dust*100)%100);
+        //rt_kprintf("(GP2Y10) Dust: %d.%02d ug/m3\n", (int)dust, (int)(dust*100)%100);
 
-        rt_thread_mdelay(1000);
+        sync(SENSOR_DUST, dust);
+
+        rt_thread_mdelay(3000);
     }
 }
 
@@ -144,7 +227,6 @@ static void sgp30_thread_entry(void *parameter)
 
     sgp30 = sgp30_init(SGP30_I2C_BUS_NAME);
     if(!sgp30) {
-        sgp30_deinit(sgp30);
         rt_kprintf("(SGP30) Init failed\n");
         return;
     }
@@ -154,10 +236,13 @@ static void sgp30_thread_entry(void *parameter)
         /* Read TVOC and eCO2 */
         if(!sgp30_measure(sgp30)) {
             rt_kprintf("(SGP30) Measurement failed\n");
+            //sgp30_deinit(sgp30);
             continue;
         }
-        rt_kprintf("(SGP30) TVOC: %d ppb, eCO2: %d ppm\n", sgp30->TVOC, sgp30->eCO2);
-
+        //rt_kprintf("(SGP30) TVOC: %d ppb, eCO2: %d ppm\n", sgp30->TVOC, sgp30->eCO2);
+        sync(SENSOR_TVOC, sgp30->TVOC);
+        sync(SENSOR_ECO2, sgp30->eCO2);
+#if 0
         /* Read rawH2 and rawEthanol */
         if(!sgp30_measure_raw(sgp30)) {
             rt_kprintf("(SGP30) Raw Measurement failed\n");
@@ -178,7 +263,11 @@ static void sgp30_thread_entry(void *parameter)
             }
             rt_kprintf("(SGP30) ****Baseline values: eCO2: 0x%x & TVOC: 0x%x", eCO2_base, TVOC_base);
         }
+#endif
+        rt_thread_mdelay(3000);
     }
+    
+    sgp30_deinit(sgp30);
 }
 
 static rt_thread_t led_thread  = RT_NULL;
@@ -198,39 +287,56 @@ static struct rt_thread sgp30_thread;
 
 int main(void)
 {
-    /* led thread */
+    rt_kprintf("  ___ ___ _____ ___     _   _     \n");
+    rt_kprintf(" | __/ __|_   _/ __|   /_\\ (_)_ _ \n");
+    rt_kprintf(" | _| (__  | || (__   / _ \\| | '_|\n");
+    rt_kprintf(" |_| \\___| |_| \\___| /_/ \\_\\_|_| \n\n");
 
+    rt_err_t result;
+
+    /* 创建邮箱 */
+    result = rt_mb_init(&mb, "sync_mb", &mb_pool[0], sizeof(mb_pool)/4, RT_IPC_FLAG_FIFO);
+    if (result != RT_EOK)
+    {
+        rt_kprintf("init mailbox failed.\n");
+        return -1;
+    }
+
+    sync_thread = rt_thread_create("sync", sync_thread_entry, RT_NULL, 
+                                  SYNC_THREAD_STACK_SIZE, 
+                                  SYNC_THREAD_PRIORITY, 
+                                  SYNC_THREAD_TIMESLICE);
+
+    if(sync_thread) rt_thread_startup(sync_thread);
+
+    /* led thread */
     led_thread = rt_thread_create("led", led_thread_entry, RT_NULL, 
                                   LED_THREAD_STACK_SIZE, 
                                   LED_THREAD_PRIORITY, 
                                   LED_THREAD_TIMESLICE);
 
-    if(led_thread != RT_NULL)
-        rt_thread_startup(led_thread);
+    if(led_thread) rt_thread_startup(led_thread);
 
     /* dht22 thread */
-
     rt_thread_init(&dht22_thread, "dht22", dht22_thread_entry, RT_NULL, 
                    &dht22_thread_stack[0], sizeof(dht22_thread_stack), 
                    DHT22_THREAD_PRIORITY, DHT22_THREAD_TIMESLICE);
 
-    //rt_thread_startup(&dht22_thread);
+    rt_thread_startup(&dht22_thread);
 
     /* gp2y10 thread */
-
     rt_thread_init(&gp2y10_thread, "gp2y10", gp2y10_thread_entry, RT_NULL, 
                    &gp2y10_thread_stack[0], sizeof(gp2y10_thread_stack), 
                    GP2Y10_THREAD_PRIORITY, GP2Y10_THREAD_TIMESLICE);
 
-    //rt_thread_startup(&gp2y10_thread);
+    rt_thread_startup(&gp2y10_thread);
 
     /* sgp30 thread */
-
     rt_thread_init(&sgp30_thread, "sgp30", sgp30_thread_entry, RT_NULL, 
                    &sgp30_thread_stack[0], sizeof(sgp30_thread_stack), 
                    SGP30_THREAD_PRIORITY, SGP30_THREAD_TIMESLICE);
 
-    //rt_thread_startup(&gp2y10_thread);
+    rt_thread_startup(&sgp30_thread);
 
 
     return RT_EOK;
@@ -252,7 +358,7 @@ static void cat_dht11(void)
         float t = dht_get_temperature(&dht11);
         float h = dht_get_humidity(&dht11);
 
-        rt_kprintf("(DHT11) temperature: %d.%02d'C, humidity: %d.%02d%\n", 
+        rt_kprintf("(DHT11) temperature: %d.%02d'C, humidity: %d.%02d%%\n", 
                     (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
     }
     else {

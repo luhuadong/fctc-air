@@ -117,7 +117,7 @@ static rt_err_t sensor_init(sgp30_device_t dev)
     if (!read_word_from_command(dev->i2c, cmd, 2, 10, &featureset, 1))
     	return -RT_ERROR;
 
-    rt_kprintf("(SGP30) Featureset 0x%x\n", featureset);
+    //rt_kprintf("(SGP30) Featureset 0x%x\n", featureset);
     if ((featureset & 0xF0) != SGP30_FEATURESET)
     	return -RT_ERROR;
 
