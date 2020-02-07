@@ -13,6 +13,7 @@
 #include <rtdevice.h>
 #include <board.h>
 
+#include "fctc_air.h"
 #include "dht.h"
 #include "gp2y10.h"
 #include "sgp30.h"
@@ -57,6 +58,8 @@
 #define SYNC_THREAD_PRIORITY     15
 #define SYNC_THREAD_STACK_SIZE   512
 #define SYNC_THREAD_TIMESLICE    5
+
+#define DELAY_TIME_DEFAULT       10000
 
 /* 邮箱控制块 */
 static struct rt_mailbox mb;
@@ -199,7 +202,7 @@ static void dht22_thread_entry(void *parameter)
             //rt_kprintf("(DHT22) error\n");
         }
 
-        rt_thread_mdelay(3000);
+        rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
 }
 
@@ -216,7 +219,7 @@ static void gp2y10_thread_entry(void *parameter)
 
         sync(SENSOR_DUST, dust);
 
-        rt_thread_mdelay(3000);
+        rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
 }
 
@@ -264,7 +267,7 @@ static void sgp30_thread_entry(void *parameter)
             rt_kprintf("(SGP30) ****Baseline values: eCO2: 0x%x & TVOC: 0x%x", eCO2_base, TVOC_base);
         }
 #endif
-        rt_thread_mdelay(3000);
+        rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
     
     sgp30_deinit(sgp30);
@@ -405,7 +408,7 @@ MSH_CMD_EXPORT(cat_gp2y10, read gp2y10 dust density);
 #endif
 
 /* cat_sgp30 */
-void cat_sgp30(void)
+static void cat_sgp30(void)
 {
     rt_kprintf("hello SGP30\n");
 
@@ -451,7 +454,7 @@ MSH_CMD_EXPORT(cat_sgp30, read sgp30 TVOC and eCO2);
 #endif
 
 /* cat_hello */
-void cat_hello(void)
+static void cat_hello(void)
 {
     rt_kprintf("hello RT-Thread\n");
 }
