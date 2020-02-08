@@ -19,12 +19,6 @@
 #include "sgp30.h"
 
 
-#define LED1_PIN                 GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
-#define LED2_PIN                 GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
-#define LED3_PIN                 GET_PIN(B, 14)  /* defined the LED3 pin: PB14 */
-#define LED_RUNNING              LED1_PIN
-#define LED_WARNING              LED3_PIN
-
 #define DHT22_DATA_PIN           GET_PIN(E, 13)  /* D3 */
 #define DHT11_DATA_PIN           GET_PIN(E, 9)   /* D6 */
 
@@ -150,7 +144,7 @@ static void sync_thread_entry(void *parameter)
             rt_free(msg);
         }
 
-        if (flag == 0x1F) {
+        if (!is_paused && flag == 0x1F) {
             /* print the % symbol should add the escape character '%' or '\' */
             rt_kprintf("[Air] Temp: %d.%02d'C, Humi: %d.%02d%%, Dust: %d.%02dug/m3, TVOC: %dppb, eCO2: %dppm\n",
                         (int)air.temp, (int)(air.temp*100)%100, 
@@ -296,6 +290,10 @@ int main(void)
     rt_kprintf(" |_| \\___| |_| \\___| /_/ \\_\\_|_| \n\n");
 
     rt_err_t result;
+
+    /* initialization */
+
+    user_btn_init();
 
     /* 创建邮箱 */
     result = rt_mb_init(&mb, "sync_mb", &mb_pool[0], sizeof(mb_pool)/4, RT_IPC_FLAG_FIFO);
