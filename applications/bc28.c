@@ -18,7 +18,7 @@
 #define LED_THREAD_STACK_SIZE    512
 #define LED_THREAD_TIMESLICE     15
 
-#define SAMPLE_UART_NAME       "uart1"    /* 串口设备名称 */
+#define SAMPLE_UART_NAME       "uart3"    /* 串口设备名称 */
 static rt_device_t serial;                /* 串口设备句柄 */
 static struct rt_semaphore rx_sem;    /* 用于接收消息的信号量 */
 
@@ -56,11 +56,18 @@ static void serial_thread_entry(void *parameter)
 //rt_err_t rt_device_set_tx_complete(rt_device_t dev, rt_err_t (*tx_done)(rt_device_t dev,void *buffer));
 
 /* cat_bc28 */
-static void cat_bc28(void)
+static void cat_bc28(int argc, char **argv)
 {
-    rt_kprintf("hello Quectel BC28\n");
+    char cmd[64] = {0};
 
-    char cmd[] = "AT\r\n";
+    if (argc < 2) {
+        rt_sprintf(cmd, "AT\r\n");
+    }
+    else {
+        rt_sprintf(cmd, "%s\r\n", argv[1]);
+    }
+
+    rt_kprintf("hello Quectel BC28 ==> %s\n", cmd);
 
     struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;
 
@@ -94,7 +101,7 @@ static void cat_bc28(void)
     if(bc28_rx_thread) rt_thread_startup(bc28_rx_thread);
 
     /* 发送字符串 */
-    rt_device_write(serial, 0, cmd, (sizeof(cmd) - 1));
+    rt_device_write(serial, 0, cmd, rt_strlen(cmd));
 
     rt_thread_mdelay(5000);
 
@@ -103,5 +110,5 @@ static void cat_bc28(void)
     rt_device_close(serial);
 }
 #ifdef FINSH_USING_MSH
-MSH_CMD_EXPORT(cat_bc28, debug Quectel BC28);
+MSH_CMD_EXPORT(cat_bc28, Usage: cat_bc28 <AT command>);
 #endif

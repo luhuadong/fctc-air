@@ -168,6 +168,7 @@
 #define BSP_USING_UART
 #define BSP_USING_LPUART1
 #define BSP_USING_UART1
+#define BSP_USING_UART3
 #define BSP_USING_ADC
 #define BSP_USING_ADC1
 #define BSP_USING_I2C
