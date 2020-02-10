@@ -5,7 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2020-02-01     RudyLo       the first version
+ * 2020-02-01     luhuadong    the first version
  */
 
 #include <rthw.h>

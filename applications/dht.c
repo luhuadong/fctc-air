@@ -5,7 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2020-01-20     RudyLo       the first version
+ * 2020-01-20     luhuadong    the first version
  */
 
 #include "dht.h"

@@ -6,7 +6,7 @@
  * Change Logs:
  * Date           Author       Notes
  * 2018-11-06     SummerGift   first version
- * 2020-01-20     RudyLo       fctc-air
+ * 2020-01-20     luhuadong    fctc-air
  */
 
 #include <rtthread.h>
@@ -53,7 +53,7 @@
 #define SYNC_THREAD_STACK_SIZE   512
 #define SYNC_THREAD_TIMESLICE    5
 
-#define DELAY_TIME_DEFAULT       10000
+#define DELAY_TIME_DEFAULT       3000
 
 /* 邮箱控制块 */
 static struct rt_mailbox mb;

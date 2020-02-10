@@ -5,7 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2020-01-21     RudyLo       the first version
+ * 2020-01-21     luhuadong    the first version
  */
 
 #include "gp2y10.h"

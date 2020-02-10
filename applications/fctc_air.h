@@ -5,7 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2020-02-07     RudyLo       the first version
+ * 2020-02-07     luhuadong    the first version
  */
 
 #ifndef __FCTC_AIR_H__
