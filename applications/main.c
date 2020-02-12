@@ -106,11 +106,72 @@ static void sync(sensor_type TAG, float data)
     rt_mb_send(&mb, (rt_ubase_t)msg);
 }
 
+static int bc28_init(void)
+{
+    at_client_dev_init();
+    
+    return at_client_attach();
+}
+
+static int build_mqtt_network(void)
+{
+    int result = 0;
+
+    if((result = bc28_mqtt_auth()) < 0) {
+        return result;
+    }
+
+    if((result = bc28_mqtt_open()) < 0) {
+        return result;
+    }
+
+    if((result = bc28_mqtt_connect()) < 0) {
+        return result;
+    }
+
+    if((result = bc28_mqtt_subscribe(MQTT_TOPIC_HELLO)) < 0) {
+        return result;
+    }
+
+    if((result = bc28_mqtt_auth()) < 0) {
+        return result;
+    }
+
+    return RT_EOK;
+}
+
+static int rebuild_mqtt_network(void)
+{
+    bc28_mqtt_close();
+    build_mqtt_network();
+}
+
 static void sync_thread_entry(void *parameter)
 {
     struct sensor_msg *msg;
-    struct air_data   air;
+    struct air_data air;
+    //char json_pack[256] = {0};
+
     rt_uint32_t flag = 0;
+    //int result = 0;
+
+#if 0
+    if(RT_EOK == bc28_init())
+    {
+        rt_kprintf("bc28 init ok\n");
+        result = build_mqtt_network();
+    }
+
+    if(result != RT_EOK)
+    {
+        rt_kprintf("bc28 mqtt rebuild...\n");
+        rebuild_mqtt_network();
+    }
+    else
+    {
+        rt_kprintf("bc28 mqtt network ok\n");
+    }
+#endif
 
     while(1)
     {
@@ -151,6 +212,9 @@ static void sync_thread_entry(void *parameter)
                         (int)air.humi, (int)(air.humi*100)%100,
                         (int)air.dust, (int)(air.dust*100)%100,
                         air.tvoc, air.eco2);
+            
+            //rt_sprintf(json_pack, JSON_DATA_PACK, air.temp, air.humi, air.dust, air.tvoc, air.eco2);
+            //bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, json_pack);
             flag = 0;
         }
     }
