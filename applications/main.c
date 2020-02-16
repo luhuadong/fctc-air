@@ -37,7 +37,7 @@
 #define LED_THREAD_STACK_SIZE    512
 #define LED_THREAD_TIMESLICE     15
 
-#define DHT22_THREAD_PRIORITY    5
+#define DHT22_THREAD_PRIORITY    8
 #define DHT22_THREAD_STACK_SIZE  1024
 #define DHT22_THREAD_TIMESLICE   5
 
@@ -50,15 +50,29 @@
 #define SGP30_THREAD_TIMESLICE   5
 
 #define SYNC_THREAD_PRIORITY     15
-#define SYNC_THREAD_STACK_SIZE   512
+#define SYNC_THREAD_STACK_SIZE   1024
 #define SYNC_THREAD_TIMESLICE    5
 
+#define BC28_THREAD_PRIORITY     5
+#define BC28_THREAD_STACK_SIZE   2048
+#define BC28_THREAD_TIMESLICE    5
+
 #define DELAY_TIME_DEFAULT       3000
+
+#define EVENT_FLAG_DHT22         (1 << 0)
+#define EVENT_FLAG_GP2Y10        (1 << 1)
+#define EVENT_FLAG_SGP30         (1 << 2)
+#define EVENT_FLAG_UPLOAD        (1 << 3)
+
+/* event */
+static struct rt_event event;
 
 /* 邮箱控制块 */
 static struct rt_mailbox mb;
 /* 用于放邮件的内存池 */
 static char mb_pool[128];
+
+static char json_data[512];
 
 typedef enum { 
     SENSOR_TEMP  = 0x01, 
@@ -106,72 +120,13 @@ static void sync(sensor_type TAG, float data)
     rt_mb_send(&mb, (rt_ubase_t)msg);
 }
 
-static int bc28_init(void)
-{
-    at_client_dev_init();
-    
-    return at_client_attach();
-}
-
-static int build_mqtt_network(void)
-{
-    int result = 0;
-
-    if((result = bc28_mqtt_auth()) < 0) {
-        return result;
-    }
-
-    if((result = bc28_mqtt_open()) < 0) {
-        return result;
-    }
-
-    if((result = bc28_mqtt_connect()) < 0) {
-        return result;
-    }
-
-    if((result = bc28_mqtt_subscribe(MQTT_TOPIC_HELLO)) < 0) {
-        return result;
-    }
-
-    if((result = bc28_mqtt_auth()) < 0) {
-        return result;
-    }
-
-    return RT_EOK;
-}
-
-static int rebuild_mqtt_network(void)
-{
-    bc28_mqtt_close();
-    build_mqtt_network();
-}
-
 static void sync_thread_entry(void *parameter)
 {
     struct sensor_msg *msg;
     struct air_data air;
-    //char json_pack[256] = {0};
 
     rt_uint32_t flag = 0;
-    //int result = 0;
-
-#if 0
-    if(RT_EOK == bc28_init())
-    {
-        rt_kprintf("bc28 init ok\n");
-        result = build_mqtt_network();
-    }
-
-    if(result != RT_EOK)
-    {
-        rt_kprintf("bc28 mqtt rebuild...\n");
-        rebuild_mqtt_network();
-    }
-    else
-    {
-        rt_kprintf("bc28 mqtt network ok\n");
-    }
-#endif
+    int count = 0;
 
     while(1)
     {
@@ -206,16 +161,63 @@ static void sync_thread_entry(void *parameter)
         }
 
         if (!is_paused && flag == 0x1F) {
+
+            count++;
+
+            int temp_int  = (int)air.temp;
+            int temp_frac = (int)(air.temp*100)%100;
+            int humi_int  = (int)air.humi;
+            int humi_frac = (int)(air.humi*100)%100;
             /* print the % symbol should add the escape character '%' or '\' */
-            rt_kprintf("[Air] Temp: %d.%02d'C, Humi: %d.%02d%%, Dust: %d.%02dug/m3, TVOC: %dppb, eCO2: %dppm\n",
+            /*
+            rt_kprintf("[Air] Temp: %d.%02d'C, Humi: %d.%02d%, Dust: %d.%02dug/m3, TVOC: %dppb, eCO2: %dppm\n",
                         (int)air.temp, (int)(air.temp*100)%100, 
                         (int)air.humi, (int)(air.humi*100)%100,
                         (int)air.dust, (int)(air.dust*100)%100,
                         air.tvoc, air.eco2);
+                        */
             
-            //rt_sprintf(json_pack, JSON_DATA_PACK, air.temp, air.humi, air.dust, air.tvoc, air.eco2);
-            //bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, json_pack);
+            rt_kprintf(AIR_MSG, temp_int, temp_frac, humi_int, humi_frac, (int)air.dust, air.tvoc, air.eco2);
+            //rt_kprintf("[%02d] %s", count++, json_data);
+
+            if (count == 10)
+            {
+                rt_sprintf(json_data, JSON_DATA_PACK, temp_int, temp_frac, humi_int, humi_frac, (int)air.dust, air.tvoc, air.eco2);
+                //rt_sprintf(json_data, JSON_DATA_PACK2, (int)air.temp, (int)air.humi, (int)air.dust, air.tvoc, air.eco2);
+                //rt_kprintf("%s", json_data);
+                rt_event_send(&event, EVENT_FLAG_UPLOAD);
+                count = 0;
+            }
+
             flag = 0;
+        }
+    }
+}
+
+static void bc28_thread_entry(void *parameter)
+{
+    if(RT_EOK != bc28_init())
+    {
+        rt_kprintf("(BC28) init failed\n");
+        return;
+    }
+
+    if(RT_EOK != build_mqtt_network())
+    {
+        rt_kprintf("(BC28) build mqtt network failed\n");
+        return;
+    }
+
+    rt_uint32_t e;
+
+    while (1)
+    {
+        /* wait event */
+        if(RT_EOK == rt_event_recv(&event, EVENT_FLAG_UPLOAD, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_FOREVER, &e))
+        {
+            /**/
+            rt_kprintf("(BC28) upload...\n");
+            bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, json_data);
         }
     }
 }
@@ -333,6 +335,7 @@ static void sgp30_thread_entry(void *parameter)
 
 static rt_thread_t led_thread  = RT_NULL;
 static rt_thread_t sync_thread = RT_NULL;
+static rt_thread_t bc28_thread = RT_NULL;
 
 ALIGN(RT_ALIGN_SIZE)
 static char dht22_thread_stack[DHT22_THREAD_STACK_SIZE];
@@ -359,7 +362,7 @@ int main(void)
 
     user_btn_init();
 
-    /* 创建邮箱 */
+    /* create mailbox */
     result = rt_mb_init(&mb, "sync_mb", &mb_pool[0], sizeof(mb_pool)/4, RT_IPC_FLAG_FIFO);
     if (result != RT_EOK)
     {
@@ -367,12 +370,25 @@ int main(void)
         return -1;
     }
 
+    /* create event */
+    result = rt_event_init(&event, "event", RT_IPC_FLAG_FIFO);
+    if (result != RT_EOK)
+    {
+        rt_kprintf("init event failed.\n");
+        return -1;
+    }
+
+    /* sync thread */
     sync_thread = rt_thread_create("sync", sync_thread_entry, RT_NULL, 
                                   SYNC_THREAD_STACK_SIZE, 
                                   SYNC_THREAD_PRIORITY, 
                                   SYNC_THREAD_TIMESLICE);
 
-    if(sync_thread) rt_thread_startup(sync_thread);
+    /* bc28 thread */
+    bc28_thread = rt_thread_create("at_bc28", bc28_thread_entry, RT_NULL, 
+                                  BC28_THREAD_STACK_SIZE, 
+                                  BC28_THREAD_PRIORITY, 
+                                  BC28_THREAD_TIMESLICE);
 
     /* led thread */
     led_thread = rt_thread_create("led", led_thread_entry, RT_NULL, 
@@ -380,28 +396,28 @@ int main(void)
                                   LED_THREAD_PRIORITY, 
                                   LED_THREAD_TIMESLICE);
 
-    if(led_thread) rt_thread_startup(led_thread);
-
     /* dht22 thread */
     rt_thread_init(&dht22_thread, "dht22", dht22_thread_entry, RT_NULL, 
                    &dht22_thread_stack[0], sizeof(dht22_thread_stack), 
                    DHT22_THREAD_PRIORITY, DHT22_THREAD_TIMESLICE);
-
-    rt_thread_startup(&dht22_thread);
 
     /* gp2y10 thread */
     rt_thread_init(&gp2y10_thread, "gp2y10", gp2y10_thread_entry, RT_NULL, 
                    &gp2y10_thread_stack[0], sizeof(gp2y10_thread_stack), 
                    GP2Y10_THREAD_PRIORITY, GP2Y10_THREAD_TIMESLICE);
 
-    rt_thread_startup(&gp2y10_thread);
-
     /* sgp30 thread */
     rt_thread_init(&sgp30_thread, "sgp30", sgp30_thread_entry, RT_NULL, 
                    &sgp30_thread_stack[0], sizeof(sgp30_thread_stack), 
                    SGP30_THREAD_PRIORITY, SGP30_THREAD_TIMESLICE);
 
+    /* start up all user thread */
+    if(led_thread) rt_thread_startup(led_thread);
+    rt_thread_startup(&dht22_thread);
+    rt_thread_startup(&gp2y10_thread);
     rt_thread_startup(&sgp30_thread);
+    if(sync_thread) rt_thread_startup(sync_thread);
+    if(bc28_thread) rt_thread_startup(bc28_thread);
 
 
     return RT_EOK;

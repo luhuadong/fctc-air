@@ -13,7 +13,7 @@
 
 #include <rtthread.h>
 #include <rtdevice.h>
-//#include <board.h>
+#include <board.h>
 #include <at.h>
 
 #define LOG_TAG                   "at.bc28"
@@ -21,6 +21,10 @@
 #include <at_log.h>
 
 #include "fctc_air.h"
+
+#define BC28_ADC0_PIN             GET_PIN(C, 0)
+#define BC28_POWER_EN_PIN         GET_PIN(A, 3)
+#define BC28_RESET_N_PIN          GET_PIN(A, 5)
 
 #define AT_CLIENT_DEV_NAME        "uart3"
 #define AT_DEFAULT_TIMEOUT        5000
@@ -34,6 +38,7 @@
 
 #define AT_TEST                   "AT"
 #define AT_ECHO_OFF               "ATE0"
+#define AT_QREGSWT_2              "AT+QREGSWT=2"
 #define AT_AUTOCONNECT_DISABLE    "AT+NCONFIG=AUTOCONNECT,FALSE"
 #define AT_REBOOT                 "AT+NRB"
 #define AT_NBAND_B8               "AT+NBAND=8"
@@ -263,7 +268,15 @@ static int check_send_cmd(const char* cmd, const char* resp_expr, const rt_size_
     return RT_EOK;
 }
 
-int bc28_mqtt_auth(void)
+static int bc28_mqtt_set_alive(rt_uint32_t keepalive_time)
+{
+    char cmd[AT_CMD_MAX_LEN] = {0};
+    rt_sprintf(cmd, AT_MQTT_ALIVE, keepalive_time);
+
+    return check_send_cmd(cmd, AT_OK, 0, AT_DEFAULT_TIMEOUT);
+}
+
+static int bc28_mqtt_auth(void)
 {
     char cmd[AT_CMD_MAX_LEN] = {0};
     rt_sprintf(cmd, AT_MQTT_AUTH, PRODUCT_KEY, DEVICE_NAME, DEVICE_SECRET);
@@ -271,7 +284,7 @@ int bc28_mqtt_auth(void)
     return check_send_cmd(cmd, AT_OK, 0, AT_DEFAULT_TIMEOUT);
 }
 
-int bc28_mqtt_open(void)
+static int bc28_mqtt_open(void)
 {
     char cmd[AT_CMD_MAX_LEN] = {0};
     rt_sprintf(cmd, AT_MQTT_OPEN, PRODUCT_KEY);
@@ -279,22 +292,22 @@ int bc28_mqtt_open(void)
     return check_send_cmd(cmd, AT_MQTT_OPEN_SUCC, 4, 75000);
 }
 
-int bc28_mqtt_close(void)
+static int bc28_mqtt_close(void)
 {
     return check_send_cmd(AT_MQTT_CLOSE, AT_OK, 0, AT_DEFAULT_TIMEOUT);
 }
 
-int bc28_mqtt_connect(void)
+static int bc28_mqtt_connect(void)
 {
     return check_send_cmd(AT_MQTT_CONNECT, AT_MQTT_CONNECT_SUCC, 4, 10000);
 }
 
-int bc28_mqtt_disconnect(void)
+static int bc28_mqtt_disconnect(void)
 {
     return check_send_cmd(AT_MQTT_DISCONNECT, AT_OK, 0, AT_DEFAULT_TIMEOUT);
 }
 
-int bc28_mqtt_subscribe(const char *topic)
+static int bc28_mqtt_subscribe(const char *topic)
 {
     char cmd[AT_CMD_MAX_LEN] = {0};
     rt_sprintf(cmd, AT_MQTT_SUB, topic);
@@ -302,7 +315,7 @@ int bc28_mqtt_subscribe(const char *topic)
     return check_send_cmd(cmd, AT_MQTT_SUB_SUCC, 4, AT_DEFAULT_TIMEOUT);
 }
 
-int bc28_mqtt_unsubscribe(const char *topic)
+static int bc28_mqtt_unsubscribe(const char *topic)
 {
     char cmd[AT_CMD_MAX_LEN] = {0};
     rt_sprintf(cmd, AT_MQTT_UNSUB, topic);
@@ -315,13 +328,13 @@ int bc28_mqtt_publish(const char *topic, const char *msg)
     char cmd[AT_CMD_MAX_LEN] = {0};
     rt_sprintf(cmd, AT_MQTT_PUB, topic);
 
-    check_send_cmd(cmd, ">", 0, AT_DEFAULT_TIMEOUT);
+    check_send_cmd(cmd, ">", 2, AT_DEFAULT_TIMEOUT);
     LOG_D("go...");
 
-    return check_send_cmd(msg, AT_MQTT_PUB_SUCC, 0, AT_DEFAULT_TIMEOUT);
+    return check_send_cmd(msg, AT_MQTT_PUB_SUCC, 4, AT_DEFAULT_TIMEOUT);
 }
 
-int bc28_mqtt_upload(int argc, char **argv)
+static int bc28_mqtt_upload(int argc, char **argv)
 {
     if(argc != 6) {
         LOG_E("Usage: bc28_mqtt_upload <temp> <humi> <dust> <tvoc> <eco2>");
@@ -329,15 +342,9 @@ int bc28_mqtt_upload(int argc, char **argv)
     }
 
     int result = 0;
-    char json_pack[256] = {0};
+    char json_pack[512] = {0};
 
-    int temp = atoi(argv[1]);
-    int humi = atoi(argv[2]);
-    int dust = atoi(argv[3]);
-    int tvoc = atoi(argv[4]);
-    int eco2 = atoi(argv[5]);
-
-    rt_sprintf(json_pack, JSON_DATA_PACK, temp, humi, dust, tvoc, eco2);
+    rt_sprintf(json_pack, JSON_DATA_PACK_TEST, argv[1], argv[2], argv[3], argv[4], argv[5]);
 
     result = bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, json_pack);
 
@@ -349,12 +356,16 @@ int bc28_mqtt_upload(int argc, char **argv)
     return result;
 }
 
-int at_client_attach(void)
+static int at_client_attach(void)
 {
     int result = 0;
 
     /* close echo */
     check_send_cmd(AT_ECHO_OFF, AT_OK, 0, AT_DEFAULT_TIMEOUT);
+
+    /* 关闭电信自动注册功能 */
+    result = check_send_cmd(AT_QREGSWT_2, AT_OK, 0, AT_DEFAULT_TIMEOUT);
+    if (result != RT_EOK) return result;
 
     /* 禁用自动连接网络 */
     result = check_send_cmd(AT_AUTOCONNECT_DISABLE, AT_OK, 0, AT_DEFAULT_TIMEOUT);
@@ -437,7 +448,7 @@ int at_client_attach(void)
  *        -1 : initialize failed
  *        -5 : no memory
  */
-int at_client_dev_init(void)
+static int at_client_dev_init(void)
 {
     rt_device_t serial = rt_device_find(AT_CLIENT_DEV_NAME);
     struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;
@@ -454,7 +465,99 @@ int at_client_dev_init(void)
     return at_client_init(AT_CLIENT_DEV_NAME, AT_CLIENT_RECV_BUFF_LEN);
 }
 
+static void bc28_reset(void);
+
+int bc28_init(void)
+{
+    bc28_reset();
+    at_client_dev_init();
+    
+    return at_client_attach();
+}
+
+int build_mqtt_network(void)
+{
+    int result = 0;
+
+    bc28_mqtt_set_alive(300);
+
+    if((result = bc28_mqtt_auth()) < 0) {
+        return result;
+    }
+
+    if((result = bc28_mqtt_open()) < 0) {
+        return result;
+    }
+
+    if((result = bc28_mqtt_connect()) < 0) {
+        return result;
+    }
+
+    if((result = bc28_mqtt_subscribe(MQTT_TOPIC_HELLO)) < 0) {
+        return result;
+    }
+
+    if((result = bc28_mqtt_auth()) < 0) {
+        return result;
+    }
+
+    return RT_EOK;
+}
+
+int rebuild_mqtt_network(void)
+{
+    bc28_mqtt_close();
+    build_mqtt_network();
+}
+
+static int bc28_pin_init(void)
+{
+    rt_pin_mode(BC28_POWER_EN_PIN, PIN_MODE_OUTPUT);
+    rt_pin_mode(BC28_RESET_N_PIN, PIN_MODE_OUTPUT);
+
+    rt_pin_write(BC28_POWER_EN_PIN, PIN_LOW);
+    rt_pin_write(BC28_RESET_N_PIN, PIN_LOW);
+
+    return 0;
+}
+INIT_DEVICE_EXPORT(bc28_pin_init);
+
+static void bc28_reset(void)
+{
+    rt_pin_write(BC28_RESET_N_PIN, PIN_HIGH);
+    rt_thread_mdelay(300);
+    rt_pin_write(BC28_RESET_N_PIN, PIN_LOW);
+    //rt_thread_mdelay(300);
+}
+
+static void bc28_power_en_high(void)
+{
+    rt_pin_write(BC28_POWER_EN_PIN, PIN_HIGH);
+}
+
+static void bc28_power_en_low(void)
+{
+    rt_pin_write(BC28_POWER_EN_PIN, PIN_LOW);
+}
+
+static void bc28_reset_n_high(void)
+{
+    rt_pin_write(BC28_RESET_N_PIN, PIN_HIGH);
+}
+
+static void bc28_reset_n_low(void)
+{
+    rt_pin_write(BC28_RESET_N_PIN, PIN_LOW);
+}
+
+
 #ifdef FINSH_USING_MSH
+MSH_CMD_EXPORT(bc28_power_en_high,    BC28 pin);
+MSH_CMD_EXPORT(bc28_power_en_low,     BC28 pin);
+MSH_CMD_EXPORT(bc28_reset_n_high,     BC28 pin);
+MSH_CMD_EXPORT(bc28_reset_n_low,      BC28 pin);
+
+MSH_CMD_EXPORT(bc28_mqtt_set_alive,   AT client MQTT auth);
 MSH_CMD_EXPORT(bc28_mqtt_auth,        AT client MQTT auth);
 MSH_CMD_EXPORT(bc28_mqtt_open,        AT client MQTT open);
 MSH_CMD_EXPORT(bc28_mqtt_close,       AT client MQTT close);

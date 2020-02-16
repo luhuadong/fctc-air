@@ -18,8 +18,10 @@
 #define LED_PAUSE                LED2_PIN
 #define LED_WARNING              LED3_PIN
 
-#define JSON_DATA_PACK           "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%f,\"Humi\":%f,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
-
+#define JSON_DATA_PACK_TEST      "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%s,\"TVOC\":%s,\"eCO2\":%s},\"method\":\"thing.event.property.post\"}\x1A"
+#define JSON_DATA_PACK           "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%d.%02d,\"Humi\":%d.%02d,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
+#define JSON_DATA_PACK2          "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%d,\"Humi\":%d,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
+#define AIR_MSG                  "[Air] Temp: %d.%02d'C, Humi: %d.%02d%, Dust: %dug/m3, TVOC: %dppb, eCO2: %dppm\n"
 #define MQTT_TOPIC_HELLO         "/a1p8Pngb3oY/BC28/user/hello"
 #define MQTT_TOPIC_UPLOAD        "/sys/a1p8Pngb3oY/BC28/thing/event/property/post"
 
@@ -29,6 +31,7 @@ void user_btn_init(void);
 
 
 /* NB-IoT */
+/*
 int at_client_dev_init(void);
 int at_client_attach(void);
 
@@ -39,6 +42,11 @@ int bc28_mqtt_connect(void);
 int bc28_mqtt_disconnect(void);
 int bc28_mqtt_subscribe(const char *topic);
 int bc28_mqtt_unsubscribe(const char *topic);
+*/
 int bc28_mqtt_publish(const char *topic, const char *msg);
+
+int bc28_init(void);
+int build_mqtt_network(void);
+int rebuild_mqtt_network(void);
 
 #endif /* __FCTC_AIR_H__ */

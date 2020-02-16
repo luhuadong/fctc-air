@@ -238,7 +238,7 @@ static void client_cli_parser(at_client_t  client)
         if (client_rx_fifo && at_client)
         {
             rt_kprintf("======== Welcome to using RT-Thread AT command client cli ========\n");
-            rt_kprintf("Cli will forward your command to server port(%s). Press 'ESC' to exit.\n> ", client->device->parent.name);
+            rt_kprintf("Cli will forward your command to server port(%s). Press 'ESC' to exit.\n", client->device->parent.name);
             rt_thread_startup(at_client);
             /* process user input */
             while (ESC_KEY != (ch = console_getchar()))
@@ -259,7 +259,6 @@ static void client_cli_parser(at_client_t  client)
                     {
                         rt_kprintf("\n");
                         at_obj_exec_cmd(client, RT_NULL, "%.*s", cur_line_len, cur_line);
-                        rt_kprintf("> ");
                     }
                     cur_line_len = 0;
                 }
