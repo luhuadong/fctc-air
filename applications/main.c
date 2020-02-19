@@ -238,7 +238,7 @@ static void led_thread_entry(void *parameter)
         rt_thread_mdelay(500);
     }
 }
-
+#if 0
 static void dht22_thread_entry(void *parameter)
 {
     struct dht_device dht22;
@@ -265,6 +265,7 @@ static void dht22_thread_entry(void *parameter)
         rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
 }
+#endif
 
 static void gp2y10_thread_entry(void *parameter)
 {
@@ -397,9 +398,10 @@ int main(void)
                                   LED_THREAD_TIMESLICE);
 
     /* dht22 thread */
+    /*
     rt_thread_init(&dht22_thread, "dht22", dht22_thread_entry, RT_NULL, 
                    &dht22_thread_stack[0], sizeof(dht22_thread_stack), 
-                   DHT22_THREAD_PRIORITY, DHT22_THREAD_TIMESLICE);
+                   DHT22_THREAD_PRIORITY, DHT22_THREAD_TIMESLICE);*/
 
     /* gp2y10 thread */
     rt_thread_init(&gp2y10_thread, "gp2y10", gp2y10_thread_entry, RT_NULL, 
@@ -413,11 +415,11 @@ int main(void)
 
     /* start up all user thread */
     if(led_thread) rt_thread_startup(led_thread);
-    rt_thread_startup(&dht22_thread);
-    rt_thread_startup(&gp2y10_thread);
-    rt_thread_startup(&sgp30_thread);
-    if(sync_thread) rt_thread_startup(sync_thread);
-    if(bc28_thread) rt_thread_startup(bc28_thread);
+    //rt_thread_startup(&dht22_thread);
+    //rt_thread_startup(&gp2y10_thread);
+    //rt_thread_startup(&sgp30_thread);
+    //if(sync_thread) rt_thread_startup(sync_thread);
+    //if(bc28_thread) rt_thread_startup(bc28_thread);
 
 
     return RT_EOK;
@@ -427,7 +429,7 @@ int main(void)
 /*
  * EXPORT FUNCTIONS
  */
-
+#if 0
 /* cat_dht11 */
 static void cat_dht11(void)
 {
@@ -470,6 +472,7 @@ static void cat_dht22(void)
 }
 #ifdef FINSH_USING_MSH
 MSH_CMD_EXPORT(cat_dht22, read dht22 humidity and temperature);
+#endif
 #endif
 
 /* cat_gp2y10 */

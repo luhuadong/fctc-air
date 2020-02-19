@@ -10,7 +10,7 @@
 
 #ifndef __DHT_H__
 #define __DHT_H__
-
+#if 0
 #include <rthw.h>
 #include <rtthread.h>
 #include <rtdevice.h>
@@ -53,5 +53,5 @@ float convert_c2f(float c);
 float convert_f2c(float f);
 
 //int rt_hw_dht_init(const char *name, struct rt_sensor_config *cfg);
-
+#endif
 #endif /* __DHT_H__ */

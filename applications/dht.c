@@ -9,7 +9,7 @@
  */
 
 #include "dht.h"
-
+#if 0
 RT_WEAK void rt_hw_us_delay(rt_uint32_t us)
 {
     rt_uint32_t delta;
@@ -253,3 +253,4 @@ float convert_f2c(float f)
 {
 	return (f - 32) * 0.55555;
 }
+#endif
