@@ -14,7 +14,7 @@
 #include <board.h>
 
 #include "fctc_air.h"
-#include "dht.h"
+#include "dhtxx.h"
 #include "gp2y10.h"
 #include "sgp30.h"
 
@@ -24,12 +24,10 @@
 #define GP2Y10_ILED_PIN          GET_PIN(F, 15)  /* D2 */
 #define GP2Y10_AOUT_PIN          GET_PIN(C, 3)   /* A2 */
 
-#define SGP30_SCL_PIN            GET_PIN(B, 8)   /* D15 I2C_A_SCL */
-#define SGP30_SDA_PIN            GET_PIN(B, 9)   /* D14 I2C_A_SDA */
+//#define ADC_DEV_NAME             "adc1"      /* ADC device name */
+//#define ADC_DEV_CHANNEL          4           /* ADC channel */
+//#define ADC_CONVERT_BITS         12          /* 转换位数为12位 */
 
-#define ADC_DEV_NAME             "adc1"      /* ADC device name */
-#define ADC_DEV_CHANNEL          4           /* ADC channel */
-#define ADC_CONVERT_BITS         12          /* 转换位数为12位 */
 #define SGP30_I2C_BUS_NAME       "i2c1"
 
 #define LED_THREAD_PRIORITY      20
@@ -58,10 +56,19 @@
 
 #define DELAY_TIME_DEFAULT       3000
 
-#define EVENT_FLAG_DHT22         (1 << 0)
-#define EVENT_FLAG_GP2Y10        (1 << 1)
-#define EVENT_FLAG_SGP30         (1 << 2)
-#define EVENT_FLAG_UPLOAD        (1 << 3)
+#define SENSOR_TEMP              (0)
+#define SENSOR_HUMI              (1)
+#define SENSOR_DUST              (2)
+#define SENSOR_TVOC              (3)
+#define SENSOR_ECO2              (4)
+
+#define EVENT_FLAG_TEMP          (1 << SENSOR_TEMP)
+#define EVENT_FLAG_HUMI          (1 << SENSOR_HUMI)
+#define EVENT_FLAG_DUST          (1 << SENSOR_DUST)
+#define EVENT_FLAG_TVOC          (1 << SENSOR_TVOC)
+#define EVENT_FLAG_ECO2          (1 << SENSOR_ECO2)
+#define EVENT_FLAG_UPLOAD        (1 << 28)
+#define EVENT_FLAG_PAUSE         (1 << 30)
 
 /* event */
 static struct rt_event event;
@@ -73,122 +80,54 @@ static char mb_pool[128];
 
 static char json_data[512];
 
-typedef enum { 
-    SENSOR_TEMP  = 0x01, 
-    SENSOR_HUMI  = 0x02, 
-    SENSOR_DUST  = 0x04, 
-    SENSOR_TVOC  = 0x08,
-    SENSOR_ECO2  = 0x10,
-} sensor_type;
-
 struct sensor_msg
 {
-    sensor_type tag;
-    union {
-        rt_uint32_t i;
-        float       f;
-    }data;
-};
-
-struct air_data
-{
-    rt_uint32_t temp;
-    rt_uint32_t humi;
-    rt_uint32_t dust;
-    rt_uint32_t tvoc;
-    rt_uint32_t eco2;
+    rt_uint8_t tag;
+    rt_int32_t data;
 };
 
 /*
  * param data using float because the sensor data include int and float
 */
-static void sync(sensor_type TAG, float data)
+static void sync(const rt_uint8_t tag, const rt_int32_t data)
 {
-    struct sensor_msg *msg;
-    msg = (struct sensor_msg*)rt_malloc(sizeof(struct sensor_msg));
+    struct sensor_msg *msg = (struct sensor_msg*)rt_malloc(sizeof(struct sensor_msg));
 
-    msg->tag = TAG;
+    msg->tag  = tag;
+    msg->data = data;
 
-    if( TAG == SENSOR_TEMP || TAG == SENSOR_HUMI || TAG == SENSOR_DUST) {
-        msg->data.f = (float)data;
-    }
-    else {
-        msg->data.i = (rt_uint32_t)data;
-    }
-    
-    rt_mb_send(&mb, (rt_ubase_t)msg);
+    rt_mb_send(&mb, (rt_ubase_t)msg);    /* send sensor data */
+    rt_event_send(&event, (1 << tag));   /* send sensor event */
 }
 
 static void sync_thread_entry(void *parameter)
 {
     struct sensor_msg *msg;
-    struct air_data air;
+    rt_int32_t air[5];
 
-    rt_uint32_t flag = 0;
     int count = 0;
+    rt_uint32_t recved;
+    rt_uint32_t sensor_event = EVENT_FLAG_TEMP | 
+                               EVENT_FLAG_HUMI | 
+                               EVENT_FLAG_DUST | 
+                               EVENT_FLAG_TVOC | 
+                               EVENT_FLAG_ECO2;
 
     while(1)
     {
-        if(rt_mb_recv(&mb, (rt_ubase_t *)&msg, RT_WAITING_FOREVER) == RT_EOK)
+        if (RT_EOK == rt_mb_recv(&mb, (rt_ubase_t *)&msg, RT_WAITING_FOREVER))
         {
-            switch (msg->tag) 
-            {
-            case SENSOR_TEMP: 
-                air.temp = msg->data.f; 
-                flag |= SENSOR_TEMP;
-                break;
-            case SENSOR_HUMI: 
-                air.humi = msg->data.f;
-                flag |= SENSOR_HUMI;
-                break;
-            case SENSOR_DUST: 
-                air.dust = msg->data.f;
-                flag |= SENSOR_DUST;
-                break;
-            case SENSOR_TVOC: 
-                air.tvoc = msg->data.i;
-                flag |= SENSOR_TVOC;
-                break;
-            case SENSOR_ECO2: 
-                air.eco2 = msg->data.i;
-                flag |= SENSOR_ECO2;
-                break;
-            default: 
-                break;
-            }
+            air[msg->tag] = msg->data;
             rt_free(msg);
         }
 
-        if (!is_paused && flag == 0x1F) {
+        if (RT_EOK == rt_event_recv(&event, sensor_event, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, 0, &recved))
+        {
+            rt_kprintf("[%03d] Temp:%3d.%dC, Humi:%3d.%d%, Dust:%4dug/m3, TVOC:%4dppb, eCO2:%4dppm\n", 
+                        ++count, air[0]/10, air[0]%10, air[1]/10, air[1]%10, air[2], air[3], air[4]);
 
-            count++;
-
-            int temp_int  = (int)air.temp;
-            int temp_frac = (int)(air.temp*100)%100;
-            int humi_int  = (int)air.humi;
-            int humi_frac = (int)(air.humi*100)%100;
-            /* print the % symbol should add the escape character '%' or '\' */
-            /*
-            rt_kprintf("[Air] Temp: %d.%02d'C, Humi: %d.%02d%, Dust: %d.%02dug/m3, TVOC: %dppb, eCO2: %dppm\n",
-                        (int)air.temp, (int)(air.temp*100)%100, 
-                        (int)air.humi, (int)(air.humi*100)%100,
-                        (int)air.dust, (int)(air.dust*100)%100,
-                        air.tvoc, air.eco2);
-                        */
-            
-            rt_kprintf(AIR_MSG, temp_int, temp_frac, humi_int, humi_frac, (int)air.dust, air.tvoc, air.eco2);
-            //rt_kprintf("[%02d] %s", count++, json_data);
-
-            if (count == 10)
-            {
-                rt_sprintf(json_data, JSON_DATA_PACK, temp_int, temp_frac, humi_int, humi_frac, (int)air.dust, air.tvoc, air.eco2);
-                //rt_sprintf(json_data, JSON_DATA_PACK2, (int)air.temp, (int)air.humi, (int)air.dust, air.tvoc, air.eco2);
-                //rt_kprintf("%s", json_data);
-                rt_event_send(&event, EVENT_FLAG_UPLOAD);
-                count = 0;
-            }
-
-            flag = 0;
+            //rt_sprintf(json_data, JSON_DATA_PACK, temp_int, temp_frac, humi_int, humi_frac, (int)air.dust, air.tvoc, air.eco2);
+            //rt_event_send(&event, EVENT_FLAG_UPLOAD);
         }
     }
 }
@@ -237,97 +176,180 @@ static void led_thread_entry(void *parameter)
         rt_thread_mdelay(500);
     }
 }
-#if 0
-static void dht22_thread_entry(void *parameter)
-{
-    struct dht_device dht22;
-    dht_init(&dht22, SENSOR_DHT22, DHT22_DATA_PIN);
 
-    while(1)
+static void read_temp_entry(void *args)
+{
+    rt_device_t temp_dev = RT_NULL;
+    struct rt_sensor_data sensor_data;
+
+    temp_dev = rt_device_find(args);
+    if (!temp_dev) 
     {
-        if(dht_read(&dht22)) {
-
-            float t = dht_get_temperature(&dht22);
-            float h = dht_get_humidity(&dht22);
-
-            /*
-            rt_kprintf("(DHT22) temperature: %d.%02d'C, humidity: %d.%02d%\n", 
-                       (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
-            */
-            sync(SENSOR_TEMP, t);
-            sync(SENSOR_HUMI, h);
-        }
-        else {
-            //rt_kprintf("(DHT22) error\n");
-        }
-
-        rt_thread_mdelay(DELAY_TIME_DEFAULT);
+        rt_kprintf("Can't find temp device.\n");
+        return;
     }
-}
-#endif
-#if 0
-static void gp2y10_thread_entry(void *parameter)
-{
-    struct gp2y10_device gp2y10;
 
-    gp2y10_init(&gp2y10, GP2Y10_ILED_PIN, GP2Y10_AOUT_PIN);
-
-    while(1)
+    if (rt_device_open(temp_dev, RT_DEVICE_FLAG_RDWR)) 
     {
-        float dust = gp2y10_get_dust_density(&gp2y10);
-        //rt_kprintf("(GP2Y10) Dust: %d.%02d ug/m3\n", (int)dust, (int)(dust*100)%100);
-
-        sync(SENSOR_DUST, dust);
-
-        rt_thread_mdelay(DELAY_TIME_DEFAULT);
-    }
-}
-#endif
-#if 0
-static void sgp30_thread_entry(void *parameter)
-{
-    sgp30_device_t sgp30 = RT_NULL;
-    int counter = 0;
-
-    sgp30 = sgp30_init(SGP30_I2C_BUS_NAME);
-    if(!sgp30) {
-        rt_kprintf("(SGP30) Init failed\n");
+        rt_kprintf("Open temp device failed.\n");
         return;
     }
 
     while(1)
     {
-        /* Read TVOC and eCO2 */
-        if(!sgp30_measure(sgp30)) {
-            rt_kprintf("(SGP30) Measurement failed\n");
-            //sgp30_deinit(sgp30);
-            continue;
+        if (1 != rt_device_read(temp_dev, 0, &sensor_data, 1)) 
+        {
+            rt_kprintf("Read temp data failed.\n");
         }
-        //rt_kprintf("(SGP30) TVOC: %d ppb, eCO2: %d ppm\n", sgp30->TVOC, sgp30->eCO2);
-        sync(SENSOR_TVOC, sgp30->TVOC);
-        sync(SENSOR_ECO2, sgp30->eCO2);
 
+        //rt_kprintf("[%d] Temp: %d\n", sensor_data.timestamp, sensor_data.data.temp);
+        sync(SENSOR_TEMP, sensor_data.data.temp);
         rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
-    
-    sgp30_deinit(sgp30);
+
+    rt_device_close(temp_dev);
 }
-#endif
+
+static void read_humi_entry(void *args)
+{
+    rt_device_t humi_dev = RT_NULL;
+    struct rt_sensor_data sensor_data;
+
+    humi_dev = rt_device_find(args);
+    if (!humi_dev) 
+    {
+        rt_kprintf("Can't find humi device.\n");
+        return;
+    }
+
+    if (rt_device_open(humi_dev, RT_DEVICE_FLAG_RDWR)) 
+    {
+        rt_kprintf("Open humi device failed.\n");
+        return;
+    }
+
+    while (1)
+    {
+        if (1 != rt_device_read(humi_dev, 0, &sensor_data, 1)) 
+        {
+            rt_kprintf("Read humi data failed.\n");
+        }
+
+        //rt_kprintf("[%d] Humi: %d\n", sensor_data.timestamp, sensor_data.data.humi);
+        sync(SENSOR_HUMI, sensor_data.data.humi);
+        rt_thread_mdelay(DELAY_TIME_DEFAULT);
+    }
+
+    rt_device_close(humi_dev);
+}
+
+static void read_dust_entry(void *args)
+{
+    rt_device_t dust_dev = RT_NULL;
+    struct rt_sensor_data sensor_data;
+
+    dust_dev = rt_device_find(args);
+    if (dust_dev == RT_NULL)
+    {
+        rt_kprintf("Can't find dust device.\n");
+        return;
+    }
+
+    if (rt_device_open(dust_dev, RT_DEVICE_FLAG_RDWR)) 
+    {
+        rt_kprintf("Open dust device failed.\n");
+        return;
+    }
+
+    while(1)
+    {
+        if (1 != rt_device_read(dust_dev, 0, &sensor_data, 1))
+        {
+            rt_kprintf("Read dust data failed.\n");
+        }
+
+        //rt_kprintf("[%d] Dust: %d\n", sensor_data.timestamp, sensor_data.data.dust);
+        sync(SENSOR_DUST, sensor_data.data.dust);
+        rt_thread_mdelay(DELAY_TIME_DEFAULT);
+    }
+
+    rt_device_close(dust_dev);
+}
+
+static void read_tvoc_entry(void *args)
+{
+    rt_device_t tvoc_dev = RT_NULL;
+    struct rt_sensor_data sensor_data;
+
+    tvoc_dev = rt_device_find(args);
+    if (!tvoc_dev) 
+    {
+        rt_kprintf("Can't find TVOC device.\n");
+        return;
+    }
+
+    if (rt_device_open(tvoc_dev, RT_DEVICE_FLAG_RDWR)) 
+    {
+        rt_kprintf("Open TVOC device failed.\n");
+        return;
+    }
+
+    while (1)
+    {
+        if (1 != rt_device_read(tvoc_dev, 0, &sensor_data, 1)) 
+        {
+            rt_kprintf("Read TVOC data failed.\n");
+        }
+
+        //rt_kprintf("[%d] TVOC: %d\n", sensor_data.timestamp, sensor_data.data.tvoc);
+        sync(SENSOR_TVOC, sensor_data.data.tvoc);
+        rt_thread_mdelay(DELAY_TIME_DEFAULT);
+    }
+
+    rt_device_close(tvoc_dev);
+}
+
+static void read_eco2_entry(void *args)
+{
+    rt_device_t eco2_dev = RT_NULL;
+    struct rt_sensor_data sensor_data;
+
+    eco2_dev = rt_device_find(args);
+    if (!eco2_dev) 
+    {
+        rt_kprintf("Can't find eCO2 device.\n");
+        return;
+    }
+
+    if (rt_device_open(eco2_dev, RT_DEVICE_FLAG_RDWR)) 
+    {
+        rt_kprintf("Open eCO2 device failed.\n");
+        return;
+    }
+
+    while(1)
+    {
+        if (1 != rt_device_read(eco2_dev, 0, &sensor_data, 1)) 
+        {
+            rt_kprintf("Read eCO2 data failed.\n");
+        }
+
+        //rt_kprintf("[%d] eCO2: %d\n", sensor_data.timestamp, sensor_data.data.eco2);
+        sync(SENSOR_ECO2, sensor_data.data.eco2);
+        rt_thread_mdelay(DELAY_TIME_DEFAULT);
+    }
+
+    rt_device_close(eco2_dev);
+}
+
+static rt_thread_t temp_thread = RT_NULL;
+static rt_thread_t humi_thread = RT_NULL;
+static rt_thread_t dust_thread = RT_NULL;
+static rt_thread_t tvoc_thread = RT_NULL;
+static rt_thread_t eco2_thread = RT_NULL;
 static rt_thread_t led_thread  = RT_NULL;
 static rt_thread_t sync_thread = RT_NULL;
 static rt_thread_t bc28_thread = RT_NULL;
-
-ALIGN(RT_ALIGN_SIZE)
-static char dht22_thread_stack[DHT22_THREAD_STACK_SIZE];
-static struct rt_thread dht22_thread;
-
-ALIGN(RT_ALIGN_SIZE)
-static char gp2y10_thread_stack[GP2Y10_THREAD_STACK_SIZE];
-static struct rt_thread gp2y10_thread;
-
-ALIGN(RT_ALIGN_SIZE)
-static char sgp30_thread_stack[SGP30_THREAD_STACK_SIZE];
-static struct rt_thread sgp30_thread;
 
 int main(void)
 {
@@ -357,49 +379,73 @@ int main(void)
         rt_kprintf("init event failed.\n");
         return -1;
     }
+    
+    led_thread = rt_thread_create("led", led_thread_entry, RT_NULL, 512, 20, 5);
 
-    /* sync thread */
-    sync_thread = rt_thread_create("sync", sync_thread_entry, RT_NULL, 
-                                  SYNC_THREAD_STACK_SIZE, 
-                                  SYNC_THREAD_PRIORITY, 
-                                  SYNC_THREAD_TIMESLICE);
+    temp_thread = rt_thread_create("temp_th", read_temp_entry, "temp_dh2", 1024, 10, 5);
+    humi_thread = rt_thread_create("humi_th", read_humi_entry, "humi_dh2", 1024, 10, 5);
+    dust_thread = rt_thread_create("dust_th", read_dust_entry, "dust_gp2", 1024, 15, 5);
+    tvoc_thread = rt_thread_create("tvoc_th", read_tvoc_entry, "tvoc_sg3", 1024, 16, 5);
+    eco2_thread = rt_thread_create("eco2_th", read_eco2_entry, "eco2_sg3", 1024, 16, 5);
 
-    /* bc28 thread */
-    bc28_thread = rt_thread_create("at_bc28", bc28_thread_entry, RT_NULL, 
-                                  BC28_THREAD_STACK_SIZE, 
-                                  BC28_THREAD_PRIORITY, 
-                                  BC28_THREAD_TIMESLICE);
+    sync_thread = rt_thread_create("sync", sync_thread_entry, RT_NULL, 1024, 15, 5);
+    bc28_thread = rt_thread_create("at_bc28", bc28_thread_entry, RT_NULL, 2048, 5, 5);
 
-    /* led thread */
-    led_thread = rt_thread_create("led", led_thread_entry, RT_NULL, 
-                                  LED_THREAD_STACK_SIZE, 
-                                  LED_THREAD_PRIORITY, 
-                                  LED_THREAD_TIMESLICE);
-
-    /* dht22 thread */
-#if 0
-    rt_thread_init(&dht22_thread, "dht22", dht22_thread_entry, RT_NULL, 
-                   &dht22_thread_stack[0], sizeof(dht22_thread_stack), 
-                   DHT22_THREAD_PRIORITY, DHT22_THREAD_TIMESLICE);
-
-    /* gp2y10 thread */
-    rt_thread_init(&gp2y10_thread, "gp2y10", gp2y10_thread_entry, RT_NULL, 
-                   &gp2y10_thread_stack[0], sizeof(gp2y10_thread_stack), 
-                   GP2Y10_THREAD_PRIORITY, GP2Y10_THREAD_TIMESLICE);
-
-    /* sgp30 thread */
-    rt_thread_init(&sgp30_thread, "sgp30", sgp30_thread_entry, RT_NULL, 
-                   &sgp30_thread_stack[0], sizeof(sgp30_thread_stack), 
-                   SGP30_THREAD_PRIORITY, SGP30_THREAD_TIMESLICE);
-#endif
     /* start up all user thread */
     if(led_thread) rt_thread_startup(led_thread);
-    //rt_thread_startup(&dht22_thread);
-    //rt_thread_startup(&gp2y10_thread);
-    //rt_thread_startup(&sgp30_thread);
-    //if(sync_thread) rt_thread_startup(sync_thread);
-    //if(bc28_thread) rt_thread_startup(bc28_thread);
 
+    if(temp_thread) rt_thread_startup(temp_thread);
+    if(humi_thread) rt_thread_startup(humi_thread);
+    if(dust_thread) rt_thread_startup(dust_thread);
+    if(tvoc_thread) rt_thread_startup(tvoc_thread);
+    if(eco2_thread) rt_thread_startup(eco2_thread);
+
+    if(sync_thread) rt_thread_startup(sync_thread);
+    //if(bc28_thread) rt_thread_startup(bc28_thread);
 
     return RT_EOK;
 }
+
+static int rt_hw_dht22_port(void)
+{
+    static struct dht_info info;
+    struct rt_sensor_config cfg;
+
+    info.type = DHT22;
+    info.pin  = DHT22_DATA_PIN;
+    
+    cfg.intf.type = RT_SENSOR_INTF_ONEWIRE;
+    cfg.intf.user_data = (void *)&info;
+    rt_hw_dht_init("dh2", &cfg);
+    
+    return RT_EOK;
+}
+INIT_COMPONENT_EXPORT(rt_hw_dht22_port);
+
+static int rt_hw_gp2y10_port(void)
+{
+    static struct gp2y10_device gp2y10_dev;
+    struct rt_sensor_config cfg;
+
+    gp2y10_dev.iled_pin = GP2Y10_ILED_PIN;
+    gp2y10_dev.aout_pin = GP2Y10_AOUT_PIN;
+    
+    //cfg.intf.type = RT_SENSOR_INTF_ADC;
+    cfg.intf.user_data = (void *)&gp2y10_dev;
+    rt_hw_gp2y10_init("gp2", &cfg);
+
+    return RT_EOK;
+}
+INIT_COMPONENT_EXPORT(rt_hw_gp2y10_port);
+
+static int rt_hw_sgp30_port(void)
+{
+    struct rt_sensor_config cfg;
+    
+    cfg.intf.type = RT_SENSOR_INTF_I2C;
+    cfg.intf.dev_name = SGP30_I2C_BUS_NAME;
+    rt_hw_sgp30_init("sg3", &cfg);
+    
+    return RT_EOK;
+}
+INIT_COMPONENT_EXPORT(rt_hw_sgp30_port);
