@@ -31,7 +31,9 @@ static char *const sensor_name_str[] =
     "tvoc_",     /* TVOC Level        */
     "noi_",      /* Noise Loudness    */
     "step_",     /* Step sensor       */
-    "forc_"      /* Force sensor      */
+    "forc_",     /* Force sensor      */
+    "dust_",     /* Dust sensor       */
+    "eco2_"      /* eCO2 sensor       */
 };
 
 /* Sensor interrupt correlation function */
@@ -305,7 +307,7 @@ static rt_err_t rt_sensor_control(rt_device_t dev, int cmd, void *args)
     case RT_SENSOR_CTRL_GET_ID:
         if (args)
         {
-            sensor->ops->control(sensor, RT_SENSOR_CTRL_GET_ID, args);
+            result = sensor->ops->control(sensor, RT_SENSOR_CTRL_GET_ID, args);
         }
         break;
     case RT_SENSOR_CTRL_GET_INFO:
@@ -350,7 +352,10 @@ static rt_err_t rt_sensor_control(rt_device_t dev, int cmd, void *args)
         result = sensor->ops->control(sensor, RT_SENSOR_CTRL_SELF_TEST, args);
         break;
     default:
-        return -RT_ERROR;
+
+        /* Custom commands */
+        result = sensor->ops->control(sensor, cmd, args);
+        break;
     }
 
     if (sensor->module)
