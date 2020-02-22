@@ -187,6 +187,14 @@
 
 /* peripheral libraries and drivers */
 
+#define PKG_USING_SENSORS_DRIVERS
+#define PKG_USING_DHTXX
+#define PKG_USING_DHTXX_LATEST_VERSION
+#define PKG_USING_GP2Y10
+#define PKG_USING_GP2Y10_VOLTAGE_RATIO 11
+#define PKG_USING_GP2Y10_LATEST_VERSION
+#define PKG_USING_SGP30
+#define PKG_USING_SGP30_LATEST_VERSION
 
 /* miscellaneous packages */
 

@@ -18,7 +18,6 @@
 #include "gp2y10.h"
 #include "sgp30.h"
 
-
 #define DHT22_DATA_PIN           GET_PIN(E, 13)  /* D3 */
 #define DHT11_DATA_PIN           GET_PIN(E, 9)   /* D6 */
 
@@ -93,9 +92,9 @@ struct sensor_msg
 
 struct air_data
 {
-    float       temp;
-    float       humi;
-    float       dust;
+    rt_uint32_t temp;
+    rt_uint32_t humi;
+    rt_uint32_t dust;
     rt_uint32_t tvoc;
     rt_uint32_t eco2;
 };
@@ -266,7 +265,7 @@ static void dht22_thread_entry(void *parameter)
     }
 }
 #endif
-
+#if 0
 static void gp2y10_thread_entry(void *parameter)
 {
     struct gp2y10_device gp2y10;
@@ -283,7 +282,8 @@ static void gp2y10_thread_entry(void *parameter)
         rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
 }
-
+#endif
+#if 0
 static void sgp30_thread_entry(void *parameter)
 {
     sgp30_device_t sgp30 = RT_NULL;
@@ -306,34 +306,13 @@ static void sgp30_thread_entry(void *parameter)
         //rt_kprintf("(SGP30) TVOC: %d ppb, eCO2: %d ppm\n", sgp30->TVOC, sgp30->eCO2);
         sync(SENSOR_TVOC, sgp30->TVOC);
         sync(SENSOR_ECO2, sgp30->eCO2);
-#if 0
-        /* Read rawH2 and rawEthanol */
-        if(!sgp30_measure_raw(sgp30)) {
-            rt_kprintf("(SGP30) Raw Measurement failed\n");
-            continue;
-        }
-        rt_kprintf("(SGP30) Raw H2: %d, Raw Ethanol: %d\n", sgp30->rawH2, sgp30->rawEthanol);
 
-        rt_thread_mdelay(1000);
-
-        counter++;
-        if(counter == 30) {
-            counter = 0;
-
-            rt_uint16_t TVOC_base, eCO2_base;
-            if(!sgp30_get_baseline(sgp30, &eCO2_base, &TVOC_base)) {
-                rt_kprintf("(SGP30) Failed to get baseline readings\n");
-                return;
-            }
-            rt_kprintf("(SGP30) ****Baseline values: eCO2: 0x%x & TVOC: 0x%x", eCO2_base, TVOC_base);
-        }
-#endif
         rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
     
     sgp30_deinit(sgp30);
 }
-
+#endif
 static rt_thread_t led_thread  = RT_NULL;
 static rt_thread_t sync_thread = RT_NULL;
 static rt_thread_t bc28_thread = RT_NULL;
@@ -398,10 +377,10 @@ int main(void)
                                   LED_THREAD_TIMESLICE);
 
     /* dht22 thread */
-    /*
+#if 0
     rt_thread_init(&dht22_thread, "dht22", dht22_thread_entry, RT_NULL, 
                    &dht22_thread_stack[0], sizeof(dht22_thread_stack), 
-                   DHT22_THREAD_PRIORITY, DHT22_THREAD_TIMESLICE);*/
+                   DHT22_THREAD_PRIORITY, DHT22_THREAD_TIMESLICE);
 
     /* gp2y10 thread */
     rt_thread_init(&gp2y10_thread, "gp2y10", gp2y10_thread_entry, RT_NULL, 
@@ -412,7 +391,7 @@ int main(void)
     rt_thread_init(&sgp30_thread, "sgp30", sgp30_thread_entry, RT_NULL, 
                    &sgp30_thread_stack[0], sizeof(sgp30_thread_stack), 
                    SGP30_THREAD_PRIORITY, SGP30_THREAD_TIMESLICE);
-
+#endif
     /* start up all user thread */
     if(led_thread) rt_thread_startup(led_thread);
     //rt_thread_startup(&dht22_thread);
@@ -424,121 +403,3 @@ int main(void)
 
     return RT_EOK;
 }
-
-
-/*
- * EXPORT FUNCTIONS
- */
-#if 0
-/* cat_dht11 */
-static void cat_dht11(void)
-{
-    struct dht_device dht11;
-    dht_init(&dht11, SENSOR_DHT11, DHT11_DATA_PIN);
-
-    if(dht_read(&dht11)) {
-
-        float t = dht_get_temperature(&dht11);
-        float h = dht_get_humidity(&dht11);
-
-        rt_kprintf("(DHT11) temperature: %d.%02d'C, humidity: %d.%02d%%\n", 
-                    (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
-    }
-    else {
-        rt_kprintf("(DHT11) error\n");
-    }
-}
-#ifdef FINSH_USING_MSH
-MSH_CMD_EXPORT(cat_dht11, read dht11 humidity and temperature);
-#endif
-
-/* cat_dht22 */
-static void cat_dht22(void)
-{
-    struct dht_device dht22;
-    dht_init(&dht22, SENSOR_DHT22, DHT22_DATA_PIN);
-
-    if(dht_read(&dht22)) {
-
-        float t = dht_get_temperature(&dht22);
-        float h = dht_get_humidity(&dht22);
-
-        rt_kprintf("(DHT22) temperature: %d.%02d'C, humidity: %d.%02d%\n", 
-                    (int)t, (int)(t*100) % 100, (int)h, (int)(h*100) % 100);
-    }
-    else {
-        rt_kprintf("(DHT22) error\n");
-    }
-}
-#ifdef FINSH_USING_MSH
-MSH_CMD_EXPORT(cat_dht22, read dht22 humidity and temperature);
-#endif
-#endif
-
-/* cat_gp2y10 */
-static void cat_gp2y10(void)
-{
-    struct gp2y10_device gp2y10;
-
-    gp2y10_init(&gp2y10, GP2Y10_ILED_PIN, GP2Y10_AOUT_PIN);
-    float dust = gp2y10_get_dust_density(&gp2y10);
-    rt_kprintf("(GP2Y10) Dust: %d.%02d ug/m3\n", (int)dust, (int)(dust*100)%100);
-}
-#ifdef FINSH_USING_MSH
-MSH_CMD_EXPORT(cat_gp2y10, read gp2y10 dust density);
-#endif
-
-/* cat_sgp30 */
-static void cat_sgp30(void)
-{
-    rt_kprintf("hello SGP30\n");
-
-    sgp30_device_t sgp30 = RT_NULL;
-
-    sgp30 = sgp30_init(SGP30_I2C_BUS_NAME);
-    if(!sgp30) {
-        rt_kprintf("(SGP30) Init failed\n");
-        return;
-    }
-
-    rt_kprintf("(SGP30) Serial number: %x.%x.%x\n", sgp30->serialnumber[0], 
-               sgp30->serialnumber[1], sgp30->serialnumber[2]);
-
-    rt_uint16_t loop = 20;
-
-    while(loop--)
-    {
-        /* Read TVOC and eCO2 */
-        if(!sgp30_measure(sgp30)) {
-            rt_kprintf("(SGP30) Measurement failed\n");
-            sgp30_deinit(sgp30);
-            break;
-        }
-
-        /* Read rawH2 and rawEthanol */
-        if(!sgp30_measure_raw(sgp30)) {
-            rt_kprintf("(SGP30) Raw Measurement failed\n");
-            sgp30_deinit(sgp30);
-            break;
-        }
-
-        rt_kprintf("[%2u] TVOC: %d ppb, eCO2: %d ppm; Raw H2: %d, Raw Ethanol: %d\n", 
-                   loop, sgp30->TVOC, sgp30->eCO2, sgp30->rawH2, sgp30->rawEthanol);
-
-        rt_thread_mdelay(1500);
-    }
-    
-    sgp30_deinit(sgp30);
-}
-#ifdef FINSH_USING_MSH
-MSH_CMD_EXPORT(cat_sgp30, read sgp30 TVOC and eCO2);
-#endif
-
-/* cat_hello */
-static void cat_hello(void)
-{
-    rt_kprintf("hello RT-Thread\n");
-}
-#ifdef FINSH_USING_MSH
-MSH_CMD_EXPORT(cat_hello, say hello to RT-Thread);
-#endif

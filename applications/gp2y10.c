@@ -9,7 +9,7 @@
  */
 
 #include "gp2y10.h"
-
+#if 0
 RT_WEAK void rt_hw_us_delay(rt_uint32_t us)
 {
     rt_uint32_t delta;
@@ -154,3 +154,4 @@ float gp2y10_get_dust_density(gp2y10_device_t dev)
 
     return density;
 }
+#endif
