@@ -8,15 +8,8 @@
  * 2020-02-07     luhuadong    the first version
  */
 
-#ifndef __FCTC_AIR_H__
-#define __FCTC_AIR_H__
-
-#define LED1_PIN                 GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
-#define LED2_PIN                 GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
-#define LED3_PIN                 GET_PIN(B, 14)  /* defined the LED3 pin: PB14 */
-#define LED_RUNNING              LED1_PIN
-#define LED_PAUSE                LED2_PIN
-#define LED_WARNING              LED3_PIN
+#ifndef __AT_BC28_H__
+#define __AT_BC28_H__
 
 #define JSON_DATA_PACK_TEST      "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%s,\"TVOC\":%s,\"eCO2\":%s},\"method\":\"thing.event.property.post\"}\x1A"
 #define JSON_DATA_PACK           "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%d.%02d,\"Humi\":%d.%02d,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
@@ -25,10 +18,7 @@
 #define MQTT_TOPIC_HELLO         "/a1p8Pngb3oY/BC28/user/hello"
 #define MQTT_TOPIC_UPLOAD        "/sys/a1p8Pngb3oY/BC28/thing/event/property/post"
 
-extern rt_bool_t is_paused;
-
 void user_btn_init(void);
-
 
 /* NB-IoT */
 /*
@@ -49,4 +39,4 @@ int bc28_init(void);
 int build_mqtt_network(void);
 int rebuild_mqtt_network(void);
 
-#endif /* __FCTC_AIR_H__ */
+#endif /* __AT_BC28_H__ */

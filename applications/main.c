@@ -13,10 +13,19 @@
 #include <rtdevice.h>
 #include <board.h>
 
-#include "fctc_air.h"
-#include "dhtxx.h"
-#include "gp2y10.h"
-#include "sgp30.h"
+#include <dhtxx.h>
+#include <gp2y10.h>
+#include <sgp30.h>
+#include "at_bc28.h"
+
+#define LED1_PIN                 GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
+#define LED2_PIN                 GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
+#define LED3_PIN                 GET_PIN(B, 14)  /* defined the LED3 pin: PB14 */
+#define LED_RUNNING              LED1_PIN
+#define LED_PAUSE                LED2_PIN
+#define LED_WARNING              LED3_PIN
+
+#define USER_BTN_PIN             GET_PIN(C, 13)  /* B1 USER */
 
 #define DHT22_DATA_PIN           GET_PIN(E, 13)  /* D3 */
 #define DHT11_DATA_PIN           GET_PIN(E, 9)   /* D6 */
@@ -29,30 +38,6 @@
 //#define ADC_CONVERT_BITS         12          /* 转换位数为12位 */
 
 #define SGP30_I2C_BUS_NAME       "i2c1"
-
-#define LED_THREAD_PRIORITY      20
-#define LED_THREAD_STACK_SIZE    512
-#define LED_THREAD_TIMESLICE     15
-
-#define DHT22_THREAD_PRIORITY    8
-#define DHT22_THREAD_STACK_SIZE  1024
-#define DHT22_THREAD_TIMESLICE   5
-
-#define GP2Y10_THREAD_PRIORITY   10
-#define GP2Y10_THREAD_STACK_SIZE 1024
-#define GP2Y10_THREAD_TIMESLICE  5
-
-#define SGP30_THREAD_PRIORITY    10
-#define SGP30_THREAD_STACK_SIZE  1024
-#define SGP30_THREAD_TIMESLICE   5
-
-#define SYNC_THREAD_PRIORITY     15
-#define SYNC_THREAD_STACK_SIZE   1024
-#define SYNC_THREAD_TIMESLICE    5
-
-#define BC28_THREAD_PRIORITY     5
-#define BC28_THREAD_STACK_SIZE   2048
-#define BC28_THREAD_TIMESLICE    5
 
 #define DELAY_TIME_DEFAULT       3000
 
@@ -85,6 +70,32 @@ struct sensor_msg
     rt_uint8_t tag;
     rt_int32_t data;
 };
+
+static rt_bool_t is_paused = RT_FALSE;
+
+static void key_cb(void *args)
+{
+    if (!is_paused) {
+        rt_kprintf("(BUTTON) paused\n");
+        is_paused = RT_TRUE;
+        rt_pin_write(LED_PAUSE, PIN_HIGH);
+        /* pase sync thread print or upload data to cloud */
+    }
+    else {
+        rt_kprintf("(BUTTON) resume\n");
+        is_paused = RT_FALSE;
+        rt_pin_write(LED_PAUSE, PIN_LOW);
+        /* resume */
+    }
+}
+
+void user_btn_init()
+{
+    rt_pin_mode(USER_BTN_PIN, PIN_MODE_INPUT_PULLUP);
+    /* Why can not use PIN_IRQ_MODE_FALLING ??? */
+    rt_pin_attach_irq(USER_BTN_PIN, PIN_IRQ_MODE_RISING, key_cb, RT_NULL);
+    rt_pin_irq_enable(USER_BTN_PIN, PIN_IRQ_ENABLE);
+}
 
 /*
  * param data using float because the sensor data include int and float

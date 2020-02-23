@@ -20,7 +20,7 @@
 #define LOG_LVL                   LOG_LVL_DBG
 #include <at_log.h>
 
-#include "fctc_air.h"
+#include "at_bc28.h"
 
 #define BC28_ADC0_PIN             GET_PIN(C, 0)
 #define BC28_POWER_EN_PIN         GET_PIN(A, 3)
