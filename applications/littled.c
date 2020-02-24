@@ -79,6 +79,7 @@ int led_register(rt_base_t pin, rt_base_t active_logic)
     rt_slist_append(&littled_list.head, &new_led->list);
 
     int ld = littled_list.ld_max++;
+    new_led->ld = ld;
 
     //rt_mutex_release(littled_list.lock);
 
@@ -86,7 +87,7 @@ int led_register(rt_base_t pin, rt_base_t active_logic)
     rt_pin_mode(new_led->pin, PIN_MODE_OUTPUT);
     rt_pin_write(new_led->pin, !new_led->active_logic);
 
-    rt_kprintf("littled [%d] register\n", ld);
+    rt_kprintf("littled [%d] register, len = %d\n", ld, rt_slist_len(&littled_list.head));
 
     return ld;
 }
@@ -199,7 +200,7 @@ static void littled_daemon_entry(void *args)
 
             if (node == RT_NULL)
             {
-                rt_kpintf("#8#\n");
+                rt_kprintf("#8#\n");
                 continue;
             }
 
