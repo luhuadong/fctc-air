@@ -199,6 +199,7 @@ static void littled_daemon_entry(void *args)
 
             if (node == RT_NULL)
             {
+                rt_kpintf("#8#\n");
                 continue;
             }
 
