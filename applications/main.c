@@ -17,6 +17,7 @@
 #include <gp2y10.h>
 #include <sgp30.h>
 #include "at_bc28.h"
+#include "littled.h"
 
 #define LED1_PIN                 GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
 #define LED2_PIN                 GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
@@ -24,6 +25,10 @@
 #define LED_RUNNING              LED1_PIN
 #define LED_PAUSE                LED2_PIN
 #define LED_WARNING              LED3_PIN
+
+static int led_normal;
+static int led_upload;
+static int led_warning;
 
 #define USER_BTN_PIN             GET_PIN(C, 13)  /* B1 USER */
 
@@ -134,8 +139,8 @@ static void sync_thread_entry(void *parameter)
 
         if (RT_EOK == rt_event_recv(&event, sensor_event, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, 0, &recved))
         {
-            rt_kprintf("[%03d] Temp:%3d.%dC, Humi:%3d.%d%, Dust:%4dug/m3, TVOC:%4dppb, eCO2:%4dppm\n", 
-                        ++count, air[0]/10, air[0]%10, air[1]/10, air[1]%10, air[2], air[3], air[4]);
+            //rt_kprintf("[%03d] Temp:%3d.%dC, Humi:%3d.%d%, Dust:%4dug/m3, TVOC:%4dppb, eCO2:%4dppm\n", 
+            //            ++count, air[0]/10, air[0]%10, air[1]/10, air[1]%10, air[2], air[3], air[4]);
 
             //rt_sprintf(json_data, JSON_DATA_PACK, temp_int, temp_frac, humi_int, humi_frac, (int)air.dust, air.tvoc, air.eco2);
             //rt_event_send(&event, EVENT_FLAG_UPLOAD);
@@ -375,6 +380,16 @@ int main(void)
 
     user_btn_init();
 
+    led_normal = led_register(LED1_PIN, PIN_HIGH);
+    led_upload = led_register(LED2_PIN, PIN_HIGH);
+    led_warning = led_register(LED3_PIN, PIN_HIGH);
+
+    LED_BLINK(led_normal);
+    rt_thread_mdelay(2000);
+    LED_BLINK(led_upload);
+    rt_thread_mdelay(2000);
+    LED_BLINK(led_warning);
+
     /* create mailbox */
     result = rt_mb_init(&mb, "sync_mb", &mb_pool[0], sizeof(mb_pool)/4, RT_IPC_FLAG_FIFO);
     if (result != RT_EOK)
@@ -403,7 +418,7 @@ int main(void)
     bc28_thread = rt_thread_create("at_bc28", bc28_thread_entry, RT_NULL, 2048, 5, 5);
 
     /* start up all user thread */
-    if(led_thread) rt_thread_startup(led_thread);
+    //if(led_thread) rt_thread_startup(led_thread);
 
     if(temp_thread) rt_thread_startup(temp_thread);
     if(humi_thread) rt_thread_startup(humi_thread);
