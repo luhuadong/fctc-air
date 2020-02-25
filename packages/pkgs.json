@@ -18,5 +18,10 @@
   "path": "/packages/peripherals/sensors/sgp30", 
   "ver": "latest", 
   "name": "SGP30"
+ }, 
+ {
+  "path": "/packages/peripherals/littled", 
+  "ver": "latest", 
+  "name": "LITTLED"
  }
 ]
