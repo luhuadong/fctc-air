@@ -22,13 +22,6 @@
 #define LED1_PIN                 GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
 #define LED2_PIN                 GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
 #define LED3_PIN                 GET_PIN(B, 14)  /* defined the LED3 pin: PB14 */
-#define LED_RUNNING              LED1_PIN
-#define LED_PAUSE                LED2_PIN
-#define LED_WARNING              LED3_PIN
-
-static int led_normal;
-static int led_upload;
-static int led_warning;
 
 #define USER_BTN_PIN             GET_PIN(C, 13)  /* B1 USER */
 
@@ -69,6 +62,10 @@ static struct rt_mailbox mb;
 static char mb_pool[128];
 
 static char json_data[512];
+
+static int led_normal;
+static int led_upload;
+static int led_warning;
 
 struct sensor_msg
 {
@@ -173,23 +170,6 @@ static void bc28_thread_entry(void *parameter)
             rt_kprintf("(BC28) upload...\n");
             bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, json_data);
         }
-    }
-}
-
-static void led_thread_entry(void *parameter)
-{
-    int count = 1;
-
-    rt_pin_mode(LED_RUNNING, PIN_MODE_OUTPUT);
-    rt_pin_mode(LED2_PIN, PIN_MODE_OUTPUT);
-    rt_pin_mode(LED3_PIN, PIN_MODE_OUTPUT);
-
-    while (count++)
-    {
-        rt_pin_write(LED_RUNNING, PIN_HIGH);
-        rt_thread_mdelay(500);
-        rt_pin_write(LED_RUNNING, PIN_LOW);
-        rt_thread_mdelay(500);
     }
 }
 
@@ -363,7 +343,6 @@ static rt_thread_t humi_thread = RT_NULL;
 static rt_thread_t dust_thread = RT_NULL;
 static rt_thread_t tvoc_thread = RT_NULL;
 static rt_thread_t eco2_thread = RT_NULL;
-static rt_thread_t led_thread  = RT_NULL;
 static rt_thread_t sync_thread = RT_NULL;
 static rt_thread_t bc28_thread = RT_NULL;
 
@@ -385,10 +364,8 @@ int main(void)
     led_warning = led_register(LED3_PIN, PIN_HIGH);
 
     LED_BLINK(led_normal);
-    rt_thread_mdelay(2000);
-    LED_BLINK(led_upload);
-    rt_thread_mdelay(2000);
-    LED_BLINK(led_warning);
+    LED_BLINK_FAST(led_upload);
+    LED_BLINK_SLOW(led_warning);
 
     /* create mailbox */
     result = rt_mb_init(&mb, "sync_mb", &mb_pool[0], sizeof(mb_pool)/4, RT_IPC_FLAG_FIFO);
@@ -405,8 +382,6 @@ int main(void)
         rt_kprintf("init event failed.\n");
         return -1;
     }
-    
-    led_thread = rt_thread_create("led", led_thread_entry, RT_NULL, 512, 20, 5);
 
     temp_thread = rt_thread_create("temp_th", read_temp_entry, "temp_dh2", 1024, 10, 5);
     humi_thread = rt_thread_create("humi_th", read_humi_entry, "humi_dh2", 1024, 10, 5);
@@ -418,8 +393,6 @@ int main(void)
     bc28_thread = rt_thread_create("at_bc28", bc28_thread_entry, RT_NULL, 2048, 5, 5);
 
     /* start up all user thread */
-    //if(led_thread) rt_thread_startup(led_thread);
-
     if(temp_thread) rt_thread_startup(temp_thread);
     if(humi_thread) rt_thread_startup(humi_thread);
     if(dust_thread) rt_thread_startup(dust_thread);
