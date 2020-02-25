@@ -32,7 +32,6 @@ struct led_node
 
     struct rt_thread *tid;
 
-    int status; // idle, running
     rt_mutex_t  lock;
     rt_slist_t  list;
 };
@@ -46,58 +45,78 @@ struct led_msg
     rt_uint32_t count;
 };
 
-// 链表本身也要加互斥锁，保证原子操作
-struct littled_head
+struct littled_list_head
 {
     rt_uint32_t ld_max;
     rt_mutex_t  lock;
     rt_slist_t  head;
-
 };
-static struct littled_head littled_list;
 
-
-
+static struct littled_list_head littled_list;
 static rt_thread_t  littled_thread = RT_NULL;
 static rt_mailbox_t littled_mb = RT_NULL;
 
 int led_register(rt_base_t pin, rt_base_t active_logic)
 {
-    // create node
+    /* Create node */
     struct led_node *new_led = (struct led_node *)rt_calloc(1, sizeof(struct led_node));
     if (new_led == RT_NULL)
     {
         return -RT_ENOMEM;
     }
 
-    //rt_mutex_take(littled_list.lock, RT_WAITING_FOREVER);
-
     new_led->pin = pin;
     new_led->active_logic = active_logic;
 
-    // insert list
+    /* Operate list */
+    rt_mutex_take(littled_list.lock, RT_WAITING_FOREVER);
+
     rt_slist_append(&littled_list.head, &new_led->list);
+    new_led->ld = littled_list.ld_max++;
 
-    int ld = littled_list.ld_max++;
-    new_led->ld = ld;
+    LOG_D("littled [%d] register, len = %d\n", new_led->ld, rt_slist_len(&littled_list.head));
 
-    //rt_mutex_release(littled_list.lock);
+    rt_mutex_release(littled_list.lock);
 
-    // set mode
+    /* Init pin */
     rt_pin_mode(new_led->pin, PIN_MODE_OUTPUT);
     rt_pin_write(new_led->pin, !new_led->active_logic);
 
-    rt_kprintf("littled [%d] register, len = %d\n", ld, rt_slist_len(&littled_list.head));
+    return new_led->ld;
+}
 
-    return ld;
+void led_unregister(int ld)
+{
+    rt_slist_t *node = RT_NULL;
+    struct led_node *led = RT_NULL;
+
+    rt_mutex_take(littled_list.lock, RT_WAITING_FOREVER);
+
+    rt_slist_for_each(node, &littled_list.head)
+    {
+        led = rt_slist_entry(node, struct led_node, list);
+        if (ld == led->ld)
+            break;
+    }
+    if (node != RT_NULL)
+    {
+        if (led->tid)
+        {
+            rt_thread_delete(led->tid);
+        }
+        rt_slist_remove(&littled_list.head, node);
+        rt_free(led);
+    }
+
+    rt_mutex_release(littled_list.lock);
 }
 
 /**
  * This function will read a bit from sensor.
  *
- * @param ld    Led descriptor
- * @param freq  Frequency
- * @param duty  Threshold value (0: off, max: on)
+ * @param ld     Led descriptor
+ * @param period Frequency
+ * @param pulse  Threshold value (0: off, max: on)
  * @param time
  * @param count 
  *
@@ -118,16 +137,6 @@ int led_mode(int ld, rt_uint32_t period, rt_uint32_t pulse, rt_uint32_t time, rt
     rt_mb_send(littled_mb, (rt_ubase_t)msg);
 }
 
-/*
-void led_toggle(int ld)
-{
-    rt_base_t pin = list(ld)->pin;
-
-    rt_base_t value = rt_pin_read(pin);
-    rt_pin_write(pin, !value);
-}
-*/
-
 static void led_task_entry(void *args)
 {
     struct led_node *led = (struct led_node *)args;
@@ -142,19 +151,7 @@ static void led_task_entry(void *args)
     rt_uint32_t cur_time   = 0;
     rt_uint32_t cur_count  = 0;
 
-    rt_kprintf("[%d] led task running\n", led->ld);
-
-    if (pulse == 0)
-    {
-        rt_pin_write(pin, !active_logic);
-        return;
-    }
-
-    if (pulse == period)
-    {
-        rt_pin_write(pin, active_logic);
-        return;
-    }
+    LOG_D("[%d] led task running", led->ld);
 
     while(cur_count <= count && cur_time <= time)
     {
@@ -180,58 +177,86 @@ static void littled_daemon_entry(void *args)
 
     while(1)
     {
-        // wait mailbox
+        /* Wait message from mailbox */
         if (RT_EOK == rt_mb_recv(littled_mb, (rt_ubase_t *)&msg, RT_WAITING_FOREVER))
         {
-            rt_kprintf("littled recv mailbox\n");
+            LOG_D("littled recv mailbox");
 
             rt_slist_t *node = RT_NULL;
             struct led_node *led = RT_NULL;
 
-            // find led node
+            rt_mutex_take(littled_list.lock, RT_WAITING_FOREVER);
+
+            /* Find led node */
             rt_slist_for_each(node, &littled_list.head)
             {
                 led = rt_slist_entry(node, struct led_node, list);
                 if (msg->ld == led->ld)
-                {
                     break;
-                }
             }
 
             if (node == RT_NULL)
             {
-                rt_kprintf("#8#\n");
+                LOG_D("led node [%d] not yet registered", msg->ld);
+                rt_free(msg);
                 continue;
             }
 
+            /* Save message */
             led->period = msg->period;
             led->pulse  = msg->pulse;
             led->time   = msg->time;
             led->count  = msg->count;
 
+            rt_free(msg);
+
+            /* Preprocessing */
             if (led->tid)
             {
                 rt_thread_delete(led->tid);
                 led->tid = RT_NULL;
             }
             
-            rt_free(msg);
+            if (led->pulse > led->period)  /* invalid */
+            {
+                LOG_W("pulse should be less than or equal to period");
+                continue;
+            }
+            else if (led->period == 0)     /* period = 0, means LED toggle */
+            {
+                rt_base_t value = rt_pin_read(led->pin);
+                rt_pin_write(led->pin, !value);
+                continue;
+            }
+            else if (led->pulse == 0)      /* period > 0, but pulse = 0, means LED off */
+            {
+                rt_pin_write(led->pin, !led->active_logic);
+                continue;
+            }
+            if (led->pulse == led->period) /* period > 0, and pulse = period, means LED on */
+            {
+                rt_pin_write(led->pin, led->active_logic);
+                continue;
+            }
 
+            /* Start thread processing task */
             {
                 rt_sprintf(led_thread_name, "led_%d", led->ld);
                 rt_thread_t tid = rt_thread_create(led_thread_name, led_task_entry, led,
                                                     512, RT_THREAD_PRIORITY_MAX - 1, 5);
                 
-                
                 rt_thread_startup(tid);
                 led->tid = tid;
             }
+
+            rt_mutex_release(littled_list.lock);
         }
     }
 }
 
 static int littled_init(void)
 {
+    /* Makesure singleton */
     if (littled_thread)
     {
         LOG_W("littled thread has been created");
@@ -241,22 +266,18 @@ static int littled_init(void)
     littled_list.ld_max = 0;
     littled_list.lock   = RT_NULL;
     littled_list.head.next   = RT_NULL;
-    //littled_list.head   = RT_SLIST_OBJECT_INIT(littled_list.head);
 
     /* Create a mutex lock for list */
-
     littled_list.lock = rt_mutex_create("littled", RT_IPC_FLAG_FIFO);
     if (littled_list.lock == RT_NULL)
         goto __exit;
 
     /* Create a mailbox for thread */
-
     littled_mb = rt_mb_create("littled", 32, RT_IPC_FLAG_FIFO);
     if (littled_mb == RT_NULL)
         goto __exit;
 
-    /* create the littled thread */
-
+    /* create the littled daemon thread */
     littled_thread = rt_thread_create("littled", littled_daemon_entry, RT_NULL, 
                                       1024, RT_THREAD_PRIORITY_MAX / 2, 20);
     if (littled_thread == RT_NULL)
