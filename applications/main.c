@@ -13,11 +13,11 @@
 #include <rtdevice.h>
 #include <board.h>
 
+#include <littled.h>
 #include <dhtxx.h>
 #include <gp2y10.h>
 #include <sgp30.h>
 #include "at_bc28.h"
-#include "littled.h"
 
 #define LED1_PIN                 GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
 #define LED2_PIN                 GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
@@ -77,16 +77,18 @@ static rt_bool_t is_paused = RT_FALSE;
 
 static void key_cb(void *args)
 {
+    LED_TOGGLE(led_warning);
+
     if (!is_paused) {
         rt_kprintf("(BUTTON) paused\n");
         is_paused = RT_TRUE;
-        rt_pin_write(LED_PAUSE, PIN_HIGH);
+        //rt_pin_write(LED_PAUSE, PIN_HIGH);
         /* pase sync thread print or upload data to cloud */
     }
     else {
         rt_kprintf("(BUTTON) resume\n");
         is_paused = RT_FALSE;
-        rt_pin_write(LED_PAUSE, PIN_LOW);
+        //rt_pin_write(LED_PAUSE, PIN_LOW);
         /* resume */
     }
 }
@@ -136,9 +138,19 @@ static void sync_thread_entry(void *parameter)
 
         if (RT_EOK == rt_event_recv(&event, sensor_event, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, 0, &recved))
         {
+            rt_int32_t flag, temp_int, temp_dec, humi_int, humi_dec;
+            char temp_str[8], humi_str[8];
+
+            flag = split_int(air[0], &temp_int, &temp_dec, 10);
+            rt_sprintf(temp_str, "%s%d.%d", flag > 0 ? "-" : "", temp_int, temp_dec);
+
+            flag = split_int(air[1], &humi_int, &humi_dec, 10);
+            rt_sprintf(humi_str, "%s%d.%d", flag > 0 ? "-" : "", humi_int, humi_dec);
+
             //rt_kprintf("[%03d] Temp:%3d.%dC, Humi:%3d.%d%, Dust:%4dug/m3, TVOC:%4dppb, eCO2:%4dppm\n", 
             //            ++count, air[0]/10, air[0]%10, air[1]/10, air[1]%10, air[2], air[3], air[4]);
 
+            rt_sprintf(json_data, JSON_DATA_PACK_STR, temp_str, humi_str, air[2], air[3], air[4]);
             //rt_sprintf(json_data, JSON_DATA_PACK, temp_int, temp_frac, humi_int, humi_frac, (int)air.dust, air.tvoc, air.eco2);
             //rt_event_send(&event, EVENT_FLAG_UPLOAD);
         }
@@ -166,8 +178,9 @@ static void bc28_thread_entry(void *parameter)
         /* wait event */
         if(RT_EOK == rt_event_recv(&event, EVENT_FLAG_UPLOAD, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_FOREVER, &e))
         {
-            /**/
-            rt_kprintf("(BC28) upload...\n");
+            LED_BEEP(led_upload);
+            //rt_kprintf("(BC28) upload...\n");
+
             bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, json_data);
         }
     }
@@ -195,6 +208,7 @@ static void read_temp_entry(void *args)
     {
         if (1 != rt_device_read(temp_dev, 0, &sensor_data, 1)) 
         {
+            LED_BEEP(led_warning);
             rt_kprintf("Read temp data failed.\n");
         }
 
@@ -228,6 +242,7 @@ static void read_humi_entry(void *args)
     {
         if (1 != rt_device_read(humi_dev, 0, &sensor_data, 1)) 
         {
+            LED_BEEP(led_warning);
             rt_kprintf("Read humi data failed.\n");
         }
 
