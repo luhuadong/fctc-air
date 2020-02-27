@@ -186,21 +186,21 @@ static void bc28_thread_entry(void *parameter)
     }
 }
 
-static void read_temp_entry(void *args)
+static void read_temp_entry(void *parameter)
 {
     rt_device_t temp_dev = RT_NULL;
     struct rt_sensor_data sensor_data;
 
-    temp_dev = rt_device_find(args);
+    temp_dev = rt_device_find(parameter);
     if (!temp_dev) 
     {
-        rt_kprintf("Can't find temp device.\n");
+        rt_kprintf("Can't find %s device.\n", parameter);
         return;
     }
 
     if (rt_device_open(temp_dev, RT_DEVICE_FLAG_RDWR)) 
     {
-        rt_kprintf("Open temp device failed.\n");
+        rt_kprintf("Open %s device failed.\n", parameter);
         return;
     }
 
@@ -209,32 +209,32 @@ static void read_temp_entry(void *args)
         if (1 != rt_device_read(temp_dev, 0, &sensor_data, 1)) 
         {
             LED_BEEP(led_warning);
-            rt_kprintf("Read temp data failed.\n");
+            rt_kprintf("Read %s data failed.\n", parameter);
+        } else 
+        {
+            //rt_kprintf("[%d] Temp: %d\n", sensor_data.timestamp, sensor_data.data.temp);
+            sync(SENSOR_TEMP, sensor_data.data.temp);
         }
-
-        //rt_kprintf("[%d] Temp: %d\n", sensor_data.timestamp, sensor_data.data.temp);
-        sync(SENSOR_TEMP, sensor_data.data.temp);
         rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
-
     rt_device_close(temp_dev);
 }
 
-static void read_humi_entry(void *args)
+static void read_humi_entry(void *parameter)
 {
     rt_device_t humi_dev = RT_NULL;
     struct rt_sensor_data sensor_data;
 
-    humi_dev = rt_device_find(args);
+    humi_dev = rt_device_find(parameter);
     if (!humi_dev) 
     {
-        rt_kprintf("Can't find humi device.\n");
+        rt_kprintf("Can't find %s device.\n", parameter);
         return;
     }
 
     if (rt_device_open(humi_dev, RT_DEVICE_FLAG_RDWR)) 
     {
-        rt_kprintf("Open humi device failed.\n");
+        rt_kprintf("Open %s device failed.\n", parameter);
         return;
     }
 
@@ -243,32 +243,32 @@ static void read_humi_entry(void *args)
         if (1 != rt_device_read(humi_dev, 0, &sensor_data, 1)) 
         {
             LED_BEEP(led_warning);
-            rt_kprintf("Read humi data failed.\n");
+            rt_kprintf("Read %s data failed.\n", parameter);
+        } else
+        {
+            //rt_kprintf("[%d] Humi: %d\n", sensor_data.timestamp, sensor_data.data.humi);
+            sync(SENSOR_HUMI, sensor_data.data.humi);
         }
-
-        //rt_kprintf("[%d] Humi: %d\n", sensor_data.timestamp, sensor_data.data.humi);
-        sync(SENSOR_HUMI, sensor_data.data.humi);
         rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
-
     rt_device_close(humi_dev);
 }
 
-static void read_dust_entry(void *args)
+static void read_dust_entry(void *parameter)
 {
     rt_device_t dust_dev = RT_NULL;
     struct rt_sensor_data sensor_data;
 
-    dust_dev = rt_device_find(args);
+    dust_dev = rt_device_find(parameter);
     if (dust_dev == RT_NULL)
     {
-        rt_kprintf("Can't find dust device.\n");
+        rt_kprintf("Can't find %s device.\n", parameter);
         return;
     }
 
     if (rt_device_open(dust_dev, RT_DEVICE_FLAG_RDWR)) 
     {
-        rt_kprintf("Open dust device failed.\n");
+        rt_kprintf("Open %s device failed.\n", parameter);
         return;
     }
 
@@ -276,32 +276,32 @@ static void read_dust_entry(void *args)
     {
         if (1 != rt_device_read(dust_dev, 0, &sensor_data, 1))
         {
-            rt_kprintf("Read dust data failed.\n");
+            rt_kprintf("Read %s data failed.\n", parameter);
+        } else
+        {
+            //rt_kprintf("[%d] Dust: %d\n", sensor_data.timestamp, sensor_data.data.dust);
+            sync(SENSOR_DUST, sensor_data.data.dust);
         }
-
-        //rt_kprintf("[%d] Dust: %d\n", sensor_data.timestamp, sensor_data.data.dust);
-        sync(SENSOR_DUST, sensor_data.data.dust);
         rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
-
     rt_device_close(dust_dev);
 }
 
-static void read_tvoc_entry(void *args)
+static void read_tvoc_entry(void *parameter)
 {
     rt_device_t tvoc_dev = RT_NULL;
     struct rt_sensor_data sensor_data;
 
-    tvoc_dev = rt_device_find(args);
+    tvoc_dev = rt_device_find(parameter);
     if (!tvoc_dev) 
     {
-        rt_kprintf("Can't find TVOC device.\n");
+        rt_kprintf("Can't find %s device.\n", parameter);
         return;
     }
 
     if (rt_device_open(tvoc_dev, RT_DEVICE_FLAG_RDWR)) 
     {
-        rt_kprintf("Open TVOC device failed.\n");
+        rt_kprintf("Open %s device failed.\n", parameter);
         return;
     }
 
@@ -309,32 +309,32 @@ static void read_tvoc_entry(void *args)
     {
         if (1 != rt_device_read(tvoc_dev, 0, &sensor_data, 1)) 
         {
-            rt_kprintf("Read TVOC data failed.\n");
+            rt_kprintf("Read %s data failed.\n", parameter);
+        } else
+        {
+            //rt_kprintf("[%d] TVOC: %d\n", sensor_data.timestamp, sensor_data.data.tvoc);
+            sync(SENSOR_TVOC, sensor_data.data.tvoc);
         }
-
-        //rt_kprintf("[%d] TVOC: %d\n", sensor_data.timestamp, sensor_data.data.tvoc);
-        sync(SENSOR_TVOC, sensor_data.data.tvoc);
         rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
-
     rt_device_close(tvoc_dev);
 }
 
-static void read_eco2_entry(void *args)
+static void read_eco2_entry(void *parameter)
 {
     rt_device_t eco2_dev = RT_NULL;
     struct rt_sensor_data sensor_data;
 
-    eco2_dev = rt_device_find(args);
+    eco2_dev = rt_device_find(parameter);
     if (!eco2_dev) 
     {
-        rt_kprintf("Can't find eCO2 device.\n");
+        rt_kprintf("Can't find %s device.\n", parameter);
         return;
     }
 
     if (rt_device_open(eco2_dev, RT_DEVICE_FLAG_RDWR)) 
     {
-        rt_kprintf("Open eCO2 device failed.\n");
+        rt_kprintf("Open %s device failed.\n", parameter);
         return;
     }
 
@@ -342,14 +342,14 @@ static void read_eco2_entry(void *args)
     {
         if (1 != rt_device_read(eco2_dev, 0, &sensor_data, 1)) 
         {
-            rt_kprintf("Read eCO2 data failed.\n");
+            rt_kprintf("Read %s data failed.\n", parameter);
+        } else
+        {
+            //rt_kprintf("[%d] eCO2: %d\n", sensor_data.timestamp, sensor_data.data.eco2);
+            sync(SENSOR_ECO2, sensor_data.data.eco2);
         }
-
-        //rt_kprintf("[%d] eCO2: %d\n", sensor_data.timestamp, sensor_data.data.eco2);
-        sync(SENSOR_ECO2, sensor_data.data.eco2);
         rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
-
     rt_device_close(eco2_dev);
 }
 
