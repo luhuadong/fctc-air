@@ -31,10 +31,6 @@
 #define GP2Y10_ILED_PIN          GET_PIN(F, 15)  /* D2 */
 #define GP2Y10_AOUT_PIN          GET_PIN(C, 3)   /* A2 */
 
-//#define ADC_DEV_NAME             "adc1"      /* ADC device name */
-//#define ADC_DEV_CHANNEL          4           /* ADC channel */
-//#define ADC_CONVERT_BITS         12          /* 转换位数为12位 */
-
 #define SGP30_I2C_BUS_NAME       "i2c1"
 
 #define DELAY_TIME_DEFAULT       3000
@@ -56,16 +52,23 @@
 /* event */
 static struct rt_event event;
 
-/* 邮箱控制块 */
-static struct rt_mailbox mb;
-/* 用于放邮件的内存池 */
-static char mb_pool[128];
-
 static char json_data[512];
+
+static rt_mq_t      sync_mq    = RT_NULL;
+static rt_mailbox_t upload_mb  = RT_NULL;
 
 static int led_normal;
 static int led_upload;
 static int led_warning;
+
+static rt_thread_t temp_thread = RT_NULL;
+static rt_thread_t humi_thread = RT_NULL;
+static rt_thread_t dust_thread = RT_NULL;
+static rt_thread_t tvoc_thread = RT_NULL;
+static rt_thread_t eco2_thread = RT_NULL;
+
+static rt_thread_t sync_thread = RT_NULL;
+static rt_thread_t bc28_thread = RT_NULL;
 
 struct sensor_msg
 {
@@ -83,13 +86,15 @@ static void key_cb(void *args)
         rt_kprintf("(BUTTON) paused\n");
         is_paused = RT_TRUE;
         //rt_pin_write(LED_PAUSE, PIN_HIGH);
-        /* pase sync thread print or upload data to cloud */
+        /* pause sync thread print or upload data to cloud */
+
     }
     else {
         rt_kprintf("(BUTTON) resume\n");
         is_paused = RT_FALSE;
         //rt_pin_write(LED_PAUSE, PIN_LOW);
         /* resume */
+        rt_event_send(&event, EVENT_FLAG_PAUSE);
     }
 }
 
@@ -101,58 +106,64 @@ void user_btn_init()
     rt_pin_irq_enable(USER_BTN_PIN, PIN_IRQ_ENABLE);
 }
 
+static char *int10_to_str(const rt_int32_t num, char *str)
+{
+    RT_ASSERT(str);
+
+    int anum = num < 0 ? -num : num;
+    int integer = anum / 10;
+    int decimal = anum % 10;
+
+    rt_sprintf(str, "%s%d.%d", num < 0 ? "-" : "", integer, decimal);
+    return str;
+}
+
 /*
  * param data using float because the sensor data include int and float
 */
 static void sync(const rt_uint8_t tag, const rt_int32_t data)
 {
-    struct sensor_msg *msg = (struct sensor_msg*)rt_malloc(sizeof(struct sensor_msg));
+    struct sensor_msg msg;
 
-    msg->tag  = tag;
-    msg->data = data;
-
-    rt_mb_send(&mb, (rt_ubase_t)msg);    /* send sensor data */
-    rt_event_send(&event, (1 << tag));   /* send sensor event */
+    msg.tag  = tag;
+    msg.data = data;
+  
+    rt_mq_send(sync_mq, (void *)&msg, sizeof(msg));  /* send sensor data */
+    rt_event_send(&event, (1 << tag));               /* send sensor event */
 }
 
 static void sync_thread_entry(void *parameter)
 {
-    struct sensor_msg *msg;
+    struct sensor_msg msg;
     rt_int32_t air[5];
+    char temp_str[8], humi_str[8];
+    char buf[512];
 
     int count = 0;
     rt_uint32_t recved;
-    rt_uint32_t sensor_event = EVENT_FLAG_TEMP | 
-                               EVENT_FLAG_HUMI | 
-                               EVENT_FLAG_DUST | 
-                               EVENT_FLAG_TVOC | 
-                               EVENT_FLAG_ECO2;
+    rt_uint32_t sensor_event = EVENT_FLAG_TEMP | EVENT_FLAG_HUMI | EVENT_FLAG_DUST | 
+                               EVENT_FLAG_TVOC | EVENT_FLAG_ECO2;
 
     while(1)
     {
-        if (RT_EOK == rt_mb_recv(&mb, (rt_ubase_t *)&msg, RT_WAITING_FOREVER))
+        if (RT_EOK == rt_mq_recv(sync_mq, (void *)&msg, sizeof(msg), RT_WAITING_FOREVER))
         {
-            air[msg->tag] = msg->data;
-            rt_free(msg);
+            air[msg.tag] = msg.data;
         }
 
         if (RT_EOK == rt_event_recv(&event, sensor_event, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, 0, &recved))
         {
-            rt_int32_t flag, temp_int, temp_dec, humi_int, humi_dec;
-            char temp_str[8], humi_str[8];
+            int10_to_str(air[0], temp_str);
+            int10_to_str(air[1], humi_str);
 
-            flag = split_int(air[0], &temp_int, &temp_dec, 10);
-            rt_sprintf(temp_str, "%s%d.%d", flag > 0 ? "-" : "", temp_int, temp_dec);
+            rt_kprintf("[%03d] Temp: %s C, Humi: %s%, Dust:%4d ug/m3, TVOC:%4d ppb, eCO2:%4d ppm\n", 
+                        ++count, temp_str, humi_str, air[2], air[3], air[4]);
 
-            flag = split_int(air[1], &humi_int, &humi_dec, 10);
-            rt_sprintf(humi_str, "%s%d.%d", flag > 0 ? "-" : "", humi_int, humi_dec);
-
-            //rt_kprintf("[%03d] Temp:%3d.%dC, Humi:%3d.%d%, Dust:%4dug/m3, TVOC:%4dppb, eCO2:%4dppm\n", 
-            //            ++count, air[0]/10, air[0]%10, air[1]/10, air[1]%10, air[2], air[3], air[4]);
-
-            rt_sprintf(json_data, JSON_DATA_PACK_STR, temp_str, humi_str, air[2], air[3], air[4]);
-            //rt_sprintf(json_data, JSON_DATA_PACK, temp_int, temp_frac, humi_int, humi_frac, (int)air.dust, air.tvoc, air.eco2);
-            //rt_event_send(&event, EVENT_FLAG_UPLOAD);
+            if (count%10 == 0)
+            {
+                rt_sprintf(buf, JSON_DATA_PACK_STR, temp_str, humi_str, air[2], air[3], air[4]);
+                rt_mb_send(upload_mb, (rt_ubase_t)buf);
+            }
         }
     }
 }
@@ -167,21 +178,21 @@ static void bc28_thread_entry(void *parameter)
 
     if(RT_EOK != build_mqtt_network())
     {
+        LED_BEEP(led_warning);
         rt_kprintf("(BC28) build mqtt network failed\n");
-        return;
+        rebuild_mqtt_network();
     }
 
-    rt_uint32_t e;
+    LED_BLINK(led_normal);
+
+    char *buf;
 
     while (1)
     {
-        /* wait event */
-        if(RT_EOK == rt_event_recv(&event, EVENT_FLAG_UPLOAD, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_FOREVER, &e))
+        if (RT_EOK == rt_mb_recv(upload_mb, (rt_ubase_t *)&buf, RT_WAITING_FOREVER))
         {
             LED_BEEP(led_upload);
-            //rt_kprintf("(BC28) upload...\n");
-
-            bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, json_data);
+            bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, buf);
         }
     }
 }
@@ -208,7 +219,7 @@ static void read_temp_entry(void *parameter)
     {
         if (1 != rt_device_read(temp_dev, 0, &sensor_data, 1)) 
         {
-            LED_BEEP(led_warning);
+            //LED_BEEP(led_warning);
             rt_kprintf("Read %s data failed.\n", parameter);
         } else 
         {
@@ -242,7 +253,7 @@ static void read_humi_entry(void *parameter)
     {
         if (1 != rt_device_read(humi_dev, 0, &sensor_data, 1)) 
         {
-            LED_BEEP(led_warning);
+            //LED_BEEP(led_warning);
             rt_kprintf("Read %s data failed.\n", parameter);
         } else
         {
@@ -353,14 +364,6 @@ static void read_eco2_entry(void *parameter)
     rt_device_close(eco2_dev);
 }
 
-static rt_thread_t temp_thread = RT_NULL;
-static rt_thread_t humi_thread = RT_NULL;
-static rt_thread_t dust_thread = RT_NULL;
-static rt_thread_t tvoc_thread = RT_NULL;
-static rt_thread_t eco2_thread = RT_NULL;
-static rt_thread_t sync_thread = RT_NULL;
-static rt_thread_t bc28_thread = RT_NULL;
-
 int main(void)
 {
     rt_kprintf("  ___ ___ _____ ___     _   _     \n");
@@ -378,15 +381,31 @@ int main(void)
     led_upload = led_register(LED2_PIN, PIN_HIGH);
     led_warning = led_register(LED3_PIN, PIN_HIGH);
 
-    LED_BLINK(led_normal);
-    LED_BLINK_FAST(led_upload);
-    LED_BLINK_SLOW(led_warning);
+    LED_ON(led_normal);
+    //LED_BLINK_FAST(led_upload);
+    //LED_BLINK_SLOW(led_warning);
 
     /* create mailbox */
+    /*
     result = rt_mb_init(&mb, "sync_mb", &mb_pool[0], sizeof(mb_pool)/4, RT_IPC_FLAG_FIFO);
     if (result != RT_EOK)
     {
         rt_kprintf("init mailbox failed.\n");
+        return -1;
+    }*/
+
+    upload_mb = rt_mb_create("upload_mb", 1, RT_IPC_FLAG_FIFO);
+    if (upload_mb == RT_NULL)
+    {
+        rt_kprintf("create mailbox failed.\n");
+        return -1;
+    }
+
+    /* create message queue */
+    sync_mq = rt_mq_create("sync_mq", sizeof(struct sensor_msg), 10, RT_IPC_FLAG_FIFO);
+    if (sync_mq == RT_NULL)
+    {
+        rt_kprintf("create message queue failed.\n");
         return -1;
     }
 
@@ -415,7 +434,7 @@ int main(void)
     if(eco2_thread) rt_thread_startup(eco2_thread);
 
     if(sync_thread) rt_thread_startup(sync_thread);
-    //if(bc28_thread) rt_thread_startup(bc28_thread);
+    if(bc28_thread) rt_thread_startup(bc28_thread);
 
     return RT_EOK;
 }
