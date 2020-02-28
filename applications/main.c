@@ -385,27 +385,19 @@ int main(void)
     //LED_BLINK_FAST(led_upload);
     //LED_BLINK_SLOW(led_warning);
 
-    /* create mailbox */
-    /*
-    result = rt_mb_init(&mb, "sync_mb", &mb_pool[0], sizeof(mb_pool)/4, RT_IPC_FLAG_FIFO);
-    if (result != RT_EOK)
-    {
-        rt_kprintf("init mailbox failed.\n");
-        return -1;
-    }*/
-
-    upload_mb = rt_mb_create("upload_mb", 1, RT_IPC_FLAG_FIFO);
-    if (upload_mb == RT_NULL)
-    {
-        rt_kprintf("create mailbox failed.\n");
-        return -1;
-    }
-
     /* create message queue */
     sync_mq = rt_mq_create("sync_mq", sizeof(struct sensor_msg), 10, RT_IPC_FLAG_FIFO);
     if (sync_mq == RT_NULL)
     {
         rt_kprintf("create message queue failed.\n");
+        return -1;
+    }
+
+    /* create mailbox */
+    upload_mb = rt_mb_create("upload_mb", 1, RT_IPC_FLAG_FIFO);
+    if (upload_mb == RT_NULL)
+    {
+        rt_kprintf("create mailbox failed.\n");
         return -1;
     }
 
