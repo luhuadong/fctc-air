@@ -215,6 +215,8 @@ static void read_temp_entry(void *parameter)
         return;
     }
 
+    rt_thread_mdelay(2000);  /* 越过2s不稳定期 */
+
     while(1)
     {
         if (1 != rt_device_read(temp_dev, 0, &sensor_data, 1)) 
@@ -248,6 +250,8 @@ static void read_humi_entry(void *parameter)
         rt_kprintf("Open %s device failed.\n", parameter);
         return;
     }
+
+    rt_thread_mdelay(2000);  /* 越过2s不稳定期 */
 
     while (1)
     {
