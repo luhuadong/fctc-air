@@ -215,8 +215,18 @@ int at_client_port_init(void)
     return RT_EOK;
 }
 
-//int check_send_cmd(int argc, char **argv)
-static int check_send_cmd(const char* cmd, const char* resp_expr, const rt_size_t lines, const rt_int32_t timeout)
+/**
+ * This function will send command and check the result.
+ *
+ * @param cmd       command to at client
+ * @param resp_expr expected response expression
+ * @param lines     response lines
+ * @param timeout   waiting time
+ *
+ * @return match successful return RT_EOK, otherwise return error code
+ */
+static int check_send_cmd(const char* cmd, const char* resp_expr, 
+                          const rt_size_t lines, const rt_int32_t timeout)
 {
     at_response_t resp = RT_NULL;
     int result = 0;
@@ -224,7 +234,7 @@ static int check_send_cmd(const char* cmd, const char* resp_expr, const rt_size_
     resp = at_create_resp(AT_CLIENT_RECV_BUFF_LEN, lines, rt_tick_from_millisecond(timeout));
     if (resp == RT_NULL)
     {
-        rt_kprintf("No memory for response structure!");
+        LOG_E("No memory for response structure!");
         return -RT_ENOMEM;
     }
 
@@ -236,24 +246,18 @@ static int check_send_cmd(const char* cmd, const char* resp_expr, const rt_size_
         return result;
     }
 
+#if 0
     /* Print response line buffer */
+    char *line_buffer = RT_NULL;
+
+    for(rt_size_t line_num = 1; line_num <= resp->line_counts; line_num++)
     {
-        const char *line_buffer = RT_NULL;
-
-        rt_kprintf("Response buffer");
-
-        for(rt_size_t line_num = 1; line_num <= resp->line_counts; line_num++)
-        {
-            if((line_buffer = at_resp_get_line(resp, line_num)) != RT_NULL)
-            {
-                LOG_D("line %d buffer : %s", line_num, line_buffer);
-            }
-            else
-            {
-                LOG_E("Parse line buffer error!");
-            }
-        }
+        if((line_buffer = at_resp_get_line(resp, line_num)) != RT_NULL)
+            LOG_D("line %d buffer : %s", line_num, line_buffer);
+        else
+            LOG_D("Parse line buffer error!");
     }
+#endif
 
     char resp_arg[AT_CMD_MAX_LEN] = { 0 };
     if (at_resp_parse_line_args_by_kw(resp, resp_expr, "%s", resp_arg) <= 0)
@@ -263,7 +267,7 @@ static int check_send_cmd(const char* cmd, const char* resp_expr, const rt_size_
         return -RT_ERROR;
     }
 
-    LOG_E("# ^_^ successed\n");
+    LOG_D("# ^_^ successed\n");
     at_delete_resp(resp);
     return RT_EOK;
 }
