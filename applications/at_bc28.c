@@ -191,30 +191,6 @@ MSH_CMD_EXPORT(cat_bc28, Usage: cat_bc28 <AT command>);
 
 #endif
 
-static void urc_stat_func(struct at_client *client, const char *data, rt_size_t size)
-{
-    /* WIFI 连接成功信息 */
-    LOG_D("AT Server device WIFI connect success!");
-}
-
-static void urc_recv_func(struct at_client *client, const char *data, rt_size_t size)
-{
-    /* 接收到服务器发送数据 */
-    LOG_D("AT Client receive AT Server data!");
-}
-
-static struct at_urc urc_table[] = {
-    { "+QMTSTAT", ":", urc_stat_func },
-    { "+QMTRECV", ":", urc_recv_func },
-};
-
-int at_client_port_init(void)
-{
-    /* 添加多种 URC 数据至 URC 列表中，当接收到同时匹配 URC 前缀和后缀的数据，执行 URC 函数  */
-    at_set_urc_table(urc_table, sizeof(urc_table) / sizeof(urc_table[0]));
-    return RT_EOK;
-}
-
 /**
  * This function will send command and check the result.
  *
@@ -469,7 +445,16 @@ static int at_client_dev_init(void)
     return at_client_init(AT_CLIENT_DEV_NAME, AT_CLIENT_RECV_BUFF_LEN);
 }
 
-static void bc28_reset(void);
+static void bc28_reset(void)
+{
+    rt_pin_mode(BC28_RESET_N_PIN, PIN_MODE_OUTPUT);
+    rt_pin_write(BC28_RESET_N_PIN, PIN_HIGH);
+
+    rt_thread_mdelay(300);
+
+    rt_pin_write(BC28_RESET_N_PIN, PIN_LOW);
+    //rt_thread_mdelay(300);
+}
 
 int bc28_init(void)
 {
@@ -496,7 +481,7 @@ int build_mqtt_network(void)
     if((result = bc28_mqtt_connect()) < 0) {
         return result;
     }
-
+/*
     if((result = bc28_mqtt_subscribe(MQTT_TOPIC_HELLO)) < 0) {
         return result;
     }
@@ -504,16 +489,33 @@ int build_mqtt_network(void)
     if((result = bc28_mqtt_auth()) < 0) {
         return result;
     }
-
+*/
     return RT_EOK;
 }
 
 int rebuild_mqtt_network(void)
 {
+    int result = 0;
+
     bc28_mqtt_close();
-    build_mqtt_network();
+    
+    if((result = bc28_mqtt_open()) < 0) {
+        return result;
+    }
+
+    if((result = bc28_mqtt_connect()) < 0) {
+        return result;
+    }
+
+    return RT_EOK;
 }
 
+int deactivate_pdp(void)
+{
+    return RT_EOK;
+}
+
+#if 0
 static int bc28_pin_init(void)
 {
     rt_pin_mode(BC28_POWER_EN_PIN, PIN_MODE_OUTPUT);
@@ -525,42 +527,38 @@ static int bc28_pin_init(void)
     return 0;
 }
 INIT_DEVICE_EXPORT(bc28_pin_init);
+#endif
 
-static void bc28_reset(void)
+static void urc_mqtt_stat(struct at_client *client, const char *data, rt_size_t size)
 {
-    rt_pin_write(BC28_RESET_N_PIN, PIN_HIGH);
-    rt_thread_mdelay(300);
-    rt_pin_write(BC28_RESET_N_PIN, PIN_LOW);
-    //rt_thread_mdelay(300);
+    /* MQTT链路层的状态发生变化 */
+    LOG_D("The state of the MQTT link layer changes");
+
+    LOG_D(">> %c", data[size-1]);
 }
 
-static void bc28_power_en_high(void)
+static void urc_mqtt_recv(struct at_client *client, const char *data, rt_size_t size)
 {
-    rt_pin_write(BC28_POWER_EN_PIN, PIN_HIGH);
+    /* 读取已从MQTT服务器接收的MQTT包数据 */
+    LOG_D("AT client receive data from server");
+
+    LOG_D(">> %s", data);
 }
 
-static void bc28_power_en_low(void)
-{
-    rt_pin_write(BC28_POWER_EN_PIN, PIN_LOW);
-}
+static struct at_urc urc_table[] = {
+    { "+QMTSTAT", ":", urc_mqtt_stat },
+    { "+QMTRECV", ":", urc_mqtt_recv },
+};
 
-static void bc28_reset_n_high(void)
+int at_client_port_init(void)
 {
-    rt_pin_write(BC28_RESET_N_PIN, PIN_HIGH);
+    /* 添加多种 URC 数据至 URC 列表中，当接收到同时匹配 URC 前缀和后缀的数据，执行 URC 函数  */
+    at_set_urc_table(urc_table, sizeof(urc_table) / sizeof(urc_table[0]));
+    return RT_EOK;
 }
-
-static void bc28_reset_n_low(void)
-{
-    rt_pin_write(BC28_RESET_N_PIN, PIN_LOW);
-}
-
+INIT_APP_EXPORT(at_client_port_init);
 
 #ifdef FINSH_USING_MSH
-MSH_CMD_EXPORT(bc28_power_en_high,    BC28 pin);
-MSH_CMD_EXPORT(bc28_power_en_low,     BC28 pin);
-MSH_CMD_EXPORT(bc28_reset_n_high,     BC28 pin);
-MSH_CMD_EXPORT(bc28_reset_n_low,      BC28 pin);
-
 MSH_CMD_EXPORT(bc28_mqtt_set_alive,   AT client MQTT auth);
 MSH_CMD_EXPORT(bc28_mqtt_auth,        AT client MQTT auth);
 MSH_CMD_EXPORT(bc28_mqtt_open,        AT client MQTT open);
