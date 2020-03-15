@@ -469,9 +469,10 @@ static void urc_mqtt_recv(struct at_client *client, const char *data, rt_size_t 
     LOG_D(">> %s", data);
 }
 
-static struct at_urc urc_table[] = {
-    { "+QMTSTAT", "\r\n", urc_mqtt_stat },
-    { "+QMTRECV", ":", urc_mqtt_recv },
+static const struct at_urc urc_table[] = {
+
+    { "+QMTSTAT:", "\r\n", urc_mqtt_stat },
+    { "+QMTRECV:", "\r\n", urc_mqtt_recv },
 };
 
 int at_client_port_init(void)
