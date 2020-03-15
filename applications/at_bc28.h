@@ -31,9 +31,10 @@ at_stat_t at_stat;
 void user_btn_init(void);
 
 /* NB-IoT */
-/*
+
 int at_client_dev_init(void);
 int at_client_attach(void);
+int at_client_deattach(void);
 
 int bc28_mqtt_auth(void);
 int bc28_mqtt_open(void);
@@ -42,7 +43,6 @@ int bc28_mqtt_connect(void);
 int bc28_mqtt_disconnect(void);
 int bc28_mqtt_subscribe(const char *topic);
 int bc28_mqtt_unsubscribe(const char *topic);
-*/
 int bc28_mqtt_publish(const char *topic, const char *msg);
 
 int bc28_init(void);

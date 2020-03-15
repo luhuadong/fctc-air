@@ -48,6 +48,7 @@
 #define AT_PSM_OFF                "AT+CPSMS=0"
 #define AT_RECV_AUTO              "AT+NSONMI=2"
 #define AT_UE_ATTACH              "AT+CGATT=1"
+#define AT_UE_DEATTACH            "AT+CGATT=0"
 #define AT_QUERY_IMEI             "AT+CGSN=1"
 #define AT_QUERY_IMSI             "AT+CIMI"
 #define AT_QUERY_STATUS           "AT+NUESTATS"
@@ -79,117 +80,9 @@
 #define AT_QMTSTAT_WORNG_CLOSE        6
 #define AT_QMTSTAT_INACTIVATED        7
 
-#define AT_QMTRECV_DATA           "+QMTRECV: %d,%d,\"%s\",\"%s\""
-
+//#define AT_QMTRECV_DATA           "+QMTRECV: %d,%d,\"%s\",\"%s\""
 #define AT_CLIENT_RECV_BUFF_LEN   256
 
-#if 0
-#include <rtthread.h>
-#include <rtdevice.h>
-#include <board.h>
-
-#include "fctc_air.h"
-
-#define LED_THREAD_PRIORITY      20
-#define LED_THREAD_STACK_SIZE    512
-#define LED_THREAD_TIMESLICE     15
-
-#define SAMPLE_UART_NAME       "uart3"    /* 串口设备名称 */
-static rt_device_t serial;                /* 串口设备句柄 */
-static struct rt_semaphore rx_sem;    /* 用于接收消息的信号量 */
-
-static rt_thread_t bc28_rx_thread = RT_NULL;
-
-/* 接收数据回调函数 */
-static rt_err_t uart_input(rt_device_t dev, rt_size_t size)
-{
-    /* 串口接收到数据后产生中断，调用此回调函数，然后发送接收信号量 */
-    rt_sem_release(&rx_sem);
-
-    return RT_EOK;
-}
-
-/* 接收数据的线程 */
-static void serial_thread_entry(void *parameter)
-{
-    char ch;
-
-    while (1)
-    {
-        /* 从串口读取一个字节的数据，没有读取到则等待接收信号量 */
-        while (rt_device_read(serial, -1, &ch, 1) != 1)
-        {
-            /* 阻塞等待接收信号量，等到信号量后再次读取数据 */
-            rt_sem_take(&rx_sem, RT_WAITING_FOREVER);
-        }
-        /* 输出 */
-        rt_kprintf("%c", ch);
-    }
-}
-
-
-/* 设置发送完成回调函数 */
-//rt_err_t rt_device_set_tx_complete(rt_device_t dev, rt_err_t (*tx_done)(rt_device_t dev,void *buffer));
-
-/* cat_bc28 */
-static void cat_bc28(int argc, char **argv)
-{
-    char cmd[64] = {0};
-
-    if (argc < 2) {
-        rt_sprintf(cmd, "AT\r\n");
-    }
-    else {
-        rt_sprintf(cmd, "%s\r\n", argv[1]);
-    }
-
-    rt_kprintf("hello Quectel BC28 ==> %s\n", cmd);
-
-    struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;
-
-    /* step1：查找串口设备 */
-    serial = rt_device_find(SAMPLE_UART_NAME);
-
-    /* step2：修改串口配置参数 */
-    config.baud_rate = BAUD_RATE_9600;        //修改波特率为 9600
-    config.data_bits = DATA_BITS_8;           //数据位 8
-    config.stop_bits = STOP_BITS_1;           //停止位 1
-    config.bufsz     = 128;                   //修改缓冲区 buff size 为 128
-    config.parity    = PARITY_NONE;           //无奇偶校验位
-
-    /* step3：控制串口设备。通过控制接口传入命令控制字，与控制参数 */
-    rt_device_control(serial, RT_DEVICE_CTRL_CONFIG, &config);
-
-    /* step4：打开串口设备。以中断接收及轮询发送模式打开串口设备 */
-    rt_device_open(serial, RT_DEVICE_FLAG_INT_RX);
-
-    /* 初始化信号量 */
-    rt_sem_init(&rx_sem, "rx_sem", 0, RT_IPC_FLAG_FIFO);
-
-    /* 设置接收回调函数 */
-    rt_device_set_rx_indicate(serial, uart_input);
-
-    bc28_rx_thread = rt_thread_create("bc28_rx", serial_thread_entry, RT_NULL, 
-                                  LED_THREAD_STACK_SIZE, 
-                                  LED_THREAD_PRIORITY, 
-                                  LED_THREAD_TIMESLICE);
-
-    if(bc28_rx_thread) rt_thread_startup(bc28_rx_thread);
-
-    /* 发送字符串 */
-    rt_device_write(serial, 0, cmd, rt_strlen(cmd));
-
-    rt_thread_mdelay(5000);
-
-    rt_thread_delete(bc28_rx_thread);
-    rt_sem_detach(&rx_sem);
-    rt_device_close(serial);
-}
-#ifdef FINSH_USING_MSH
-MSH_CMD_EXPORT(cat_bc28, Usage: cat_bc28 <AT command>);
-#endif
-
-#endif
 
 /**
  * This function will send command and check the result.
@@ -239,11 +132,11 @@ static int check_send_cmd(const char* cmd, const char* resp_expr,
     if (at_resp_parse_line_args_by_kw(resp, resp_expr, "%s", resp_arg) <= 0)
     {
         at_delete_resp(resp);
-        LOG_E("# >_< Failed\n");
+        LOG_E("# >_< Failed");
         return -RT_ERROR;
     }
 
-    LOG_D("# ^_^ successed\n");
+    LOG_D("# ^_^ successed");
     at_delete_resp(resp);
     return RT_EOK;
 }
@@ -256,7 +149,7 @@ static int bc28_mqtt_set_alive(rt_uint32_t keepalive_time)
     return check_send_cmd(cmd, AT_OK, 0, AT_DEFAULT_TIMEOUT);
 }
 
-static int bc28_mqtt_auth(void)
+int bc28_mqtt_auth(void)
 {
     char cmd[AT_CMD_MAX_LEN] = {0};
     rt_sprintf(cmd, AT_MQTT_AUTH, PRODUCT_KEY, DEVICE_NAME, DEVICE_SECRET);
@@ -264,7 +157,7 @@ static int bc28_mqtt_auth(void)
     return check_send_cmd(cmd, AT_OK, 0, AT_DEFAULT_TIMEOUT);
 }
 
-static int bc28_mqtt_open(void)
+int bc28_mqtt_open(void)
 {
     char cmd[AT_CMD_MAX_LEN] = {0};
     rt_sprintf(cmd, AT_MQTT_OPEN, PRODUCT_KEY);
@@ -272,22 +165,22 @@ static int bc28_mqtt_open(void)
     return check_send_cmd(cmd, AT_MQTT_OPEN_SUCC, 4, 75000);
 }
 
-static int bc28_mqtt_close(void)
+int bc28_mqtt_close(void)
 {
     return check_send_cmd(AT_MQTT_CLOSE, AT_OK, 0, AT_DEFAULT_TIMEOUT);
 }
 
-static int bc28_mqtt_connect(void)
+int bc28_mqtt_connect(void)
 {
     return check_send_cmd(AT_MQTT_CONNECT, AT_MQTT_CONNECT_SUCC, 4, 10000);
 }
 
-static int bc28_mqtt_disconnect(void)
+int bc28_mqtt_disconnect(void)
 {
     return check_send_cmd(AT_MQTT_DISCONNECT, AT_OK, 0, AT_DEFAULT_TIMEOUT);
 }
 
-static int bc28_mqtt_subscribe(const char *topic)
+int bc28_mqtt_subscribe(const char *topic)
 {
     char cmd[AT_CMD_MAX_LEN] = {0};
     rt_sprintf(cmd, AT_MQTT_SUB, topic);
@@ -295,7 +188,7 @@ static int bc28_mqtt_subscribe(const char *topic)
     return check_send_cmd(cmd, AT_MQTT_SUB_SUCC, 4, AT_DEFAULT_TIMEOUT);
 }
 
-static int bc28_mqtt_unsubscribe(const char *topic)
+int bc28_mqtt_unsubscribe(const char *topic)
 {
     char cmd[AT_CMD_MAX_LEN] = {0};
     rt_sprintf(cmd, AT_MQTT_UNSUB, topic);
@@ -314,6 +207,7 @@ int bc28_mqtt_publish(const char *topic, const char *msg)
     return check_send_cmd(msg, AT_MQTT_PUB_SUCC, 4, AT_DEFAULT_TIMEOUT);
 }
 
+/* For testing */
 static int bc28_mqtt_upload(int argc, char **argv)
 {
     if(argc != 6) {
@@ -336,7 +230,7 @@ static int bc28_mqtt_upload(int argc, char **argv)
     return result;
 }
 
-static int at_client_attach(void)
+int at_client_attach(void)
 {
     int result = 0;
 
@@ -408,7 +302,7 @@ static int at_client_attach(void)
     int count = 60;
     while(count > 0 && RT_EOK != check_send_cmd(AT_QUERY_ATTACH, AT_UE_ATTACH_SUCC, 0, AT_DEFAULT_TIMEOUT))
     {
-        rt_thread_delay(1000);
+        rt_thread_mdelay(1000);
         count--;
     }
 
@@ -421,6 +315,11 @@ static int at_client_attach(void)
         return -RT_ETIMEOUT;
 }
 
+int at_client_deattach(void)
+{
+    check_send_cmd(AT_UE_DEATTACH, AT_OK, 0, AT_DEFAULT_TIMEOUT);
+}
+
 /**
  * AT client initialize.
  *
@@ -428,7 +327,7 @@ static int at_client_attach(void)
  *        -1 : initialize failed
  *        -5 : no memory
  */
-static int at_client_dev_init(void)
+int at_client_dev_init(void)
 {
     rt_device_t serial = rt_device_find(AT_CLIENT_DEV_NAME);
     struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;
@@ -498,7 +397,12 @@ int rebuild_mqtt_network(void)
     int result = 0;
 
     bc28_mqtt_close();
-    
+    bc28_mqtt_set_alive(300);
+
+    if((result = bc28_mqtt_auth()) < 0) {
+        return result;
+    }
+
     if((result = bc28_mqtt_open()) < 0) {
         return result;
     }
@@ -510,24 +414,12 @@ int rebuild_mqtt_network(void)
     return RT_EOK;
 }
 
-int deactivate_pdp(void)
+static int deactivate_pdp(void)
 {
+    /* AT+CGACT=<state>,<cid> */
+
     return RT_EOK;
 }
-
-#if 0
-static int bc28_pin_init(void)
-{
-    rt_pin_mode(BC28_POWER_EN_PIN, PIN_MODE_OUTPUT);
-    rt_pin_mode(BC28_RESET_N_PIN, PIN_MODE_OUTPUT);
-
-    rt_pin_write(BC28_POWER_EN_PIN, PIN_LOW);
-    rt_pin_write(BC28_RESET_N_PIN, PIN_LOW);
-
-    return 0;
-}
-INIT_DEVICE_EXPORT(bc28_pin_init);
-#endif
 
 static void urc_mqtt_stat(struct at_client *client, const char *data, rt_size_t size)
 {
@@ -536,6 +428,37 @@ static void urc_mqtt_stat(struct at_client *client, const char *data, rt_size_t 
 
     LOG_D(">> %s", data);
     //LOG_D(">> %c", data[size-1]);
+
+    char err_code = data[size-1];
+    switch (err_code)
+    {
+    /* connection closed by server */
+    case '1':
+    /* send CONNECT package timeout or failure */
+    case '3':
+    /* recv CONNECK package timeout or failure */
+    case '4':
+    /* send package failure and disconnect by client */
+    case '6':
+        rebuild_mqtt_network();
+        break;
+    /* send PINGREQ package timeout or failure */
+    case '2':
+        deactivate_pdp();
+        rebuild_mqtt_network();
+        break;
+    /* disconnect by client */
+    case '5':
+        LOG_D("disconnect by client");
+        break;
+    /* network inactivated or server unavailable */
+    case '7':
+        LOG_D("please check network");
+        break;
+    default:
+        break;
+    }
+
 }
 
 static void urc_mqtt_recv(struct at_client *client, const char *data, rt_size_t size)
@@ -547,7 +470,7 @@ static void urc_mqtt_recv(struct at_client *client, const char *data, rt_size_t 
 }
 
 static struct at_urc urc_table[] = {
-    { "+QMTSTAT", ":", urc_mqtt_stat },
+    { "+QMTSTAT", "\r\n", urc_mqtt_stat },
     { "+QMTRECV", ":", urc_mqtt_recv },
 };
 

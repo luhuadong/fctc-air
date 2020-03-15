@@ -99,6 +99,8 @@ static void user_key_cb(void *args)
         rt_kprintf("(BUTTON) resume\n");
         is_paused = RT_FALSE;
         LED_OFF(led_upload);
+
+        //rt_event_recv(&event, EVENT_FLAG_PAUSE, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, 0, NULL);
     }
 }
 
@@ -157,6 +159,13 @@ static void sync_thread_entry(void *parameter)
 
         if (RT_EOK == rt_event_recv(&event, sensor_event, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, 0, &recved))
         {
+            /*
+            if (RT_EOK == rt_event_recv(&event, EVENT_FLAG_PAUSE, RT_EVENT_FLAG_AND, 0, &recved))
+            {
+                continue;
+            }
+            */
+
             if (is_paused)
                 continue;
 
@@ -180,17 +189,22 @@ static void bc28_thread_entry(void *parameter)
     if(RT_EOK != bc28_init())
     {
         rt_kprintf("(BC28) init failed\n");
+        LED_BLINK_FAST(led_warning);
         return;
     }
+    rt_kprintf("(BC28) attach ok\n");
 
-    if(RT_EOK != build_mqtt_network())
+    while (RT_EOK != build_mqtt_network())
     {
-        LED_BEEP(led_warning);
-        rt_kprintf("(BC28) build mqtt network failed\n");
-        rebuild_mqtt_network();
+        LED_BLINK_FAST(led_warning);
+        bc28_mqtt_close();
+        rt_kprintf("(BC28) rebuild mqtt network\n");
     }
 
+    LED_OFF(led_warning);
     LED_BLINK(led_normal);
+
+    rt_kprintf("(BC28) MQTT connect ok\n");
 
     char *buf;
 
