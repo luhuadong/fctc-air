@@ -355,10 +355,13 @@ static void bc28_reset(void)
     //rt_thread_mdelay(300);
 }
 
+int at_client_port_init(void);
+
 int bc28_init(void)
 {
     bc28_reset();
     at_client_dev_init();
+    at_client_port_init();
     
     return at_client_attach();
 }
@@ -479,9 +482,10 @@ int at_client_port_init(void)
 {
     /* 添加多种 URC 数据至 URC 列表中，当接收到同时匹配 URC 前缀和后缀的数据，执行 URC 函数  */
     at_set_urc_table(urc_table, sizeof(urc_table) / sizeof(urc_table[0]));
+
     return RT_EOK;
 }
-INIT_APP_EXPORT(at_client_port_init);
+//INIT_APP_EXPORT(at_client_port_init);
 
 #ifdef FINSH_USING_MSH
 MSH_CMD_EXPORT(bc28_mqtt_set_alive,   AT client MQTT auth);
