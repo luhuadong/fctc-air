@@ -46,17 +46,25 @@
 #define EVENT_FLAG_DUST          (1 << SENSOR_DUST)
 #define EVENT_FLAG_TVOC          (1 << SENSOR_TVOC)
 #define EVENT_FLAG_ECO2          (1 << SENSOR_ECO2)
-#define EVENT_FLAG_UPLOAD        (1 << 28)
-#define EVENT_FLAG_PAUSE         (1 << 30)
+//#define EVENT_FLAG_UPLOAD        (1 << 28)
+//#define EVENT_FLAG_PAUSE         (1 << 30)
 
 /* event */
 static struct rt_event event;
 
-static char json_data[512];
-
+/* message queue */
 static rt_mq_t      sync_mq    = RT_NULL;
+
+/* mailbox */
 static rt_mailbox_t upload_mb  = RT_NULL;
 
+/* memory pool */
+//static char json_data[512];
+
+/* semaphore */
+//static rt_sem_t key_sem = RT_NULL;
+
+/* LED indicator */
 static int led_normal;
 static int led_upload;
 static int led_warning;
@@ -78,31 +86,27 @@ struct sensor_msg
 
 static rt_bool_t is_paused = RT_FALSE;
 
-static void key_cb(void *args)
+static void user_key_cb(void *args)
 {
-    LED_TOGGLE(led_warning);
-
     if (!is_paused) {
         rt_kprintf("(BUTTON) paused\n");
         is_paused = RT_TRUE;
-        //rt_pin_write(LED_PAUSE, PIN_HIGH);
-        /* pause sync thread print or upload data to cloud */
+        LED_ON(led_upload);
 
+        //rt_event_send(&event, EVENT_FLAG_PAUSE);
     }
     else {
         rt_kprintf("(BUTTON) resume\n");
         is_paused = RT_FALSE;
-        //rt_pin_write(LED_PAUSE, PIN_LOW);
-        /* resume */
-        rt_event_send(&event, EVENT_FLAG_PAUSE);
+        LED_OFF(led_upload);
     }
 }
 
-void user_btn_init()
+void user_key_init()
 {
     rt_pin_mode(USER_BTN_PIN, PIN_MODE_INPUT_PULLUP);
     /* Why can not use PIN_IRQ_MODE_FALLING ??? */
-    rt_pin_attach_irq(USER_BTN_PIN, PIN_IRQ_MODE_RISING, key_cb, RT_NULL);
+    rt_pin_attach_irq(USER_BTN_PIN, PIN_IRQ_MODE_RISING, user_key_cb, RT_NULL);
     rt_pin_irq_enable(USER_BTN_PIN, PIN_IRQ_ENABLE);
 }
 
@@ -153,6 +157,9 @@ static void sync_thread_entry(void *parameter)
 
         if (RT_EOK == rt_event_recv(&event, sensor_event, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, 0, &recved))
         {
+            if (is_paused)
+                continue;
+
             int10_to_str(air[0], temp_str);
             int10_to_str(air[1], humi_str);
 
@@ -191,8 +198,9 @@ static void bc28_thread_entry(void *parameter)
     {
         if (RT_EOK == rt_mb_recv(upload_mb, (rt_ubase_t *)&buf, RT_WAITING_FOREVER))
         {
-            LED_BEEP(led_upload);
+            LED_BLINK_FAST(led_upload);
             bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, buf);
+            LED_OFF(led_upload);
         }
     }
 }
@@ -330,7 +338,7 @@ static void read_tvoc_entry(void *parameter)
             //rt_kprintf("[%d] TVOC: %d\n", sensor_data.timestamp, sensor_data.data.tvoc);
             sync(SENSOR_TVOC, sensor_data.data.tvoc);
         }
-        rt_thread_mdelay(DELAY_TIME_DEFAULT);
+        rt_thread_mdelay(1000);
     }
     rt_device_close(tvoc_dev);
 }
@@ -363,7 +371,7 @@ static void read_eco2_entry(void *parameter)
             //rt_kprintf("[%d] eCO2: %d\n", sensor_data.timestamp, sensor_data.data.eco2);
             sync(SENSOR_ECO2, sensor_data.data.eco2);
         }
-        rt_thread_mdelay(DELAY_TIME_DEFAULT);
+        rt_thread_mdelay(1000);
     }
     rt_device_close(eco2_dev);
 }
@@ -379,15 +387,15 @@ int main(void)
 
     /* initialization */
 
-    user_btn_init();
+    user_key_init();
 
     led_normal = led_register(LED1_PIN, PIN_HIGH);
     led_upload = led_register(LED2_PIN, PIN_HIGH);
     led_warning = led_register(LED3_PIN, PIN_HIGH);
 
     LED_ON(led_normal);
-    //LED_BLINK_FAST(led_upload);
-    //LED_BLINK_SLOW(led_warning);
+    LED_OFF(led_upload);
+    LED_OFF(led_warning);
 
     /* create message queue */
     sync_mq = rt_mq_create("sync_mq", sizeof(struct sensor_msg), 10, RT_IPC_FLAG_FIFO);

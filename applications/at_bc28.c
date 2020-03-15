@@ -308,7 +308,7 @@ int bc28_mqtt_publish(const char *topic, const char *msg)
     char cmd[AT_CMD_MAX_LEN] = {0};
     rt_sprintf(cmd, AT_MQTT_PUB, topic);
 
-    check_send_cmd(cmd, ">", 2, AT_DEFAULT_TIMEOUT);
+    check_send_cmd(cmd, ">", 3, AT_DEFAULT_TIMEOUT);
     LOG_D("go...");
 
     return check_send_cmd(msg, AT_MQTT_PUB_SUCC, 4, AT_DEFAULT_TIMEOUT);
@@ -534,7 +534,8 @@ static void urc_mqtt_stat(struct at_client *client, const char *data, rt_size_t 
     /* MQTT链路层的状态发生变化 */
     LOG_D("The state of the MQTT link layer changes");
 
-    LOG_D(">> %c", data[size-1]);
+    LOG_D(">> %s", data);
+    //LOG_D(">> %c", data[size-1]);
 }
 
 static void urc_mqtt_recv(struct at_client *client, const char *data, rt_size_t size)

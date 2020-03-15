@@ -18,6 +18,16 @@
 #define MQTT_TOPIC_HELLO         "/a1p8Pngb3oY/BC28/user/hello"
 #define MQTT_TOPIC_UPLOAD        "/sys/a1p8Pngb3oY/BC28/thing/event/property/post"
 
+typedef enum {
+
+	AT_STAT_INIT = 0,
+	AT_STAT_ATTACH,
+	AT_STAT_DEATTACH,
+	AT_STAT_CONNECTED,
+} at_stat_t;
+
+at_stat_t at_stat;
+
 void user_btn_init(void);
 
 /* NB-IoT */
