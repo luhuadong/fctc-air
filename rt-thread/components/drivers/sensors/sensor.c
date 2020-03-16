@@ -6,6 +6,7 @@
  * Change Logs:
  * Date           Author       Notes
  * 2019-01-31     flybreak     first version
+ * 2020-02-22     luhuadong    support custom commands
  */
 
 #include "sensor.h"
@@ -353,8 +354,15 @@ static rt_err_t rt_sensor_control(rt_device_t dev, int cmd, void *args)
         break;
     default:
 
-        /* Custom commands */
-        result = sensor->ops->control(sensor, cmd, args);
+        if (cmd > RT_SENSOR_CTRL_USER_CMD_START)
+        {
+            /* Custom commands */
+            result = sensor->ops->control(sensor, cmd, args);
+        }
+        else
+        {
+            result = -RT_ERROR;
+        }
         break;
     }
 
