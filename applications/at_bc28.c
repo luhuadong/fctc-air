@@ -250,7 +250,7 @@ int at_client_attach(void)
 
     while(RT_EOK != check_send_cmd(AT_TEST, AT_OK, 0, AT_DEFAULT_TIMEOUT))
     {
-        rt_thread_delay(1000);
+        rt_thread_mdelay(1000);
     }
 
     /* 查询IMEI号 */
@@ -343,6 +343,7 @@ int at_client_dev_init(void)
 
     return at_client_init(AT_CLIENT_DEV_NAME, AT_CLIENT_RECV_BUFF_LEN);
 }
+INIT_DEVICE_EXPORT(at_client_dev_init);
 
 static void bc28_reset(void)
 {
