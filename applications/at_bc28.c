@@ -22,8 +22,8 @@
 
 #include "at_bc28.h"
 
-#define BC28_ADC0_PIN             GET_PIN(C, 0)
-#define BC28_POWER_EN_PIN         GET_PIN(A, 3)
+//#define BC28_ADC0_PIN             GET_PIN(C, 0)
+//#define BC28_POWER_EN_PIN         GET_PIN(A, 3)
 #define BC28_RESET_N_PIN          GET_PIN(A, 5)
 
 #define AT_CLIENT_DEV_NAME        "uart3"
@@ -208,6 +208,7 @@ int bc28_mqtt_publish(const char *topic, const char *msg)
 }
 
 /* For testing */
+#if 0
 static int bc28_mqtt_upload(int argc, char **argv)
 {
     if(argc != 6) {
@@ -229,6 +230,7 @@ static int bc28_mqtt_upload(int argc, char **argv)
 
     return result;
 }
+#endif
 
 int at_client_attach(void)
 {
@@ -498,7 +500,7 @@ MSH_CMD_EXPORT(bc28_mqtt_disconnect,  AT client MQTT disconnect);
 MSH_CMD_EXPORT(bc28_mqtt_subscribe,   AT client MQTT subscribe);
 MSH_CMD_EXPORT(bc28_mqtt_unsubscribe, AT client MQTT unsubscribe);
 MSH_CMD_EXPORT(bc28_mqtt_publish,     AT client MQTT publish);
-MSH_CMD_EXPORT(bc28_mqtt_upload,      AT client MQTT upload);
+//MSH_CMD_EXPORT(bc28_mqtt_upload,      AT client MQTT upload);
 
 MSH_CMD_EXPORT(at_client_attach, AT client attach to access network);
 MSH_CMD_EXPORT_ALIAS(at_client_dev_init, at_client_init, initialize AT client);
