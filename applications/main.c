@@ -178,7 +178,7 @@ static void sync_thread_entry(void *parameter)
             if (count%10 == 0)
             {
                 rt_sprintf(buf, JSON_DATA_PACK_STR, temp_str, humi_str, air[2], air[3], air[4]);
-                //rt_mb_send(upload_mb, (rt_ubase_t)buf);
+                rt_mb_send(upload_mb, (rt_ubase_t)buf);
             }
         }
     }
@@ -452,7 +452,7 @@ int main(void)
     if(eco2_thread) rt_thread_startup(eco2_thread);
 
     if(sync_thread) rt_thread_startup(sync_thread);
-    //if(bc28_thread) rt_thread_startup(bc28_thread);
+    if(bc28_thread) rt_thread_startup(bc28_thread);
 
     return RT_EOK;
 }

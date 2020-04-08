@@ -262,8 +262,8 @@ int at_client_attach(void)
     if (result != RT_EOK) return result;
 
     /* 打开模块的调试灯 */
-    result = check_send_cmd(AT_LED_ON, AT_OK, 0, AT_DEFAULT_TIMEOUT);
-    if (result != RT_EOK) return result;
+    //result = check_send_cmd(AT_LED_ON, AT_OK, 0, AT_DEFAULT_TIMEOUT);
+    //if (result != RT_EOK) return result;
 
     /* 将模块设置为全功能模式(开启射频功能) */
     result = check_send_cmd(AT_FUN_ON, AT_OK, 0, AT_DEFAULT_TIMEOUT);
@@ -361,7 +361,7 @@ int at_client_port_init(void);
 int bc28_init(void)
 {
     bc28_reset();
-    at_client_dev_init();
+    //at_client_dev_init();
     at_client_port_init();
     
     return at_client_attach();
