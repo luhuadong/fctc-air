@@ -459,7 +459,7 @@ int main(void)
 
 static int rt_hw_dht22_port(void)
 {
-    static struct dht_info info;
+    struct dht_info info;
     struct rt_sensor_config cfg;
 
     info.type = DHT22;
@@ -475,7 +475,7 @@ INIT_COMPONENT_EXPORT(rt_hw_dht22_port);
 
 static int rt_hw_gp2y10_port(void)
 {
-    static struct gp2y10_device gp2y10_dev;
+    struct gp2y10_device gp2y10_dev;
     struct rt_sensor_config cfg;
 
     gp2y10_dev.iled_pin = GP2Y10_ILED_PIN;
