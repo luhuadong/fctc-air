@@ -10,7 +10,7 @@
 
 #ifndef __AT_BC28_H__
 #define __AT_BC28_H__
-
+#if 0
 //#define JSON_DATA_PACK_TEST      "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%s,\"TVOC\":%s,\"eCO2\":%s},\"method\":\"thing.event.property.post\"}\x1A"
 //#define JSON_DATA_PACK           "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%d.%02d,\"Humi\":%d.%02d,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
 #define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
@@ -47,5 +47,5 @@ int bc28_mqtt_publish(const char *topic, const char *msg);
 int bc28_init(void);
 int build_mqtt_network(void);
 int rebuild_mqtt_network(void);
-
+#endif
 #endif /* __AT_BC28_H__ */

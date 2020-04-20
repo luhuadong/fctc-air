@@ -15,15 +15,14 @@
 #include <rtdevice.h>
 #include <board.h>
 #include <at.h>
-
+#if 0
 #define LOG_TAG                   "at.bc28"
 #define LOG_LVL                   LOG_LVL_DBG
 #include <at_log.h>
 
 #include "at_bc28.h"
 
-//#define BC28_ADC0_PIN             GET_PIN(C, 0)
-//#define BC28_POWER_EN_PIN         GET_PIN(A, 3)
+#define BC28_ADC0_PIN             GET_PIN(C, 0)
 #define BC28_RESET_N_PIN          GET_PIN(A, 5)
 
 #define AT_CLIENT_DEV_NAME        "uart3"
@@ -504,4 +503,5 @@ MSH_CMD_EXPORT(bc28_mqtt_publish,     AT client MQTT publish);
 
 MSH_CMD_EXPORT(at_client_attach, AT client attach to access network);
 MSH_CMD_EXPORT_ALIAS(at_client_dev_init, at_client_init, initialize AT client);
+#endif
 #endif

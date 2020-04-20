@@ -17,7 +17,8 @@
 #include <dhtxx.h>
 #include <gp2y10.h>
 #include <sgp30.h>
-#include "at_bc28.h"
+#include <bc28_mqtt.h>
+//#include "at_bc28.h"
 
 #define LED1_PIN                 GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
 #define LED2_PIN                 GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
