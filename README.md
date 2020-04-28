@@ -1,4 +1,7 @@
-﻿# STM32L4R5ZI-NUCLEO 开发板bsp说明
+﻿# FCTC-Air on STM32 demo
+
+- Hardware: STM32L4R5ZI-NUCLEO
+- RTOS: RT-Thread
 
 ## 简介
 
@@ -113,4 +116,4 @@ msh >
 
 ## 联系人信息
 
-维护人:
+维护人: [luhuadong](luhuadong@163.com)

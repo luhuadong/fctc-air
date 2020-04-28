@@ -5,8 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2018-11-06     SummerGift   first version
- * 2020-01-20     luhuadong    fctc-air
+ * 2020-01-20     luhuadong    first version
  */
 
 #include <rtthread.h>
@@ -18,12 +17,9 @@
 #include <gp2y10.h>
 #include <sgp30.h>
 #include <bc28_mqtt.h>
-//#include "at_bc28.h"
 
-//#define JSON_DATA_PACK_TEST      "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%s,\"TVOC\":%s,\"eCO2\":%s},\"method\":\"thing.event.property.post\"}\x1A"
-//#define JSON_DATA_PACK           "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%d.%02d,\"Humi\":%d.%02d,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
 #define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
-//#define AIR_MSG                  "[Air] Temp: %d.%02d'C, Humi: %d.%02d%, Dust: %dug/m3, TVOC: %dppb, eCO2: %dppm\n"
+
 #define MQTT_TOPIC_HELLO         "/a1p8Pngb3oY/BC28/user/hello"
 #define MQTT_TOPIC_UPLOAD        "/sys/a1p8Pngb3oY/BC28/thing/event/property/post"
 
@@ -84,7 +80,7 @@ static rt_thread_t tvoc_thread = RT_NULL;
 static rt_thread_t eco2_thread = RT_NULL;
 
 static rt_thread_t sync_thread = RT_NULL;
-static rt_thread_t bc28_thread = RT_NULL;
+static rt_thread_t upload_thread = RT_NULL;
 
 struct sensor_msg
 {
@@ -192,7 +188,7 @@ static void sync_thread_entry(void *parameter)
     }
 }
 
-static void bc28_thread_entry(void *parameter)
+static void upload_thread_entry(void *parameter)
 {
     if(RT_EOK != bc28_init())
     {
@@ -450,7 +446,7 @@ int main(void)
     eco2_thread = rt_thread_create("eco2_th", read_eco2_entry, "eco2_sg3", 1024, 16, 5);
 
     sync_thread = rt_thread_create("sync", sync_thread_entry, RT_NULL, 1024, 15, 5);
-    bc28_thread = rt_thread_create("at_bc28", bc28_thread_entry, RT_NULL, 2048, 5, 5);
+    upload_thread = rt_thread_create("upload", upload_thread_entry, RT_NULL, 2048, 5, 5);
 
     /* start up all user thread */
     if(temp_thread) rt_thread_startup(temp_thread);
@@ -460,7 +456,7 @@ int main(void)
     if(eco2_thread) rt_thread_startup(eco2_thread);
 
     if(sync_thread) rt_thread_startup(sync_thread);
-    if(bc28_thread) rt_thread_startup(bc28_thread);
+    if(upload_thread) rt_thread_startup(upload_thread);
 
     return RT_EOK;
 }
