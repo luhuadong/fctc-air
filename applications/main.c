@@ -16,7 +16,9 @@
 #include <dhtxx.h>
 #include <gp2y10.h>
 #include <sgp30.h>
+#ifdef PKG_USING_BC28_MQTT
 #include <bc28_mqtt.h>
+#endif
 
 #define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
 
@@ -190,6 +192,9 @@ static void sync_thread_entry(void *parameter)
 
 static void upload_thread_entry(void *parameter)
 {
+#ifdef PKG_USING_AT_DEVICE
+    /* */
+#else
     if(RT_EOK != bc28_init())
     {
         rt_kprintf("(BC28) init failed\n");
@@ -204,11 +209,11 @@ static void upload_thread_entry(void *parameter)
         bc28_mqtt_close();
         rt_kprintf("(BC28) rebuild mqtt network\n");
     }
+    rt_kprintf("(BC28) MQTT connect ok\n");
+#endif
 
     LED_OFF(led_warning);
     LED_BLINK(led_normal);
-
-    rt_kprintf("(BC28) MQTT connect ok\n");
 
     char *buf;
 
@@ -217,7 +222,11 @@ static void upload_thread_entry(void *parameter)
         if (RT_EOK == rt_mb_recv(upload_mb, (rt_ubase_t *)&buf, RT_WAITING_FOREVER))
         {
             LED_BLINK_FAST(led_upload);
+#ifdef PKG_USING_AT_DEVICE
+            /* */
+#else
             bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, buf);
+#endif
             LED_OFF(led_upload);
         }
     }
