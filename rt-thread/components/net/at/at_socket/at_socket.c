@@ -323,7 +323,7 @@ static struct at_socket *alloc_socket_by_device(struct at_device *device)
     rt_mutex_take(at_slock, RT_WAITING_FOREVER);
 
     /* find an empty at socket entry */
-    for (idx = 1; idx < device->class->socket_num && device->sockets[idx].magic; idx++);
+    for (idx = 0; idx < device->class->socket_num && device->sockets[idx].magic; idx++);
 
     /* can't find an empty protocol family entry */
     if (idx == device->class->socket_num)

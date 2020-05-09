@@ -513,3 +513,26 @@ static int rt_hw_sgp30_port(void)
     return RT_EOK;
 }
 INIT_COMPONENT_EXPORT(rt_hw_sgp30_port);
+
+#ifndef PKG_USING_BC28_MQTT
+#include <at.h>
+static int at_client_dev_init(void)
+{
+    #define AT_CLIENT_DEV_NAME "uart3"
+
+    rt_device_t serial = rt_device_find(AT_CLIENT_DEV_NAME);
+    struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;
+
+    config.baud_rate = 9600;
+    config.data_bits = DATA_BITS_8;
+    config.stop_bits = STOP_BITS_1;
+    config.bufsz     = 256;
+    config.parity    = PARITY_NONE;
+
+    rt_device_control(serial, RT_DEVICE_CTRL_CONFIG, &config);
+    rt_device_close(serial);
+
+    return at_client_init(AT_CLIENT_DEV_NAME, 256);
+}
+INIT_DEVICE_EXPORT(at_client_dev_init);
+#endif
