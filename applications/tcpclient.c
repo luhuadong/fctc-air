@@ -1,14 +1,8 @@
 #include <rtthread.h>
-#include <string.h>
-
-//#if !defined(SAL_USING_POSIX)
-//#error "Please enable SAL_USING_POSIX!"
-//#else
-#include <sys/time.h>
-#include <sys/select.h>
-//#endif
 #include <sys/socket.h> /* 使用BSD socket，需要包含socket.h头文件 */
-#include "netdb.h"
+#include <netdb.h>
+#include <string.h>
+#include <finsh.h>
 
 #define DEBUG_TCP_CLIENT
 
@@ -26,7 +20,7 @@ static int started = 0;
 static int is_running = 0;
 static char url[256];
 static int port = 8080;
-static const char send_data[] = "This is TCP Client from RT-Thread."; /* 发送用到的数据 */
+static const char send_data[] = "Hello, World! 0123456789"; /* 发送用到的数据 */
 
 static void tcpclient(void *arg)
 {
@@ -70,6 +64,8 @@ static void tcpclient(void *arg)
     server_addr.sin_addr = *((struct in_addr *)host->h_addr);
     rt_memset(&(server_addr.sin_zero), 0, sizeof(server_addr.sin_zero));
 
+    LOG_D(">> connect()");
+
     /* 连接到服务端 */
     if (connect(sock, (struct sockaddr *)&server_addr, sizeof(struct sockaddr)) == -1)
     {
@@ -77,6 +73,8 @@ static void tcpclient(void *arg)
         LOG_E("Connect fail!");
         goto __exit;
     }
+    rt_thread_mdelay(5000);
+    LOG_D("Connect success!");
 
     started = 1;
     is_running = 1;
@@ -86,12 +84,31 @@ static void tcpclient(void *arg)
 
     while (is_running)
     {
+        
+
+        rt_thread_mdelay(3000);
+
+        /* 发送数据到sock连接 */
+        ret = send(sock, send_data, rt_strlen(send_data), 0);
+        if (ret < 0)
+        {
+            /* 接收失败，关闭这个连接 */
+            LOG_I("send error, close the socket.");
+            goto __exit;
+        }
+        else if (ret == 0)
+        {
+            /* 打印send函数返回值为0的警告信息 */
+            LOG_W("Send warning, send function return 0.");
+        }
+#if 0
         FD_ZERO(&readset);
         FD_SET(sock, &readset);
 
         /* Wait for read */
         if (select(sock + 1, &readset, RT_NULL, RT_NULL, &timeout) == 0)
             continue;
+#endif
 
         /* 从sock连接中接收最大BUFSZ - 1字节数据 */
         bytes_received = recv(sock, recv_data, BUFSZ - 1, 0);
@@ -124,23 +141,12 @@ static void tcpclient(void *arg)
                 LOG_D("Received data = %s", recv_data);
             }
         }
-
-        /* 发送数据到sock连接 */
-        ret = send(sock, send_data, rt_strlen(send_data), 0);
-        if (ret < 0)
-        {
-            /* 接收失败，关闭这个连接 */
-            LOG_I("send error, close the socket.");
-            goto __exit;
-        }
-        else if (ret == 0)
-        {
-            /* 打印send函数返回值为0的警告信息 */
-            LOG_W("Send warning, send function return 0.");
-        }
+        
     }
 
 __exit:
+    rt_thread_mdelay(5000);
+
     if (recv_data)
     {
         rt_free(recv_data);
@@ -227,6 +233,5 @@ __usage:
 }
 
 #ifdef RT_USING_FINSH
-MSH_CMD_EXPORT_ALIAS(tcpclient_test, tcpclient,
-    Start a tcp client. Help: tcpclient --help);
+MSH_CMD_EXPORT_ALIAS(tcpclient_test, tcpclient, Start a tcp client. Help: tcpclient --help);
 #endif
