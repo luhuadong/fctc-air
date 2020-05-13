@@ -73,7 +73,7 @@ static void tcpclient(void *arg)
         LOG_E("Connect fail!");
         goto __exit;
     }
-    rt_thread_mdelay(5000);
+
     LOG_D("Connect success!");
 
     started = 1;
