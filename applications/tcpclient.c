@@ -79,15 +79,13 @@ static void tcpclient(void *arg)
     started = 1;
     is_running = 1;
 
-    timeout.tv_sec = 3;
+    timeout.tv_sec = 30;
     timeout.tv_usec = 0;
+
+    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
 
     while (is_running)
     {
-        
-
-        rt_thread_mdelay(3000);
-
         /* 发送数据到sock连接 */
         ret = send(sock, send_data, rt_strlen(send_data), 0);
         if (ret < 0)
@@ -107,7 +105,7 @@ static void tcpclient(void *arg)
 
         /* Wait for read */
         if (select(sock + 1, &readset, RT_NULL, RT_NULL, &timeout) == 0)
-            continue;
+            continue;  
 #endif
 
         /* 从sock连接中接收最大BUFSZ - 1字节数据 */
@@ -141,7 +139,9 @@ static void tcpclient(void *arg)
                 LOG_D("Received data = %s", recv_data);
             }
         }
-        
+
+        rt_thread_mdelay(3000);
+        break;
     }
 
 __exit:
