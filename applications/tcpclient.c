@@ -20,7 +20,7 @@ static int started = 0;
 static int is_running = 0;
 static char url[256];
 static int port = 8080;
-static const char send_data[] = "Hello, World! 0123456789"; /* 发送用到的数据 */
+static const char send_data[] = "Hello, World! 00112233445566778899"; /* 发送用到的数据 */
 
 static void tcpclient(void *arg)
 {
