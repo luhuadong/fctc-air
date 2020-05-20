@@ -51,8 +51,10 @@ static void udpclient(void *arg)
     is_running = 1;
 
     /* 总计发送count次数据 */
-    while (count && is_running)
+    //while (count && is_running)
+    while (1)
     {
+        LOG_I("UDP send ...");
         /* 发送数据到服务远端 */
         sendto(sock, send_data, rt_strlen(send_data), 0,
                (struct sockaddr *)&server_addr, sizeof(struct sockaddr));
@@ -61,7 +63,9 @@ static void udpclient(void *arg)
         rt_thread_mdelay(1000);
 
         /* 计数值减一 */
-        count --;
+        //count --;
+        count = 0;
+        break;
     }
 
     if (count == 0)

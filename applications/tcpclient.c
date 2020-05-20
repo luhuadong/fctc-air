@@ -99,6 +99,10 @@ static void tcpclient(void *arg)
             /* 打印send函数返回值为0的警告信息 */
             LOG_W("Send warning, send function return 0.");
         }
+        else
+        {
+            LOG_I("Send %d bytes success.", ret);
+        }
 #if 0
         FD_ZERO(&readset);
         FD_SET(sock, &readset);

@@ -404,6 +404,9 @@ static struct at_socket *alloc_socket(void)
     return alloc_socket_by_device(device);
 }
 
+static void at_recv_notice_cb(struct at_socket *sock, at_socket_evt_t event, const char *buff, size_t bfsz);
+static void at_closed_notice_cb(struct at_socket *sock, at_socket_evt_t event, const char *buff, size_t bfsz);
+
 int at_socket(int domain, int type, int protocol)
 {
     struct at_socket *sock = RT_NULL;
@@ -437,6 +440,10 @@ int at_socket(int domain, int type, int protocol)
     }
     sock->type = socket_type;
     sock->state = AT_SOCKET_OPEN;
+
+    /* set AT socket receive data callback function */
+    sock->ops->at_set_event_cb(AT_SOCKET_EVT_RECV, at_recv_notice_cb);
+    sock->ops->at_set_event_cb(AT_SOCKET_EVT_CLOSED, at_closed_notice_cb);
 
     return sock->socket;
 }
@@ -499,6 +506,15 @@ int at_closesocket(int socket)
     if (sock == RT_NULL)
     {
         return -1;
+    }
+
+    if (sock->state == AT_SOCKET_CLOSED)
+    {
+        LOG_E("AAA socket is closed!");
+    }
+    else
+    {
+        LOG_E("AAA socket not closed!");
     }
 
     last_state = sock->state;
@@ -656,10 +672,21 @@ static void at_closed_notice_cb(struct at_socket *sock, at_socket_evt_t event, c
 {
     RT_ASSERT(event == AT_SOCKET_EVT_CLOSED);
 
+    LOG_E(">> at_closed_notice_cb()");
+
     /* check the socket object status */
     if (sock->magic != AT_SOCKET_MAGIC)
     {
         return;
+    }
+
+    if (sock->state == AT_SOCKET_CLOSED)
+    {
+        LOG_E("AA socket is closed!");
+    }
+    else
+    {
+        LOG_E("AA socket not closed!");
     }
     
     at_do_event_changes(sock, AT_EVENT_RECV, RT_TRUE);
@@ -676,6 +703,8 @@ int at_connect(int socket, const struct sockaddr *name, socklen_t namelen)
     uint16_t remote_port = 0;
     char ipstr[16] = { 0 };
     int result = 0;
+
+    LOG_E(">> at_connect()");
 
     sock = at_get_socket(socket);
     if (sock == RT_NULL)
@@ -695,6 +724,8 @@ int at_connect(int socket, const struct sockaddr *name, socklen_t namelen)
     socketaddr_to_ipaddr_port(name, &remote_addr, &remote_port);
     ipaddr_to_ipstr(name, ipstr);
 
+    LOG_E("sock->ops->at_connect(%s, %d)", ipstr, remote_port);
+
     if (sock->ops->at_connect(sock, ipstr, remote_port, sock->type, RT_TRUE) < 0)
     {
         result = -1;
@@ -702,10 +733,6 @@ int at_connect(int socket, const struct sockaddr *name, socklen_t namelen)
     }
 
     sock->state = AT_SOCKET_CONNECT;
-
-    /* set AT socket receive data callback function */
-    sock->ops->at_set_event_cb(AT_SOCKET_EVT_RECV, at_recv_notice_cb);
-    sock->ops->at_set_event_cb(AT_SOCKET_EVT_CLOSED, at_closed_notice_cb);
 
 __exit:
 
@@ -760,9 +787,6 @@ int at_recvfrom(int socket, void *mem, size_t len, int flags, struct sockaddr *f
             goto __exit;
         }
         sock->state = AT_SOCKET_CONNECT;
-        /* set AT socket receive data callback function */
-        sock->ops->at_set_event_cb(AT_SOCKET_EVT_RECV, at_recv_notice_cb);
-        sock->ops->at_set_event_cb(AT_SOCKET_EVT_CLOSED, at_closed_notice_cb);
     }
 
     /* receive packet list last transmission of remaining data */
@@ -924,9 +948,6 @@ int at_sendto(int socket, const void *data, size_t size, int flags, const struct
                 goto __exit;
             }
             sock->state = AT_SOCKET_CONNECT;
-            /* set AT socket receive data callback function */
-            sock->ops->at_set_event_cb(AT_SOCKET_EVT_RECV, at_recv_notice_cb);
-            sock->ops->at_set_event_cb(AT_SOCKET_EVT_CLOSED, at_closed_notice_cb);
         }
 
         if ((len = sock->ops->at_send(sock, (char *) data, size, sock->type)) < 0)
