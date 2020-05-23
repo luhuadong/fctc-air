@@ -221,13 +221,12 @@ static void upload_thread_entry(void *parameter)
     {
         if (RT_EOK == rt_mb_recv(upload_mb, (rt_ubase_t *)&buf, RT_WAITING_FOREVER))
         {
-            LED_BLINK_FAST(led_upload);
+            LED_BEEP_FAST(led_upload);
 #ifdef PKG_USING_BC28_MQTT
             bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, buf);
 #else
     /*  */
 #endif
-            LED_OFF(led_upload);
         }
     }
 }

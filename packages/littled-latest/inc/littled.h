@@ -38,8 +38,15 @@
 #define LED_ON(ld)               led_mode(ld, 1, 1, 0, 0)
 #define LED_OFF(ld)              led_mode(ld, 1, 0, 0, 0)
 #define LED_TOGGLE(ld)           led_mode(ld, 0, 0, 0, 1)
+
 #define LED_BEEP(ld)             led_mode(ld, DEFAULT_PERIOD,   DEFAULT_PULSE,   0, BEEP_COUNT)
+#define LED_BEEP_FAST(ld)        led_mode(ld, DEFAULT_PERIOD/2, DEFAULT_PULSE/2, 0, BEEP_COUNT)
+#define LED_BEEP_SLOW(ld)        led_mode(ld, DEFAULT_PERIOD*2, DEFAULT_PULSE*2, 0, BEEP_COUNT)
+
 #define LED_BELL(ld)             led_mode(ld, DEFAULT_PERIOD,   DEFAULT_PULSE,   BELL_TIME, 0)
+#define LED_BELL_FAST(ld)        led_mode(ld, DEFAULT_PERIOD/2, DEFAULT_PULSE/2, BELL_TIME, 0)
+#define LED_BELL_SLOW(ld)        led_mode(ld, DEFAULT_PERIOD*2, DEFAULT_PULSE*2, BELL_TIME, 0)
+
 #define LED_BLINK(ld)            led_mode(ld, DEFAULT_PERIOD,   DEFAULT_PULSE,   0, 0)
 #define LED_BLINK_FAST(ld)       led_mode(ld, DEFAULT_PERIOD/2, DEFAULT_PULSE/2, 0, 0)
 #define LED_BLINK_SLOW(ld)       led_mode(ld, DEFAULT_PERIOD*2, DEFAULT_PULSE*2, 0, 0)
