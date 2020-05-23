@@ -24,6 +24,7 @@
 
 #define BC28_ADC0_PIN             PKG_USING_BC28_ADC0_PIN
 #define BC28_RESET_N_PIN          PKG_USING_BC28_RESET_PIN
+#define BC28_OP_BAND              PKG_USING_BC28_MQTT_OP_BAND
 
 #define AT_CLIENT_DEV_NAME        PKG_USING_BC28_AT_CLIENT_DEV_NAME
 #define AT_CLIENT_BAUD_RATE       PKG_USING_BC28_MQTT_BAUD_RATE
@@ -42,7 +43,7 @@
 #define AT_QREGSWT_2              "AT+QREGSWT=2"
 #define AT_AUTOCONNECT_DISABLE    "AT+NCONFIG=AUTOCONNECT,FALSE"
 #define AT_REBOOT                 "AT+NRB"
-#define AT_NBAND_B8               "AT+NBAND=8"
+#define AT_NBAND                  "AT+NBAND=%d"
 #define AT_FUN_ON                 "AT+CFUN=1"
 #define AT_LED_ON                 "AT+QLEDMODE=1"
 #define AT_EDRX_OFF               "AT+CEDRXS=0,5"
@@ -85,6 +86,28 @@
 #define AT_CLIENT_RECV_BUFF_LEN   256
 #define AT_DEFAULT_TIMEOUT        5000
 
+/**
+ * This function will show response information.
+ *
+ * @param resp  the response
+ *
+ * @return void
+ */
+static void show_resp_info(at_response_t resp)
+{
+    RT_ASSERT(resp);
+    
+    /* Print response line buffer */
+    const char *line_buffer = RT_NULL;
+
+    for(rt_size_t line_num = 1; line_num <= resp->line_counts; line_num++)
+    {
+        if((line_buffer = at_resp_get_line(resp, line_num)) != RT_NULL)
+            LOG_I("line %d buffer : %s", line_num, line_buffer);
+        else
+            LOG_I("Parse line buffer error!");
+    }
+}
 
 /**
  * This function will send command and check the result.
@@ -94,13 +117,17 @@
  * @param lines     response lines
  * @param timeout   waiting time
  *
- * @return match successful return RT_EOK, otherwise return error code
+ * @return  RT_EOK       send success
+ *         -RT_ERROR     send failed
+ *         -RT_ETIMEOUT  response timeout
+ *         -RT_ENOMEM    alloc memory failed
  */
 static int check_send_cmd(const char* cmd, const char* resp_expr, 
                           const rt_size_t lines, const rt_int32_t timeout)
 {
     at_response_t resp = RT_NULL;
     int result = 0;
+    char resp_arg[AT_CMD_MAX_LEN] = { 0 };
 
     resp = at_create_resp(AT_CLIENT_RECV_BUFF_LEN, lines, rt_tick_from_millisecond(timeout));
     if (resp == RT_NULL)
@@ -110,37 +137,37 @@ static int check_send_cmd(const char* cmd, const char* resp_expr,
     }
 
     result = at_exec_cmd(resp, cmd);
-    if (result != RT_EOK)
+    if (result < 0)
     {
-        LOG_E("AT client send commands failed or return response error!");
-        at_delete_resp(resp);
-        return result;
+        LOG_E("AT client send commands failed or wait response timeout!");
+        goto __exit;
     }
 
-#if 0
-    /* Print response line buffer */
-    char *line_buffer = RT_NULL;
+    //show_resp_info(resp);
 
-    for(rt_size_t line_num = 1; line_num <= resp->line_counts; line_num++)
+    if (resp_expr) 
     {
-        if((line_buffer = at_resp_get_line(resp, line_num)) != RT_NULL)
-            LOG_D("line %d buffer : %s", line_num, line_buffer);
+        if (at_resp_parse_line_args_by_kw(resp, resp_expr, "%s", resp_arg) <= 0)
+        {
+            LOG_E("# >_< Failed");
+            result = -RT_ERROR;
+            goto __exit;
+        }
         else
-            LOG_D("Parse line buffer error!");
+        {
+            LOG_D("# ^_^ successed");
+        }
     }
-#endif
+    
+    result = RT_EOK;
 
-    char resp_arg[AT_CMD_MAX_LEN] = { 0 };
-    if (at_resp_parse_line_args_by_kw(resp, resp_expr, "%s", resp_arg) <= 0)
+__exit:
+    if (resp)
     {
         at_delete_resp(resp);
-        LOG_E("# >_< Failed");
-        return -RT_ERROR;
     }
 
-    LOG_D("# ^_^ successed");
-    at_delete_resp(resp);
-    return RT_EOK;
+    return result;
 }
 
 static int bc28_mqtt_set_alive(rt_uint32_t keepalive_time)
@@ -203,39 +230,23 @@ int bc28_mqtt_publish(const char *topic, const char *msg)
     char cmd[AT_CMD_MAX_LEN] = {0};
     rt_sprintf(cmd, AT_MQTT_PUB, topic);
 
-    check_send_cmd(cmd, ">", 3, AT_DEFAULT_TIMEOUT);
-    LOG_D("go...");
+    /* set AT client end sign to deal with '>' sign.*/
+    at_set_end_sign('>');
+
+    //check_send_cmd(cmd, ">", 3, AT_DEFAULT_TIMEOUT);
+    check_send_cmd(cmd, RT_NULL, 2, AT_DEFAULT_TIMEOUT);
+    LOG_D("publish...");
+
+    /* reset the end sign for data conflict */
+    at_set_end_sign(0);
 
     return check_send_cmd(msg, AT_MQTT_PUB_SUCC, 4, AT_DEFAULT_TIMEOUT);
 }
-#if 0
-/* For testing */
-static int bc28_mqtt_upload(int argc, char **argv)
-{
-    if(argc != 6) {
-        LOG_E("Usage: bc28_mqtt_upload <temp> <humi> <dust> <tvoc> <eco2>");
-        return -RT_ERROR;
-    }
-
-    int result = 0;
-    char json_pack[512] = {0};
-
-    rt_sprintf(json_pack, JSON_DATA_PACK_TEST, argv[1], argv[2], argv[3], argv[4], argv[5]);
-
-    result = bc28_mqtt_publish(MQTT_TOPIC_UPLOAD, json_pack);
-
-    if(result == RT_EOK)
-        LOG_D("Upload OK");
-    else
-        LOG_D("Upload Error");
-
-    return result;
-}
-#endif
 
 int at_client_attach(void)
 {
     int result = 0;
+    char cmd[AT_CMD_MAX_LEN] = {0};
 
     /* close echo */
     check_send_cmd(AT_ECHO_OFF, AT_OK, 0, AT_DEFAULT_TIMEOUT);
@@ -260,8 +271,9 @@ int at_client_attach(void)
     result = check_send_cmd(AT_QUERY_IMEI, AT_OK, 0, AT_DEFAULT_TIMEOUT);
     if (result != RT_EOK) return result;
 
-    /* 指定要搜索的频段 B8 */
-    result = check_send_cmd(AT_NBAND_B8, AT_OK, 0, AT_DEFAULT_TIMEOUT);
+    /* 指定要搜索的频段 */
+    rt_sprintf(cmd, AT_NBAND, BC28_OP_BAND);
+    result = check_send_cmd(cmd, AT_OK, 0, AT_DEFAULT_TIMEOUT);
     if (result != RT_EOK) return result;
 
     /* 打开模块的调试灯 */
@@ -386,15 +398,7 @@ int build_mqtt_network(void)
     if((result = bc28_mqtt_connect()) < 0) {
         return result;
     }
-/*
-    if((result = bc28_mqtt_subscribe(MQTT_TOPIC_HELLO)) < 0) {
-        return result;
-    }
 
-    if((result = bc28_mqtt_auth()) < 0) {
-        return result;
-    }
-*/
     return RT_EOK;
 }
 
@@ -500,7 +504,6 @@ MSH_CMD_EXPORT(bc28_mqtt_disconnect,  AT client MQTT disconnect);
 MSH_CMD_EXPORT(bc28_mqtt_subscribe,   AT client MQTT subscribe);
 MSH_CMD_EXPORT(bc28_mqtt_unsubscribe, AT client MQTT unsubscribe);
 MSH_CMD_EXPORT(bc28_mqtt_publish,     AT client MQTT publish);
-//MSH_CMD_EXPORT(bc28_mqtt_upload,      AT client MQTT upload);
 
 MSH_CMD_EXPORT(at_client_attach, AT client attach to access network);
 MSH_CMD_EXPORT_ALIAS(at_client_dev_init, at_client_init, initialize AT client);
