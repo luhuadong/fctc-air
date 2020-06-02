@@ -1,5 +1,10 @@
 [
  {
+  "path": "/packages/iot/webclient", 
+  "ver": "v2.1.2", 
+  "name": "WEBCLIENT"
+ }, 
+ {
   "path": "/packages/iot/bc28_mqtt", 
   "ver": "latest", 
   "name": "BC28_MQTT"

@@ -22,9 +22,9 @@
 #define SGP30_I2CADDR                  (0x58)    /* SGP30 has only one I2C address */
 
 /* Custom sensor control cmd types */
-#define  RT_SENSOR_CTRL_GET_BASELINE   (10)      /* Get device id */
-#define  RT_SENSOR_CTRL_SET_BASELINE   (11)      /* Set the measure range of sensor. unit is info of sensor */
-#define  RT_SENSOR_CTRL_SET_HUMIDITY   (12)      /* Set output date rate. unit is HZ */
+#define  RT_SENSOR_CTRL_GET_BASELINE   (0x110)   /* Get device id */
+#define  RT_SENSOR_CTRL_SET_BASELINE   (0x111)   /* Set the measure range of sensor. unit is info of sensor */
+#define  RT_SENSOR_CTRL_SET_HUMIDITY   (0x112)   /* Set output date rate. unit is HZ */
 
 struct sgp30_baseline
 {

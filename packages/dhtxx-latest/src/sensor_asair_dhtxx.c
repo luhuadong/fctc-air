@@ -278,6 +278,13 @@ static rt_size_t _dht_polling_get_data(struct rt_sensor_device *sensor, void *bu
     rt_int32_t temp = _dht_get_temperature(sensor, raw_data);
     rt_int32_t humi = _dht_get_humidity(sensor, raw_data);
 
+    if (temp < SENSOR_TEMP_RANGE_MIN || temp > SENSOR_TEMP_RANGE_MAX || 
+        humi < SENSOR_HUMI_RANGE_MIN || humi > SENSOR_HUMI_RANGE_MAX )
+    {
+        LOG_D("Data out of range");
+        return 0;
+    }
+
     if (sensor->info.type == RT_SENSOR_CLASS_HUMI)
     {
         sensor_data->type = RT_SENSOR_CLASS_HUMI;

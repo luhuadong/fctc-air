@@ -211,6 +211,13 @@ static rt_size_t _sgp30_polling_get_data(struct rt_sensor_device *sensor, void *
     rt_uint32_t eco2 = measure_data[0];
     rt_uint32_t tvoc = measure_data[1];
 
+    if (eco2 < SENSOR_ECO2_RANGE_MIN || eco2 > SENSOR_ECO2_RANGE_MAX || 
+        tvoc < SENSOR_TVOC_RANGE_MIN || tvoc > SENSOR_TVOC_RANGE_MAX )
+    {
+        LOG_D("Data out of range");
+        return 0;
+    }
+
     if (sensor->info.type == RT_SENSOR_CLASS_ECO2)
     {
         sensor_data->type = RT_SENSOR_CLASS_ECO2;
