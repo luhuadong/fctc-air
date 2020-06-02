@@ -13,7 +13,7 @@
 build
 Debug
 documentation/html
-packages/
+#packages/
 *~
 *.o
 *.obj
@@ -40,3 +40,6 @@ RTE/
 settings/
 *.uvguix*
 cconfig.h
+*.doc*
+*.pdf
+

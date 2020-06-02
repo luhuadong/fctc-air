@@ -344,6 +344,7 @@ static void read_tvoc_entry(void *parameter)
 {
     rt_device_t tvoc_dev = RT_NULL;
     struct rt_sensor_data sensor_data;
+    int count = 0;
 
     tvoc_dev = rt_device_find(parameter);
     if (!tvoc_dev) 
@@ -368,6 +369,19 @@ static void read_tvoc_entry(void *parameter)
             //rt_kprintf("[%d] TVOC: %d\n", sensor_data.timestamp, sensor_data.data.tvoc);
             sync(SENSOR_TVOC, sensor_data.data.tvoc);
         }
+
+#if 1
+        count++;
+        if (count == 15)
+        {
+            struct sgp30_baseline baseline;
+            rt_device_control(tvoc_dev, RT_SENSOR_CTRL_GET_BASELINE, &baseline);
+            rt_kprintf("baseline: tvoc = %d, eco2 = %d\n", baseline.tvoc_base, baseline.eco2_base);
+            count = 0;
+        }
+        
+#endif
+
         rt_thread_mdelay(1000);
     }
     rt_device_close(tvoc_dev);
