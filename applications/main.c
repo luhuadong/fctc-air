@@ -20,11 +20,7 @@
 #include <bc28_mqtt.h>
 #endif
 
-#define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
-
-#define MQTT_TOPIC_HELLO         "/a1p8Pngb3oY/BC28/user/hello"
-#define MQTT_TOPIC_UPLOAD        "/sys/a1p8Pngb3oY/BC28/thing/event/property/post"
-
+/* User Modified Part */
 #define LED1_PIN                 GET_PIN(C, 7)   /* defined the LED1 pin: PC7 */
 #define LED2_PIN                 GET_PIN(B, 7)   /* defined the LED2 pin: PB7 */
 #define LED3_PIN                 GET_PIN(B, 14)  /* defined the LED3 pin: PB14 */
@@ -38,6 +34,24 @@
 #define GP2Y10_AOUT_PIN          GET_PIN(C, 3)   /* A2 */
 
 #define SGP30_I2C_BUS_NAME       "i2c1"
+#define BC28_AT_CLIENT_NAME      "uart3"
+/* End of User Modified Part */
+
+
+#ifdef PKG_USING_BC28_MQTT
+#define PRODUCT_KEY              PKG_USING_BC28_MQTT_PRODUCT_KEY
+#define DEVICE_NAME              PKG_USING_BC28_MQTT_DEVICE_NAME
+#define DEVICE_SECRET            PKG_USING_BC28_MQTT_DEVICE_SECRET
+#else
+#define PRODUCT_KEY              "a1p8Pngb3oY"
+#define DEVICE_NAME              "Test01"
+#define DEVICE_SECRET            "Pj6cJVeDiMX2l3YldpEIdszEbXIaTkl6"
+#endif
+
+#define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
+
+#define MQTT_TOPIC_HELLO         "/"PRODUCT_KEY"/"DEVICE_NAME"/user/hello"
+#define MQTT_TOPIC_UPLOAD        "/sys/"PRODUCT_KEY"/"DEVICE_NAME"/thing/event/property/post"
 
 #define DELAY_TIME_DEFAULT       3000
 
