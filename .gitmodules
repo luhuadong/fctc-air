@@ -1,0 +1,3 @@
+[submodule "miniapp"]
+	path = miniapp
+	url = git@github.com:luhuadong/fctc-air-miniprogram.git
