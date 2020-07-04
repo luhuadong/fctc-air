@@ -329,6 +329,15 @@ static void sensor(int argc, char **argv)
             case RT_SENSOR_VENDOR_SENSIRION:
                 rt_kprintf("vendor    :Sensirion\n");
                 break;
+            case RT_SENSOR_VENDOR_TI:
+                rt_kprintf("vendor    :Texas Instruments\n");
+                break;
+            case RT_SENSOR_VENDOR_PLANTOWER:
+                rt_kprintf("vendor    :Plantower\n");
+                break;
+            case RT_SENSOR_VENDOR_AMS:
+                rt_kprintf("vendor    :AMS\n");
+                break;
         }
         rt_kprintf("model     :%s\n", info.model);
         switch (info.unit)
@@ -374,6 +383,12 @@ static void sensor(int argc, char **argv)
                 break;
             case RT_SENSOR_UNIT_MN:
                 rt_kprintf("unit      :mN\n");
+                break;
+            case RT_SENSOR_UNIT_PPM:
+                rt_kprintf("unit      :ppm\n");
+                break;
+            case RT_SENSOR_UNIT_PPB:
+                rt_kprintf("unit      :ppb\n");
                 break;
         }
         rt_kprintf("range_max :%d\n", info.range_max);
