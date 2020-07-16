@@ -5,8 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2018-11-06     SummerGift   first version
- * 2019-1-10      e31207077    add stm32f767-st-nucleo bsp
+ * 2020-07-15     luhuadong    first version
  */
 
 #include <rtthread.h>
@@ -50,7 +49,7 @@ static void example_message_arrive(void *pcontext, void *pclient, iotx_mqtt_even
     }
 }
 
-static int example_subscribe(void *handle)
+int example_subscribe(void *handle)
 {
     int res = 0;
     const char *fmt = "/%s/%s/user/hello";
@@ -77,14 +76,14 @@ static int example_subscribe(void *handle)
     return 0;
 }
 
-static int example_publish(void *handle)
+int example_publish(void *handle, char *payload)
 {
     int             res = 0;
     const char     *fmt = "/sys/%s/%s/thing/event/property/post";
     char           *topic = NULL;
     int             topic_len = 0;
     //char           *payload = "{\"message\":\"hello!\"}";
-    char           *payload = "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":26,\"Humi\":50,\"Dust\":7,\"TVOC\":9,\"eCO2\":400},\"method\":\"thing.event.property.post\"}";
+    //char           *payload = "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":26,\"Humi\":50,\"Dust\":7,\"TVOC\":9,\"eCO2\":400},\"method\":\"thing.event.property.post\"}";
 
     topic_len = strlen(fmt) + strlen(DEMO_PRODUCT_KEY) + strlen(DEMO_DEVICE_NAME) + 1;
     topic = HAL_Malloc(topic_len);
@@ -111,12 +110,10 @@ static void example_event_handle(void *pcontext, void *pclient, iotx_mqtt_event_
     EXAMPLE_TRACE("msg->event_type : %d", msg->event_type);
 }
 
-static int mqtt_connect_test(int argc, char *argv[])
+void *ali_mqtt_create(void)
 {
-    void                   *pclient = NULL;
-    int                     res = 0;
-    int                     loop_cnt = 0;
-    iotx_mqtt_param_t       mqtt_params;
+    void             *pclient = NULL;
+    iotx_mqtt_param_t mqtt_params;
 
     HAL_GetProductKey(DEMO_PRODUCT_KEY);
     HAL_GetDeviceName(DEMO_DEVICE_NAME);
@@ -226,27 +223,11 @@ static int mqtt_connect_test(int argc, char *argv[])
     pclient = IOT_MQTT_Construct(&mqtt_params);
     if (NULL == pclient) {
         EXAMPLE_TRACE("MQTT construct failed");
-        return -1;
+        return RT_NULL;
     }
 
-    res = example_subscribe(pclient);
-    if (res < 0) {
-        IOT_MQTT_Destroy(&pclient);
-        return -1;
-    }
-
-    while (1) {
-        if (0 == loop_cnt % 300) {
-            example_publish(pclient);
-        }
-
-        IOT_MQTT_Yield(pclient, 200);
-
-        loop_cnt += 1;
-    }
-
-    return 0;
+    return pclient;
 }
 #ifdef FINSH_USING_MSH
-MSH_CMD_EXPORT(mqtt_connect_test, ali mqtt sample);
+MSH_CMD_EXPORT(ali_mqtt_create, ali mqtt sample);
 #endif

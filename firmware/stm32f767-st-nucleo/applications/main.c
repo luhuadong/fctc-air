@@ -17,6 +17,7 @@
 #include <dhtxx.h>
 #include <gp2y10.h>
 #include <sgp30.h>
+#include "ali_mqtt.h"
 
 #define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}"
 
@@ -127,6 +128,43 @@ static void sync(const rt_uint8_t tag, const rt_int32_t data)
   
     rt_mq_send(sync_mq, (void *)&msg, sizeof(msg));  /* send sensor data */
     rt_event_send(&event, (1 << tag));               /* send sensor event */
+}
+
+static void upload_thread_entry(void *parameter)
+{
+    void *pclient = NULL;
+    int   res = 0;
+
+    pclient = ali_mqtt_create();
+    if (pclient == RT_NULL)
+    {
+        rt_kprintf("init mqtt network failed.\n");
+        return;
+    }
+
+    res = example_subscribe(pclient);
+    if (res < 0) 
+    {
+        rt_kprintf("mqtt topic subscribe failed.\n");
+        IOT_MQTT_Destroy(&pclient);
+        return;
+    }
+
+    LED_OFF(led_warning);
+    LED_BLINK(led_normal);
+
+    char *buf;
+
+    while (1)
+    {
+        if (RT_EOK == rt_mb_recv(upload_mb, (rt_ubase_t *)&buf, RT_WAITING_FOREVER))
+        {
+            LED_BEEP_FAST(led_upload);
+
+            example_publish(pclient, buf);
+        }
+        IOT_MQTT_Yield(pclient, 200);
+    }
 }
 
 static void sync_thread_entry(void *parameter)
@@ -416,7 +454,7 @@ int main(void)
     eco2_thread = rt_thread_create("eco2_th", read_eco2_entry, "eco2_sg3", 1024, 16, 5);
 
     sync_thread = rt_thread_create("sync", sync_thread_entry, RT_NULL, 1024, 15, 5);
-    //upload_thread = rt_thread_create("upload", upload_thread_entry, RT_NULL, 2048, 5, 5);
+    upload_thread = rt_thread_create("upload", upload_thread_entry, RT_NULL, 2048, 5, 5);
 
     /* start up all user thread */
     if(temp_thread) rt_thread_startup(temp_thread);
@@ -426,7 +464,7 @@ int main(void)
     if(eco2_thread) rt_thread_startup(eco2_thread);
 
     if(sync_thread) rt_thread_startup(sync_thread);
-    //if(upload_thread) rt_thread_startup(upload_thread);
+    if(upload_thread) rt_thread_startup(upload_thread);
 
     return RT_EOK;
 
