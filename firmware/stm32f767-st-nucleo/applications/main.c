@@ -12,6 +12,8 @@
 #include <rtthread.h>
 #include <rtdevice.h>
 #include <board.h>
+#include <arpa/inet.h>
+#include <netdev.h>
 
 #include <littled.h>
 #include <dhtxx.h>
@@ -93,7 +95,20 @@ static rt_bool_t is_paused = RT_FALSE;
 
 static void user_key_cb(void *args)
 {
-    rt_kprintf("(BUTTON) pressed\n");
+    if (!is_paused) {
+        rt_kprintf("(BUTTON) paused\n");
+        is_paused = RT_TRUE;
+        LED_ON(led_upload);
+
+        //rt_event_send(&event, EVENT_FLAG_PAUSE);
+    }
+    else {
+        rt_kprintf("(BUTTON) resume\n");
+        is_paused = RT_FALSE;
+        LED_OFF(led_upload);
+
+        //rt_event_recv(&event, EVENT_FLAG_PAUSE, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, 0, NULL);
+    }
 }
 
 static void user_key_init()
@@ -134,22 +149,40 @@ static void upload_thread_entry(void *parameter)
 {
     void *pclient = NULL;
     int   res = 0;
+    struct netdev *eth0;
+
+    eth0 = netdev_get_by_name("e0");
+    if (eth0 == RT_NULL)
+    {
+        rt_kprintf("(upload) Can't find e0 device.\n");
+        return;
+    }
+
+    while (!netdev_is_internet_up(eth0))
+    {
+        rt_thread_mdelay(1000);
+    }
+    rt_kprintf("(upload) e0 is connected to internet.\n");
 
     pclient = ali_mqtt_create();
     if (pclient == RT_NULL)
     {
-        rt_kprintf("init mqtt network failed.\n");
+        LED_BLINK_FAST(led_warning);
+        rt_kprintf("(upload) init mqtt network failed.\n");
         return;
     }
+    rt_kprintf("(upload) init mqtt network ok.\n");
 
+#if 0
     res = example_subscribe(pclient);
     if (res < 0) 
     {
-        rt_kprintf("mqtt topic subscribe failed.\n");
+        LED_BLINK_FAST(led_warning);
+        rt_kprintf("(upload) mqtt topic subscribe failed.\n");
         IOT_MQTT_Destroy(&pclient);
         return;
     }
-
+#endif
     LED_OFF(led_warning);
     LED_BLINK(led_normal);
 
@@ -161,7 +194,7 @@ static void upload_thread_entry(void *parameter)
         {
             LED_BEEP_FAST(led_upload);
 
-            example_publish(pclient, buf);
+            ali_mqtt_publish(pclient, buf);
         }
         IOT_MQTT_Yield(pclient, 200);
     }
@@ -454,7 +487,7 @@ int main(void)
     eco2_thread = rt_thread_create("eco2_th", read_eco2_entry, "eco2_sg3", 1024, 16, 5);
 
     sync_thread = rt_thread_create("sync", sync_thread_entry, RT_NULL, 1024, 15, 5);
-    upload_thread = rt_thread_create("upload", upload_thread_entry, RT_NULL, 2048, 5, 5);
+    upload_thread = rt_thread_create("upload", upload_thread_entry, RT_NULL, 4096, 5, 5);
 
     /* start up all user thread */
     if(temp_thread) rt_thread_startup(temp_thread);

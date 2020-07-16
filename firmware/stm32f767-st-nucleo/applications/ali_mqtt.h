@@ -6,6 +6,7 @@
 
 void *ali_mqtt_create(void);
 int   example_subscribe(void *handle);
-int   example_publish(void *handle, char *payload);
+int   example_publish(void *handle);
+int   ali_mqtt_publish(void *handle, char *payload);
 
 #endif /* __ALI_MQTT_H__ */
