@@ -18,6 +18,7 @@
 #include <gp2y10.h>
 #include <sgp30.h>
 
+#define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}"
 
 /* User Modified Part */
 #define LED1_PIN                 GET_PIN(B, 0)   /* defined the LD1 (green) pin: PB0 <- PC7 */
@@ -30,7 +31,7 @@
 #define DHT11_DATA_PIN           GET_PIN(E, 9)   /* D6 */
 
 #define GP2Y10_ILED_PIN          GET_PIN(F, 15)  /* D2 */
-#define GP2Y10_AOUT_PIN          GET_PIN(C, 3)   /* A2 */
+#define GP2Y10_AOUT_PIN          GET_PIN(C, 3)   /* A2 : ADC1_IN13 */
 
 #define SGP30_I2C_BUS_NAME       "i2c1"          /* SCL: PB8(24), SDA: PB9(25) */
 #define BC28_AT_CLIENT_NAME      "uart3"         /* No BC28 */

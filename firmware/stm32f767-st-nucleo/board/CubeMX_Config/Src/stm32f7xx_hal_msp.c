@@ -112,14 +112,14 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 
   /* USER CODE END ADC1_MspInit 0 */
     /* Peripheral clock enable */
-    __HAL_RCC_ADC_CLK_ENABLE();
+    __HAL_RCC_ADC1_CLK_ENABLE();
   
     __HAL_RCC_GPIOC_CLK_ENABLE();
     /**ADC1 GPIO Configuration    
-    PC3     ------> ADC1_IN4 
+    PC3     ------> ADC1_IN13 
     */
     GPIO_InitStruct.Pin = GPIO_PIN_3;
-    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
@@ -144,10 +144,10 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
 
   /* USER CODE END ADC1_MspDeInit 0 */
     /* Peripheral clock disable */
-    __HAL_RCC_ADC_CLK_DISABLE();
+    __HAL_RCC_ADC1_CLK_DISABLE();
   
     /**ADC1 GPIO Configuration    
-    PC3     ------> ADC1_IN4 
+    PC3     ------> ADC1_IN13 
     */
     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_3);
 
@@ -166,7 +166,6 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
 */
 void HAL_ETH_MspInit(ETH_HandleTypeDef* heth)
 {
-
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   if(heth->Instance==ETH)
   {
@@ -232,10 +231,8 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef* heth)
 * @param heth: ETH handle pointer
 * @retval None
 */
-
 void HAL_ETH_MspDeInit(ETH_HandleTypeDef* heth)
 {
-
   if(heth->Instance==ETH)
   {
   /* USER CODE BEGIN ETH_MspDeInit 0 */
@@ -278,7 +275,6 @@ void HAL_ETH_MspDeInit(ETH_HandleTypeDef* heth)
 */
 void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 {
-
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   if(huart->Instance==USART3)
   {
@@ -313,10 +309,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 * @param huart: UART handle pointer
 * @retval None
 */
-
 void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 {
-
   if(huart->Instance==USART3)
   {
   /* USER CODE BEGIN USART3_MspDeInit 0 */
@@ -346,7 +340,6 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 */
 void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
 {
-
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   if(hpcd->Instance==USB_OTG_FS)
   {
@@ -389,10 +382,8 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
 * @param hpcd: PCD handle pointer
 * @retval None
 */
-
 void HAL_PCD_MspDeInit(PCD_HandleTypeDef* hpcd)
 {
-
   if(hpcd->Instance==USB_OTG_FS)
   {
   /* USER CODE BEGIN USB_OTG_FS_MspDeInit 0 */
