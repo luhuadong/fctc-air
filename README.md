@@ -1,12 +1,14 @@
 # FCTC-Air
 
-分布式空气质量监测系统
+FCTC-Air is a educational project. The purpose is to build a **distributed air quality monitoring system** that everyone can access. 
+
+"**FCTC**" is the abbreviation of "**From Chip To Cloud**", means that involve all stack of IoT design, including embeded software, web, app, and so on. As well as help people pay attention to air pollution.
 
 
 
 
 
-克隆仓库后，需要更新子模块：
+After clone repo, you need to upgrade submodule:
 
 ```shell
 git submodule init
