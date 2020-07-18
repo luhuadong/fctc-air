@@ -21,5 +21,5 @@ git submodule update
 
 ## Thanks
 
-<a href="https://www.jetbrains.com/?from=FCTC-Air"><img src="./images/jetbrains.png" style="zoom:50%;" /></a>
+<a href="https://www.jetbrains.com/?from=FCTC-Air"><img src="./images/jetbrains.svg" style="zoom:80%;" /></a>
 
