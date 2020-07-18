@@ -1,0 +1,27 @@
+body {
+    background-color: #48D1CC;
+    margin-left: 20%;
+    margin-right: 20%;
+    border: 2px solid #151513;
+    font-family: sans-serif;
+}
+
+header.top {
+    background-color: #48D1CC;
+    margin: 10px 10px 40px 10px;
+    padding: 10px 10px 10px 10px;
+}
+
+article {
+    text-align:       center;
+}
+
+footer {
+    /* background-color: #70B7FD; */
+    background-color: #151513;
+    color:            #fff;
+    text-align:       center;
+    padding:          15px;
+    margin: 40px 0px 0px 0px;
+    font-size:        80%;
+}
