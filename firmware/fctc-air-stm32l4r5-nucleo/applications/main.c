@@ -18,6 +18,9 @@
 #include <sgp30.h>
 #ifdef PKG_USING_BC28_MQTT
 #include <bc28_mqtt.h>
+#else
+#include <arpa/inet.h>
+#include <netdev.h>
 #endif
 
 /* User Modified Part */
@@ -35,6 +38,7 @@
 
 #define SGP30_I2C_BUS_NAME       "i2c1"
 #define BC28_AT_CLIENT_NAME      "uart3"
+#define NET_DEVICE_NAME          "bc28"
 /* End of User Modified Part */
 
 
@@ -227,7 +231,23 @@ static void upload_thread_entry(void *parameter)
     }
     rt_kprintf("(BC28) MQTT connect ok\n");
 #else
-    /*  */
+    /* netdev */
+    void *pclient = NULL;
+    int   res = 0;
+    struct netdev *dev;
+
+    dev = netdev_get_by_name(NET_DEVICE_NAME);
+    if (dev == RT_NULL)
+    {
+        rt_kprintf("(upload) Can't find %s device.\n", NET_DEVICE_NAME);
+        return;
+    }
+
+    while (!netdev_is_internet_up(dev))
+    {
+        rt_thread_mdelay(1000);
+    }
+    rt_kprintf("(upload) %s is connected to internet.\n", NET_DEVICE_NAME);
 #endif
 
     LED_OFF(led_warning);
@@ -489,14 +509,14 @@ int main(void)
     upload_thread = rt_thread_create("upload", upload_thread_entry, RT_NULL, 2048, 5, 5);
 
     /* start up all user thread */
-    if(temp_thread) rt_thread_startup(temp_thread);
-    if(humi_thread) rt_thread_startup(humi_thread);
-    if(dust_thread) rt_thread_startup(dust_thread);
-    if(tvoc_thread) rt_thread_startup(tvoc_thread);
-    if(eco2_thread) rt_thread_startup(eco2_thread);
+    //if(temp_thread) rt_thread_startup(temp_thread);
+    //if(humi_thread) rt_thread_startup(humi_thread);
+    //if(dust_thread) rt_thread_startup(dust_thread);
+    //if(tvoc_thread) rt_thread_startup(tvoc_thread);
+    //if(eco2_thread) rt_thread_startup(eco2_thread);
 
-    if(sync_thread) rt_thread_startup(sync_thread);
-    if(upload_thread) rt_thread_startup(upload_thread);
+    //if(sync_thread) rt_thread_startup(sync_thread);
+    //if(upload_thread) rt_thread_startup(upload_thread);
 
     return RT_EOK;
 }

@@ -38,6 +38,7 @@
 
 #define SGP30_I2C_BUS_NAME       "i2c1"          /* SCL: PB8(24), SDA: PB9(25) */
 #define BC28_AT_CLIENT_NAME      "uart3"         /* No BC28 */
+#define NET_DEVICE_NAME          "e0"
 
 
 #define DELAY_TIME_DEFAULT       3000
@@ -149,20 +150,20 @@ static void upload_thread_entry(void *parameter)
 {
     void *pclient = NULL;
     int   res = 0;
-    struct netdev *eth0;
+    struct netdev *dev;
 
-    eth0 = netdev_get_by_name("e0");
-    if (eth0 == RT_NULL)
+    dev = netdev_get_by_name(NET_DEVICE_NAME);
+    if (dev == RT_NULL)
     {
-        rt_kprintf("(upload) Can't find e0 device.\n");
+        rt_kprintf("(upload) Can't find %s device.\n", NET_DEVICE_NAME);
         return;
     }
 
-    while (!netdev_is_internet_up(eth0))
+    while (!netdev_is_internet_up(dev))
     {
         rt_thread_mdelay(1000);
     }
-    rt_kprintf("(upload) e0 is connected to internet.\n");
+    rt_kprintf("(upload) %s is connected to internet.\n", NET_DEVICE_NAME);
 
     pclient = ali_mqtt_create();
     if (pclient == RT_NULL)
