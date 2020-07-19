@@ -1,5 +1,6 @@
 body {
     background-color: #48D1CC;
+    /* background-color: #3771BB; */
     margin-left: 20%;
     margin-right: 20%;
     border: 2px solid #151513;
@@ -8,6 +9,7 @@ body {
 
 header.top {
     background-color: #48D1CC;
+    /* background-color: #3771BB; */
     margin: 10px 10px 40px 10px;
     padding: 10px 10px 10px 10px;
 }
