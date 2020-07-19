@@ -302,7 +302,7 @@ static int alloc_empty_socket(rt_slist_t *l)
     return idx;
 }
 
-static struct at_socket *alloc_socket_by_device(struct at_device *device)
+static struct at_socket *alloc_socket_by_device(struct at_device *device, enum at_socket_type type)
 {
     static rt_mutex_t at_slock = RT_NULL;
     struct at_socket *sock = RT_NULL;
@@ -322,18 +322,27 @@ static struct at_socket *alloc_socket_by_device(struct at_device *device)
 
     rt_mutex_take(at_slock, RT_WAITING_FOREVER);
 
-
-    /* find an empty at socket entry */
-    for (idx = 0; idx < device->class->socket_num && device->sockets[idx].magic; idx++);
-
-    LOG_E("@_@ alloc_socket_by_device(%d) !!!", idx);
-
-    /* can't find an empty protocol family entry */
-    if (idx == device->class->socket_num)
+    if (device->class->socket_ops->at_socket != RT_NULL)
     {
-        goto __err;
-    }
+        idx = device->class->socket_ops->at_socket(device, type);
 
+        if (idx < 0)
+        {
+            goto __err;
+        }
+    }
+    else
+    {
+        /* find an empty at socket entry */
+        for (idx = 0; idx < device->class->socket_num && device->sockets[idx].magic; idx++);
+
+        /* can't find an empty protocol family entry */
+        if (idx == device->class->socket_num)
+        {
+            goto __err;
+        }
+    }
+    
     sock = &(device->sockets[idx]);
     /* the socket descriptor is the number of sockte lists */
     sock->socket = alloc_empty_socket(&(sock->list));
@@ -377,13 +386,11 @@ __err:
     return RT_NULL;
 }
 
-static struct at_socket *alloc_socket(void)
+static struct at_socket *alloc_socket(enum at_socket_type type)
 {
     extern struct netdev *netdev_default;
     struct netdev *netdev = RT_NULL;
     struct at_device *device = RT_NULL;
-
-    LOG_E("@_@ alloc_socket() !!!");
 
     if (netdev_default && netdev_is_up(netdev_default) &&
             netdev_family_get(netdev_default) == AF_AT)
@@ -406,7 +413,7 @@ static struct at_socket *alloc_socket(void)
         return RT_NULL;
     }
 
-    return alloc_socket_by_device(device);
+    return alloc_socket_by_device(device, type);
 }
 
 static void at_recv_notice_cb(struct at_socket *sock, at_socket_evt_t event, const char *buff, size_t bfsz);
@@ -421,7 +428,6 @@ int at_socket(int domain, int type, int protocol)
     RT_ASSERT(domain == AF_AT || domain == AF_INET);
 
     //TODO check protocol
-    LOG_E("@_@ at_socket() !!!");
 
     switch(type)
     {
@@ -439,7 +445,7 @@ int at_socket(int domain, int type, int protocol)
     }
 
     /* allocate and initialize a new AT socket */
-    sock = alloc_socket();
+    sock = alloc_socket(socket_type);
     if (sock == RT_NULL)
     {
         return -1;
@@ -512,15 +518,6 @@ int at_closesocket(int socket)
     if (sock == RT_NULL)
     {
         return -1;
-    }
-
-    if (sock->state == AT_SOCKET_CLOSED)
-    {
-        LOG_E("AAA socket is closed!");
-    }
-    else
-    {
-        LOG_E("AAA socket not closed!");
     }
 
     last_state = sock->state;
@@ -630,7 +627,7 @@ int at_bind(int socket, const struct sockaddr *name, socklen_t namelen)
         }
 
         /* allocate new socket */
-        new_sock = alloc_socket_by_device(new_device);
+        new_sock = alloc_socket_by_device(new_device, type);
         if (new_sock == RT_NULL)
         {
             return -1;
@@ -678,21 +675,10 @@ static void at_closed_notice_cb(struct at_socket *sock, at_socket_evt_t event, c
 {
     RT_ASSERT(event == AT_SOCKET_EVT_CLOSED);
 
-    LOG_E(">> at_closed_notice_cb()");
-
     /* check the socket object status */
     if (sock->magic != AT_SOCKET_MAGIC)
     {
         return;
-    }
-
-    if (sock->state == AT_SOCKET_CLOSED)
-    {
-        LOG_E("AA socket is closed!");
-    }
-    else
-    {
-        LOG_E("AA socket not closed!");
     }
     
     at_do_event_changes(sock, AT_EVENT_RECV, RT_TRUE);
@@ -709,8 +695,6 @@ int at_connect(int socket, const struct sockaddr *name, socklen_t namelen)
     uint16_t remote_port = 0;
     char ipstr[16] = { 0 };
     int result = 0;
-
-    LOG_E(">> at_connect()");
 
     sock = at_get_socket(socket);
     if (sock == RT_NULL)
@@ -729,8 +713,6 @@ int at_connect(int socket, const struct sockaddr *name, socklen_t namelen)
     /* get IP address and port by socketaddr structure */
     socketaddr_to_ipaddr_port(name, &remote_addr, &remote_port);
     ipaddr_to_ipstr(name, ipstr);
-
-    LOG_E("sock->ops->at_connect(%s, %d)", ipstr, remote_port);
 
     if (sock->ops->at_connect(sock, ipstr, remote_port, sock->type, RT_TRUE) < 0)
     {
@@ -777,7 +759,7 @@ int at_recvfrom(int socket, void *mem, size_t len, int flags, struct sockaddr *f
         goto __exit;
     }
 
-    /* if the socket type is UDP, nead to connect socket first */
+    /* if the socket type is UDP, need to connect socket first */
     if (from && sock->type == AT_SOCKET_UDP && sock->state == AT_SOCKET_OPEN)
     {
         ip_addr_t remote_addr;
@@ -901,8 +883,6 @@ int at_sendto(int socket, const void *data, size_t size, int flags, const struct
 {
     struct at_socket *sock = RT_NULL;
     int len = 0, result = 0;
-
-    LOG_E("@_@ at_sendto() !!!");
 
     if (data == RT_NULL || size == 0)
     {
