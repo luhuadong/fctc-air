@@ -509,14 +509,14 @@ int main(void)
     upload_thread = rt_thread_create("upload", upload_thread_entry, RT_NULL, 2048, 5, 5);
 
     /* start up all user thread */
-    //if(temp_thread) rt_thread_startup(temp_thread);
-    //if(humi_thread) rt_thread_startup(humi_thread);
-    //if(dust_thread) rt_thread_startup(dust_thread);
-    //if(tvoc_thread) rt_thread_startup(tvoc_thread);
-    //if(eco2_thread) rt_thread_startup(eco2_thread);
+    if(temp_thread) rt_thread_startup(temp_thread);
+    if(humi_thread) rt_thread_startup(humi_thread);
+    if(dust_thread) rt_thread_startup(dust_thread);
+    if(tvoc_thread) rt_thread_startup(tvoc_thread);
+    if(eco2_thread) rt_thread_startup(eco2_thread);
 
-    //if(sync_thread) rt_thread_startup(sync_thread);
-    //if(upload_thread) rt_thread_startup(upload_thread);
+    if(sync_thread) rt_thread_startup(sync_thread);
+    if(upload_thread) rt_thread_startup(upload_thread);
 
     return RT_EOK;
 }
