@@ -322,25 +322,20 @@ static struct at_socket *alloc_socket_by_device(struct at_device *device, enum a
 
     rt_mutex_take(at_slock, RT_WAITING_FOREVER);
 
+    /* find an empty at socket entry */
     if (device->class->socket_ops->at_socket != RT_NULL)
     {
         idx = device->class->socket_ops->at_socket(device, type);
-
-        if (idx < 0)
-        {
-            goto __err;
-        }
     }
     else
     {
-        /* find an empty at socket entry */
         for (idx = 0; idx < device->class->socket_num && device->sockets[idx].magic; idx++);
+    }
 
-        /* can't find an empty protocol family entry */
-        if (idx == device->class->socket_num)
-        {
-            goto __err;
-        }
+    /* can't find an empty protocol family entry */
+    if (idx < 0 || idx >= device->class->socket_num)
+    {
+        goto __err;
     }
     
     sock = &(device->sockets[idx]);
