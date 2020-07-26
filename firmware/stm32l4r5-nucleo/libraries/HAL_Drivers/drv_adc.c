@@ -206,6 +206,13 @@ static rt_err_t stm32_get_adc_value(struct rt_adc_device *device, rt_uint32_t ch
     ADC_ChanConf.SamplingTime = ADC_SAMPLETIME_112CYCLES;
 #elif defined(SOC_SERIES_STM32L4)
     ADC_ChanConf.SamplingTime = ADC_SAMPLETIME_247CYCLES_5;
+    /* Run the ADC linear calibration in single-ended mode */
+    if (HAL_ADCEx_Calibration_Start(stm32_adc_handler, ADC_SINGLE_ENDED) != HAL_OK)
+    {
+        LOG_E("ADC open linear calibration error!\n");
+        /* Calibration Error */
+        return -RT_ERROR;
+    }
 #elif defined(SOC_SERIES_STM32MP1)
     ADC_ChanConf.SamplingTime = ADC_SAMPLETIME_810CYCLES_5;
 #endif
@@ -222,7 +229,7 @@ static rt_err_t stm32_get_adc_value(struct rt_adc_device *device, rt_uint32_t ch
 #endif
     HAL_ADC_ConfigChannel(stm32_adc_handler, &ADC_ChanConf);
 #ifdef SOC_SERIES_STM32MP1
-      /* Run the ADC linear calibration in single-ended mode */
+    /* Run the ADC linear calibration in single-ended mode */
     if (HAL_ADCEx_Calibration_Start(stm32_adc_handler, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED) != HAL_OK)
     {
         LOG_E("ADC open linear calibration error!\n");
@@ -285,6 +292,9 @@ static int stm32_adc_init(void)
         }
         else
         {
+            /* calibration */
+            //HAL_ADCEx_Calibration_Start(&stm32_adc_obj[i].ADC_Handler, ADC_SINGLE_ENDED);
+
             /* register ADC device */
             if (rt_hw_adc_register(&stm32_adc_obj[i].stm32_adc_device, name_buf, &stm_adc_ops, &stm32_adc_obj[i].ADC_Handler) == RT_EOK)
             {
