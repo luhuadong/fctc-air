@@ -104,6 +104,8 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /* USER CODE BEGIN ADC1_MspInit 1 */
+    /* calibration in single-ended mode */
+    HAL_ADCEx_Calibration_Start(hadc, ADC_SINGLE_ENDED);
 
   /* USER CODE END ADC1_MspInit 1 */
   }
