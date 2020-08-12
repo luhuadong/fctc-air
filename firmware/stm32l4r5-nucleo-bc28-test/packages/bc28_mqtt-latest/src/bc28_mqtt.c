@@ -18,7 +18,7 @@
 
 #define LOG_TAG                   "pkg.at.bc28"
 #define LOG_LVL                   LOG_LVL_DBG
-#include <at_log.h>
+#include <ulog.h> 
 
 #include "bc28_mqtt.h"
 
@@ -476,15 +476,15 @@ static void urc_mqtt_stat(struct at_client *client, const char *data, rt_size_t 
 static void urc_mqtt_recv(struct at_client *client, const char *data, rt_size_t size)
 {
     /* 读取已从MQTT服务器接收的MQTT包数据 */
-    LOG_D("AT client receive data from server");
+    LOG_D("AT client receive %d bytes data from server", size);
 
-    LOG_D(">> %s", data);
+    LOG_D("%s", data);
 }
 
 static const struct at_urc urc_table[] = {
 
     { "+QMTSTAT:", "\r\n", urc_mqtt_stat },
-    { "+QMTRECV:", "\r\n", urc_mqtt_recv },
+    { "+QMTRECV:", "\r\n", urc_mqtt_recv }
 };
 
 int at_client_port_init(void)
