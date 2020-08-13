@@ -27,3 +27,9 @@ footer {
     margin: 40px 0px 0px 0px;
     font-size:        80%;
 }
+
+.video iframe {
+    display:block;
+    width: 512px;
+    height: 288px;
+}
