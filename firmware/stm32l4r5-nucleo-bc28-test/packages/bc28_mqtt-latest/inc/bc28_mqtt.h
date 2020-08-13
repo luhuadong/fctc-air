@@ -26,8 +26,10 @@ typedef enum
 
 struct bc28_device
 {
-    bc28_state_t      stat;
     struct at_client *client;
+    void (*parse)(char *json);
+    rt_thread_t       parser;
+    bc28_state_t      stat;
     rt_mutex_t        lock;
 };
 typedef struct bc28_device *bc28_device_t;
@@ -47,7 +49,7 @@ int bc28_mqtt_unsubscribe(const char *topic);
 int bc28_mqtt_publish(const char *topic, const char *msg);
 
 /* Network */
-int bc28_init(void);
+bc28_device_t bc28_init(void (*parse)(char *json));
 int build_mqtt_network(void);
 int rebuild_mqtt_network(void);
 

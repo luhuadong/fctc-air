@@ -363,6 +363,15 @@ static int at_client_dev_init(void)
 }
 INIT_DEVICE_EXPORT(at_client_dev_init);
 
+
+static void bc28_parser_entry(bc28_device_t dev)
+{
+    if (wait())
+    {
+        dev->parse(json);
+    }
+}
+
 static void bc28_reset(void)
 {
     rt_pin_mode(BC28_RESET_N_PIN, PIN_MODE_OUTPUT);
@@ -375,13 +384,27 @@ static void bc28_reset(void)
 
 int at_client_port_init(void);
 
-int bc28_init(void)
+bc28_device_t bc28_init(void (*parse)(char *json));
 {
+    bc28_device_t dev = rt_kmalloc(sizeof(struct bc28_device));
+
+    dev->parser = rt_thread_create(bc28_par,
+                                     (void (*)(void *parameter))bc28_parser_entry,
+                                     dev,
+                                     1024,
+                                     RT_THREAD_PRIORITY_MAX / 4 - 1,
+                                     5);
+
+
     bc28_reset();
     //at_client_dev_init();
     at_client_port_init();
     
-    return at_client_attach();
+    if (at_client_attach() < 0)
+    {
+        return RT_NULL;
+    }
+
 }
 
 int build_mqtt_network(void)
@@ -438,9 +461,7 @@ static void urc_mqtt_stat(struct at_client *client, const char *data, rt_size_t 
 {
     /* MQTT链路层的状态发生变化 */
     LOG_D("The state of the MQTT link layer changes");
-
     LOG_D("%s", data);
-    //LOG_D(">> %c", data[size-1]);
 
     char err_code = data[size-1];
     switch (err_code)
@@ -478,8 +499,9 @@ static void urc_mqtt_recv(struct at_client *client, const char *data, rt_size_t 
 {
     /* 读取已从MQTT服务器接收的MQTT包数据 */
     LOG_D("AT client receive %d bytes data from server", size);
-
     LOG_D("%s", data);
+
+    sscanf(data, "+QMTRECV: %*d,%*d,\"%*s\",%s")
 }
 
 static const struct at_urc urc_table[] = {
