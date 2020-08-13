@@ -12,9 +12,8 @@
 #include <rtdevice.h>
 #include <board.h>
 
-#ifdef PKG_USING_BC28_MQTT
 #include <bc28_mqtt.h>
-#endif
+#include <cJSON.h>
 
 /* defined the LED1 pin: PC7 */
 #define LED1_PIN    GET_PIN(C, 7)
@@ -23,9 +22,25 @@
 /* defined the LED3 pin: PB14 */
 #define LED3_PIN    GET_PIN(B, 14)
 
-#define LED_RUN_PIN	LED1_PIN
+#define LED_RUN_PIN LED1_PIN
+#define LIGHT_PIN   LED2_PIN
 
 static rt_thread_t bc28_thread = RT_NULL;
+
+static void light_on(rt_base_t pin)
+{
+    rt_pin_write(pin, PIN_HIGH);
+}
+
+static void light_off(rt_base_t pin)
+{
+    rt_pin_write(pin, PIN_LOW);
+}
+
+static void mqtt_recv_cb(char *json)
+{
+
+}
 
 static void bc28_thread_entry(void *parameter)
 {
@@ -52,8 +67,9 @@ static void bc28_thread_entry(void *parameter)
 int main(void)
 {
     int count = 1;
-		
+
     rt_pin_mode(LED_RUN_PIN, PIN_MODE_OUTPUT);
+    rt_pin_mode(LIGHT_PIN, PIN_MODE_OUTPUT);
 
     bc28_thread = rt_thread_create("bc28", bc28_thread_entry, RT_NULL, 2048, 5, 5);
     if(bc28_thread) rt_thread_startup(bc28_thread);

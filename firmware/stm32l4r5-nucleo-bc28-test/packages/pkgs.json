@@ -1,0 +1,12 @@
+[
+ {
+  "path": "/packages/iot/bc28_mqtt", 
+  "ver": "latest", 
+  "name": "BC28_MQTT"
+ }, 
+ {
+  "path": "/packages/iot/cJSON", 
+  "ver": "v1.0.2", 
+  "name": "CJSON"
+ }
+]
