@@ -49,7 +49,8 @@ int bc28_mqtt_unsubscribe(const char *topic);
 int bc28_mqtt_publish(const char *topic, const char *msg);
 
 /* Network */
-bc28_device_t bc28_init(void (*parse)(char *json));
+//bc28_device_t bc28_init(void (*parse)(char *json));
+int bc28_init(void);
 int build_mqtt_network(void);
 int rebuild_mqtt_network(void);
 

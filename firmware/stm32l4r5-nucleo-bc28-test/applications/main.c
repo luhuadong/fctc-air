@@ -21,20 +21,22 @@
 #define LED2_PIN    GET_PIN(B, 7)
 /* defined the LED3 pin: PB14 */
 #define LED3_PIN    GET_PIN(B, 14)
+/* D3 */
+#define LIGHT_PIN   GET_PIN(E, 13)
 
 #define LED_RUN_PIN LED1_PIN
-#define LIGHT_PIN   LED2_PIN
 
 static rt_thread_t bc28_thread = RT_NULL;
 
-static void light_on(rt_base_t pin)
+//void light_on(rt_base_t pin)
+void light_on(void)
 {
-    rt_pin_write(pin, PIN_HIGH);
+    rt_pin_write(LIGHT_PIN, PIN_HIGH);
 }
 
-static void light_off(rt_base_t pin)
+void light_off(void)
 {
-    rt_pin_write(pin, PIN_LOW);
+    rt_pin_write(LIGHT_PIN, PIN_LOW);
 }
 
 static void mqtt_recv_cb(char *json)
@@ -44,6 +46,7 @@ static void mqtt_recv_cb(char *json)
 
 static void bc28_thread_entry(void *parameter)
 {
+    //if(RT_EOK != bc28_init(mqtt_recv_cb))
     if(RT_EOK != bc28_init())
     {
         rt_kprintf("(BC28) init failed\n");

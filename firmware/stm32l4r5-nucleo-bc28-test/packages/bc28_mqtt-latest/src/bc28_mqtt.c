@@ -10,6 +10,7 @@
  * 2020-07-25     luhuadong    support state transition
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -363,7 +364,7 @@ static int at_client_dev_init(void)
 }
 INIT_DEVICE_EXPORT(at_client_dev_init);
 
-
+#if 0
 static void bc28_parser_entry(bc28_device_t dev)
 {
     if (wait())
@@ -371,6 +372,7 @@ static void bc28_parser_entry(bc28_device_t dev)
         dev->parse(json);
     }
 }
+#endif
 
 static void bc28_reset(void)
 {
@@ -384,7 +386,8 @@ static void bc28_reset(void)
 
 int at_client_port_init(void);
 
-bc28_device_t bc28_init(void (*parse)(char *json));
+#if 0
+bc28_device_t bc28_init(void (*parse)(char *json))
 {
     bc28_device_t dev = rt_kmalloc(sizeof(struct bc28_device));
 
@@ -394,6 +397,7 @@ bc28_device_t bc28_init(void (*parse)(char *json));
                                      1024,
                                      RT_THREAD_PRIORITY_MAX / 4 - 1,
                                      5);
+
 
 
     bc28_reset();
@@ -406,6 +410,16 @@ bc28_device_t bc28_init(void (*parse)(char *json));
     }
 
 }
+#else
+int bc28_init(void)
+{
+    bc28_reset();
+    //at_client_dev_init();
+    at_client_port_init();
+    
+    return at_client_attach();
+}
+#endif
 
 int build_mqtt_network(void)
 {
@@ -495,13 +509,39 @@ static void urc_mqtt_stat(struct at_client *client, const char *data, rt_size_t 
 
 }
 
+static char buf[256];
+
+extern void light_on(void);
+extern void light_off(void);
+
+#include <cJSON.h>
+
 static void urc_mqtt_recv(struct at_client *client, const char *data, rt_size_t size)
 {
     /* 读取已从MQTT服务器接收的MQTT包数据 */
     LOG_D("AT client receive %d bytes data from server", size);
     LOG_D("%s", data);
 
-    sscanf(data, "+QMTRECV: %*d,%*d,\"%*s\",%s")
+    sscanf(data, "+QMTRECV: %*d,%*d,\"%*[^\"]\",%s", buf);
+    LOG_D("buf2: %s", buf);
+
+    cJSON *obj = cJSON_Parse(buf);
+    char  *str = cJSON_Print(obj);
+    rt_kprintf("%s\n", str);
+    rt_free(str);
+
+    cJSON *powerstate = cJSON_GetObjectItem(cJSON_GetObjectItem(obj, "params"), "powerstate");
+    LOG_D("power state: %d", powerstate->valueint);
+    if (powerstate->valueint == 1)
+    {
+        light_on();
+        LOG_D("switch on");
+    }
+    else if (powerstate->valueint == 0)
+    {
+        light_off();
+        LOG_D("switch off");
+    }
 }
 
 static const struct at_urc urc_table[] = {
