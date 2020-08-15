@@ -15,6 +15,10 @@
 #include <bc28_mqtt.h>
 #include <cJSON.h>
 
+#define LOG_TAG                   "main"
+#define LOG_LVL                   LOG_LVL_DBG
+#include <ulog.h>
+
 /* defined the LED1 pin: PC7 */
 #define LED1_PIN    GET_PIN(C, 7)
 /* defined the LED2 pin: PB7 */
@@ -39,27 +43,51 @@ void light_off(void)
     rt_pin_write(LIGHT_PIN, PIN_LOW);
 }
 
-static void mqtt_recv_cb(char *json)
+static void mqtt_recv_cb(const char *json)
 {
+    cJSON *obj = cJSON_Parse(json);
+    char  *str = cJSON_Print(obj);
+    rt_kprintf("%s\n", str);
+    rt_free(str);
 
+    cJSON *powerstate = cJSON_GetObjectItem(cJSON_GetObjectItem(obj, "params"), "powerstate");
+    LOG_D("power state: %d", powerstate->valueint);
+    if (powerstate->valueint == 1)
+    {
+        light_on();
+        LOG_D("switch on");
+    }
+    else if (powerstate->valueint == 0)
+    {
+        light_off();
+        LOG_D("switch off");
+    }
 }
 
 static void bc28_thread_entry(void *parameter)
 {
-    //if(RT_EOK != bc28_init(mqtt_recv_cb))
-    if(RT_EOK != bc28_init())
+    if (bc28_init() < 0)
     {
         rt_kprintf("(BC28) init failed\n");
         return;
     }
+
+    if (bc28_client_attach() < 0)
+    {
+        rt_kprintf("(BC28) attach failed\n");
+        return;
+    }
+
     rt_kprintf("(BC28) attach ok\n");
 
-    while (RT_EOK != build_mqtt_network())
+    while (bc28_build_mqtt_network() < 0)
     {
         bc28_mqtt_close();
         rt_kprintf("(BC28) rebuild mqtt network\n");
     }
     rt_kprintf("(BC28) MQTT connect ok\n");
+
+    bc28_bind_parser(mqtt_recv_cb);
 
     while (1)
     {

@@ -15,43 +15,48 @@
 
 #include <at.h>
 
-typedef enum 
+typedef enum bc28_stat
 {
-    AT_STAT_INIT = 0,
-    AT_STAT_ATTACH,
-    AT_STAT_DEATTACH,
-    AT_STAT_CONNECTED,
-    
-} bc28_state_t;
+    BC28_STAT_INIT = 0,
+    BC28_STAT_ATTACH,
+    BC28_STAT_DEATTACH,
+    BC28_STAT_CONNECTED,
+    BC28_STAT_DISCONNECTED
+
+} bc28_stat_t;
 
 struct bc28_device
 {
-    struct at_client *client;
-    void (*parse)(char *json);
-    rt_thread_t       parser;
-    bc28_state_t      stat;
+    rt_base_t         reset_pin;
+    rt_base_t         adc_pin;
+    bc28_stat_t       stat;
     rt_mutex_t        lock;
+    char              imei[16];
+    char              ipaddr[16];
+
+    struct at_client *client;
+    void (*parser)(const char *json);
 };
 typedef struct bc28_device *bc28_device_t;
 
 /* NB-IoT */
-int at_client_attach(void);
-int at_client_deattach(void);
+int bc28_client_attach(void);
+int bc28_client_deattach(void);
 
 /* MQTT */
-int bc28_mqtt_auth(void);
-int bc28_mqtt_open(void);
-int bc28_mqtt_close(void);
-int bc28_mqtt_connect(void);
-int bc28_mqtt_disconnect(void);
-int bc28_mqtt_subscribe(const char *topic);
-int bc28_mqtt_unsubscribe(const char *topic);
-int bc28_mqtt_publish(const char *topic, const char *msg);
+int  bc28_mqtt_auth(void);
+int  bc28_mqtt_open(void);
+int  bc28_mqtt_close(void);
+int  bc28_mqtt_connect(void);
+int  bc28_mqtt_disconnect(void);
+int  bc28_mqtt_subscribe(const char *topic);
+int  bc28_mqtt_unsubscribe(const char *topic);
+int  bc28_mqtt_publish(const char *topic, const char *msg);
+void bc28_bind_parser(void (*callback)(const char *json));
 
-/* Network */
-//bc28_device_t bc28_init(void (*parse)(char *json));
-int bc28_init(void);
-int build_mqtt_network(void);
-int rebuild_mqtt_network(void);
+/* NB-IoT Network */
+int  bc28_init(void);
+int  bc28_build_mqtt_network(void);
+int  bc28_rebuild_mqtt_network(void);
 
 #endif /* __AT_BC28_H__ */
