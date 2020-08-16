@@ -8,6 +8,7 @@
  * 2020-04-08     luhuadong    the first version
  * 2020-06-04     luhuadong    v0.0.1
  * 2020-07-25     luhuadong    support state transition
+ * 2020-08-16     luhuadong    support bind recv parser
  */
 
 #include <stdio.h>
@@ -19,62 +20,62 @@
 #include <board.h>
 #include <at.h>
 
-#define LOG_TAG                   "pkg.at.bc28"
-#define LOG_LVL                   LOG_LVL_DBG
+#define LOG_TAG                       "pkg.bc28_mqtt"
+#define LOG_LVL                       LOG_LVL_DBG
 #include <ulog.h>
 
 #include "bc28_mqtt.h"
 
-#define BC28_ADC0_PIN             PKG_USING_BC28_ADC0_PIN
-#define BC28_RESET_N_PIN          PKG_USING_BC28_RESET_PIN
-#define BC28_OP_BAND              PKG_USING_BC28_MQTT_OP_BAND
+#define BC28_ADC0_PIN                 PKG_USING_BC28_ADC0_PIN
+#define BC28_RESET_N_PIN              PKG_USING_BC28_RESET_PIN
+#define BC28_OP_BAND                  PKG_USING_BC28_MQTT_OP_BAND
 
-#define AT_CLIENT_DEV_NAME        PKG_USING_BC28_AT_CLIENT_DEV_NAME
-#define AT_CLIENT_BAUD_RATE       PKG_USING_BC28_MQTT_BAUD_RATE
+#define AT_CLIENT_DEV_NAME            PKG_USING_BC28_AT_CLIENT_DEV_NAME
+#define AT_CLIENT_BAUD_RATE           PKG_USING_BC28_MQTT_BAUD_RATE
 
-#define PRODUCT_KEY               PKG_USING_BC28_MQTT_PRODUCT_KEY
-#define DEVICE_NAME               PKG_USING_BC28_MQTT_DEVICE_NAME
-#define DEVICE_SECRET             PKG_USING_BC28_MQTT_DEVICE_SECRET
+#define PRODUCT_KEY                   PKG_USING_BC28_MQTT_PRODUCT_KEY
+#define DEVICE_NAME                   PKG_USING_BC28_MQTT_DEVICE_NAME
+#define DEVICE_SECRET                 PKG_USING_BC28_MQTT_DEVICE_SECRET
 
-#define KEEP_ALIVE_TIME           PKG_USING_BC28_MQTT_KEEP_ALIVE
+#define KEEP_ALIVE_TIME               PKG_USING_BC28_MQTT_KEEP_ALIVE
 
-#define AT_OK                     "OK"
-#define AT_ERROR                  "ERROR"
+#define AT_OK                         "OK"
+#define AT_ERROR                      "ERROR"
 
-#define AT_TEST                   "AT"
-#define AT_ECHO_OFF               "ATE0"
-#define AT_QREGSWT_2              "AT+QREGSWT=2"
-#define AT_AUTOCONNECT_DISABLE    "AT+NCONFIG=AUTOCONNECT,FALSE"
-#define AT_REBOOT                 "AT+NRB"
-#define AT_NBAND                  "AT+NBAND=%d"
-#define AT_FUN_ON                 "AT+CFUN=1"
-#define AT_LED_ON                 "AT+QLEDMODE=1"
-#define AT_EDRX_OFF               "AT+CEDRXS=0,5"
-#define AT_PSM_OFF                "AT+CPSMS=0"
-#define AT_RECV_AUTO              "AT+NSONMI=2"
-#define AT_UE_ATTACH              "AT+CGATT=1"
-#define AT_UE_DEATTACH            "AT+CGATT=0"
-#define AT_QUERY_IMEI             "AT+CGSN=1"
-#define AT_QUERY_IMSI             "AT+CIMI"
-#define AT_QUERY_STATUS           "AT+NUESTATS"
-#define AT_QUERY_REG              "AT+CEREG?"
-#define AT_QUERY_IPADDR           "AT+CGPADDR"
-#define AT_QUERY_ATTACH           "AT+CGATT?"
-#define AT_UE_ATTACH_SUCC         "+CGATT:1"
+#define AT_TEST                       "AT"
+#define AT_ECHO_OFF                   "ATE0"
+#define AT_QREGSWT_2                  "AT+QREGSWT=2"
+#define AT_AUTOCONNECT_DISABLE        "AT+NCONFIG=AUTOCONNECT,FALSE"
+#define AT_REBOOT                     "AT+NRB"
+#define AT_NBAND                      "AT+NBAND=%d"
+#define AT_FUN_ON                     "AT+CFUN=1"
+#define AT_LED_ON                     "AT+QLEDMODE=1"
+#define AT_EDRX_OFF                   "AT+CEDRXS=0,5"
+#define AT_PSM_OFF                    "AT+CPSMS=0"
+#define AT_RECV_AUTO                  "AT+NSONMI=2"
+#define AT_UE_ATTACH                  "AT+CGATT=1"
+#define AT_UE_DEATTACH                "AT+CGATT=0"
+#define AT_QUERY_IMEI                 "AT+CGSN=1"
+#define AT_QUERY_IMSI                 "AT+CIMI"
+#define AT_QUERY_STATUS               "AT+NUESTATS"
+#define AT_QUERY_REG                  "AT+CEREG?"
+#define AT_QUERY_IPADDR               "AT+CGPADDR"
+#define AT_QUERY_ATTACH               "AT+CGATT?"
+#define AT_UE_ATTACH_SUCC             "+CGATT:1"
 
-#define AT_MQTT_AUTH              "AT+QMTCFG=\"aliauth\",0,\"%s\",\"%s\",\"%s\""
-#define AT_MQTT_ALIVE             "AT+QMTCFG=\"keepalive\",0,%u"
-#define AT_MQTT_OPEN              "AT+QMTOPEN=0,\"%s.iot-as-mqtt.cn-shanghai.aliyuncs.com\",1883"
-#define AT_MQTT_OPEN_SUCC         "+QMTOPEN: 0,0"
-#define AT_MQTT_CLOSE             "AT+QMTCLOSE=0"
-#define AT_MQTT_CONNECT           "AT+QMTCONN=0,\"%s\""
-#define AT_MQTT_CONNECT_SUCC      "+QMTCONN: 0,0,0"
-#define AT_MQTT_DISCONNECT        "AT+QMTDISC=0"
-#define AT_MQTT_SUB               "AT+QMTSUB=0,1,\"%s\",0"
-#define AT_MQTT_SUB_SUCC          "+QMTSUB: 0,1,0,1"
-#define AT_MQTT_UNSUB             "AT+QMTUNS=0,1, \"%s\""
-#define AT_MQTT_PUB               "AT+QMTPUB=0,0,0,0,\"%s\""
-#define AT_MQTT_PUB_SUCC          "+QMTPUB: 0,0,0"
+#define AT_MQTT_AUTH                  "AT+QMTCFG=\"aliauth\",0,\"%s\",\"%s\",\"%s\""
+#define AT_MQTT_ALIVE                 "AT+QMTCFG=\"keepalive\",0,%u"
+#define AT_MQTT_OPEN                  "AT+QMTOPEN=0,\"%s.iot-as-mqtt.cn-shanghai.aliyuncs.com\",1883"
+#define AT_MQTT_OPEN_SUCC             "+QMTOPEN: 0,0"
+#define AT_MQTT_CLOSE                 "AT+QMTCLOSE=0"
+#define AT_MQTT_CONNECT               "AT+QMTCONN=0,\"%s\""
+#define AT_MQTT_CONNECT_SUCC          "+QMTCONN: 0,0,0"
+#define AT_MQTT_DISCONNECT            "AT+QMTDISC=0"
+#define AT_MQTT_SUB                   "AT+QMTSUB=0,1,\"%s\",0"
+#define AT_MQTT_SUB_SUCC              "+QMTSUB: 0,1,0,1"
+#define AT_MQTT_UNSUB                 "AT+QMTUNS=0,1, \"%s\""
+#define AT_MQTT_PUB                   "AT+QMTPUB=0,0,0,0,\"%s\""
+#define AT_MQTT_PUB_SUCC              "+QMTPUB: 0,0,0"
 
 #define AT_QMTSTAT_CLOSED             1
 #define AT_QMTSTAT_PINGREQ_TIMEOUT    2
@@ -84,9 +85,10 @@
 #define AT_QMTSTAT_WORNG_CLOSE        6
 #define AT_QMTSTAT_INACTIVATED        7
 
-//#define AT_QMTRECV_DATA           "+QMTRECV: %d,%d,\"%s\",\"%s\""
-#define AT_CLIENT_RECV_BUFF_LEN   256
-#define AT_DEFAULT_TIMEOUT        5000
+#define AT_QMTRECV_DATA               "+QMTRECV: %d,%d,\"%s\",\"%s\""
+
+#define AT_CLIENT_RECV_BUFF_LEN       256
+#define AT_DEFAULT_TIMEOUT            5000
 
 static struct bc28_device bc28 = {
     .reset_pin = PKG_USING_BC28_RESET_PIN,
@@ -619,7 +621,7 @@ int bc28_rebuild_mqtt_network(void)
     return RT_EOK;
 }
 
-static int deactivate_pdp(void)
+static int bc28_deactivate_pdp(void)
 {
     /* AT+CGACT=<state>,<cid> */
 
@@ -632,30 +634,38 @@ static void urc_mqtt_stat(struct at_client *client, const char *data, rt_size_t 
     LOG_D("The state of the MQTT link layer changes");
     LOG_D("%s", data);
 
-    char err_code = data[size-1];
+    int tcp_conn_id = 0, err_code = 0;
+    sscanf(data, "+QMTSTAT: %d,%d", &tcp_conn_id, &err_code);
+
     switch (err_code)
     {
     /* connection closed by server */
-    case '1':
+    case AT_QMTSTAT_CLOSED:
+
     /* send CONNECT package timeout or failure */
-    case '3':
+    case AT_QMTSTAT_CONNECT_TIMEOUT:
+
     /* recv CONNECK package timeout or failure */
-    case '4':
+    case AT_QMTSTAT_CONNACK_TIMEOUT:
+
     /* send package failure and disconnect by client */
-    case '6':
+    case AT_QMTSTAT_WORNG_CLOSE:
         bc28_rebuild_mqtt_network();
         break;
+
     /* send PINGREQ package timeout or failure */
-    case '2':
-        deactivate_pdp();
+    case AT_QMTSTAT_PINGREQ_TIMEOUT:
+        bc28_deactivate_pdp();
         bc28_rebuild_mqtt_network();
         break;
+
     /* disconnect by client */
-    case '5':
+    case AT_QMTSTAT_DISCONNECT:
         LOG_D("disconnect by client");
         break;
+
     /* network inactivated or server unavailable */
-    case '7':
+    case AT_QMTSTAT_INACTIVATED:
         LOG_D("please check network");
         break;
     default:

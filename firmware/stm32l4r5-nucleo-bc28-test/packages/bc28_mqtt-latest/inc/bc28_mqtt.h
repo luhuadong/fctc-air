@@ -8,6 +8,7 @@
  * 2020-04-08     luhuadong    the first version
  * 2020-06-04     luhuadong    v0.0.1
  * 2020-07-25     luhuadong    support state transition
+ * 2020-08-16     luhuadong    uniform function name
  */
 
 #ifndef __AT_BC28_H__
@@ -40,8 +41,8 @@ struct bc28_device
 typedef struct bc28_device *bc28_device_t;
 
 /* NB-IoT */
-int bc28_client_attach(void);
-int bc28_client_deattach(void);
+int  bc28_client_attach(void);
+int  bc28_client_deattach(void);
 
 /* MQTT */
 int  bc28_mqtt_auth(void);
