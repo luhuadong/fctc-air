@@ -212,24 +212,57 @@ static void sync_thread_entry(void *parameter)
     }
 }
 
+static void mqtt_recv_cb(const char *json)
+{
+#if 0
+    cJSON *obj = cJSON_Parse(json);
+    char  *str = cJSON_Print(obj);
+    rt_kprintf("%s\n", str);
+    rt_free(str);
+
+    cJSON *powerstate = cJSON_GetObjectItem(cJSON_GetObjectItem(obj, "params"), "powerstate");
+    LOG_D("power state: %d", powerstate->valueint);
+    if (powerstate->valueint == 1)
+    {
+        light_on();
+        LOG_D("switch on");
+    }
+    else if (powerstate->valueint == 0)
+    {
+        light_off();
+        LOG_D("switch off");
+    }
+#endif
+}
+
 static void upload_thread_entry(void *parameter)
 {
 #ifdef PKG_USING_BC28_MQTT
-    if(RT_EOK != bc28_init())
+    if (bc28_init() < 0)
     {
         rt_kprintf("(BC28) init failed\n");
         LED_BLINK_FAST(led_warning);
         return;
     }
+
+    if (bc28_client_attach() < 0)
+    {
+        rt_kprintf("(BC28) attach failed\n");
+        LED_BLINK_FAST(led_warning);
+        return;
+    }
+
     rt_kprintf("(BC28) attach ok\n");
 
-    while (RT_EOK != build_mqtt_network())
+    while (bc28_build_mqtt_network() < 0)
     {
+        rt_kprintf("(BC28) rebuild mqtt network\n");
         LED_BLINK_FAST(led_warning);
         bc28_mqtt_close();
-        rt_kprintf("(BC28) rebuild mqtt network\n");
     }
     rt_kprintf("(BC28) MQTT connect ok\n");
+
+    bc28_bind_parser(mqtt_recv_cb);
 #else
     /* netdev */
     void *pclient = NULL;
