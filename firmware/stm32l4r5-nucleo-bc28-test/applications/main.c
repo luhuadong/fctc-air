@@ -26,7 +26,8 @@
 /* defined the LED3 pin: PB14 */
 #define LED3_PIN    GET_PIN(B, 14)
 /* D3 */
-#define LIGHT_PIN   GET_PIN(E, 13)
+//#define LIGHT_PIN   GET_PIN(E, 13)
+#define LIGHT_PIN   LED2_PIN
 
 #define LED_RUN_PIN LED1_PIN
 
