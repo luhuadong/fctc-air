@@ -1,0 +1,12 @@
+core_cm4.h:1816:22:__NVIC_SetPriority	16	static
+drv_common.c:20:13:reboot	16	static
+drv_common.c:28:6:rt_hw_systick_init	8	static
+drv_common.c:47:6:SysTick_Handler	8	static
+drv_common.c:59:10:HAL_GetTick	8	static
+drv_common.c:64:6:HAL_SuspendTick	4	static
+drv_common.c:68:6:HAL_ResumeTick	4	static
+drv_common.c:72:6:HAL_Delay	16	static
+drv_common.c:78:19:HAL_InitTick	16	static
+drv_common.c:89:6:_Error_Handler	16	static
+drv_common.c:104:6:rt_hw_us_delay	40	static
+drv_common.c:119:14:rt_hw_board_init	16	static

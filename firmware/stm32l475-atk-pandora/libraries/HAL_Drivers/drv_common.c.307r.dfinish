@@ -1,0 +1,1516 @@
+
+;; Function __NVIC_SetPriority (__NVIC_SetPriority, funcdef_no=130, decl_uid=7653, cgraph_uid=130, symbol_order=130)
+
+(note 1 0 7 NOTE_INSN_DELETED)
+(note 7 1 50 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 50 7 51 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1817 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 51 50 52 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -12 [0xfffffffffffffff4]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1817 4 {*arm_addsi3}
+     (nil))
+(insn 52 51 53 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1817 304 {stack_tie}
+     (nil))
+(insn/f 53 52 54 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1817 4 {*arm_addsi3}
+     (nil))
+(note 54 53 2 2 NOTE_INSN_PROLOGUE_END)
+(insn 2 54 5 2 (set (reg:SI 3 r3 [121])
+        (reg:SI 0 r0 [ IRQn ])) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1817 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 5 2 4 2 (set (mem/c:SI (reg/f:SI 7 r7) [2 priority+0 S4 A32])
+        (reg:SI 1 r1 [ priority ])) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1817 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 4 5 6 2 (set (mem/c:QI (plus:SI (reg/f:SI 7 r7)
+                (const_int 7 [0x7])) [1 IRQn+0 S1 A8])
+        (reg:QI 3 r3 [122])) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1817 192 {*arm_movqi_insn}
+     (nil))
+(note 6 4 9 2 NOTE_INSN_FUNCTION_BEG)
+(insn 9 6 10 2 (set (reg:SI 3 r3 [123])
+        (sign_extend:SI (mem/c:QI (plus:SI (reg/f:SI 7 r7)
+                    (const_int 7 [0x7])) [1 IRQn+0 S1 A8]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1818 904 {*thumb2_extendqisi_v6}
+     (nil))
+(insn 10 9 11 2 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 3 r3 [123])
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1818 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 11 10 12 2 (set (pc)
+        (if_then_else (lt (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 24)
+            (pc))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1818 204 {arm_cond_branch}
+     (nil)
+ -> 24)
+(note 12 11 13 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+(insn 13 12 14 3 (set (reg:SI 3 r3 [124])
+        (mem/c:SI (reg/f:SI 7 r7) [2 priority+0 S4 A32])) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1820 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 14 13 15 3 (set (reg:SI 2 r2 [orig:110 _1 ] [110])
+        (zero_extend:SI (reg:QI 3 r3 [124]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1820 906 {thumb2_zero_extendqisi2_v6}
+     (nil))
+(insn 15 14 16 3 (set (reg/f:SI 1 r1 [orig:111 _2 ] [111])
+        (mem:SI (label_ref 67) [0  S4 A32])) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1820 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 16 15 17 3 (set (reg:SI 3 r3 [orig:112 _3 ] [112])
+        (sign_extend:SI (mem/c:QI (plus:SI (reg/f:SI 7 r7)
+                    (const_int 7 [0x7])) [1 IRQn+0 S1 A8]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1820 904 {*thumb2_extendqisi_v6}
+     (nil))
+(insn 17 16 18 3 (parallel [
+            (set (reg:SI 2 r2 [125])
+                (ashift:SI (reg:SI 2 r2 [orig:110 _1 ] [110])
+                    (const_int 4 [0x4])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1820 913 {*thumb2_shiftsi3_short}
+     (nil))
+(insn 18 17 19 3 (set (reg:SI 2 r2 [orig:113 _4 ] [113])
+        (zero_extend:SI (reg:QI 2 r2 [125]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1820 906 {thumb2_zero_extendqisi2_v6}
+     (nil))
+(insn 19 18 21 3 (set (reg/f:SI 3 r3 [126])
+        (plus:SI (reg:SI 3 r3 [orig:112 _3 ] [112])
+            (reg/f:SI 1 r1 [orig:111 _2 ] [111]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1820 4 {*arm_addsi3}
+     (nil))
+(insn 21 19 42 3 (set (mem/v/j:QI (plus:SI (reg/f:SI 3 r3 [126])
+                (const_int 768 [0x300])) [0 _2->IP S1 A8])
+        (reg:QI 2 r2 [127])) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1820 192 {*arm_movqi_insn}
+     (nil))
+(jump_insn 42 21 43 3 (set (pc)
+        (label_ref:SI 46)) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1826 214 {*arm_jump}
+     (nil)
+ -> 46)
+(barrier 43 42 24)
+(code_label 24 43 25 4 2 (nil) [1 uses])
+(note 25 24 26 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+(insn 26 25 27 4 (set (reg:SI 3 r3 [128])
+        (mem/c:SI (reg/f:SI 7 r7) [2 priority+0 S4 A32])) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1824 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 27 26 28 4 (set (reg:SI 2 r2 [orig:114 _5 ] [114])
+        (zero_extend:SI (reg:QI 3 r3 [128]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1824 906 {thumb2_zero_extendqisi2_v6}
+     (nil))
+(insn 28 27 29 4 (set (reg/f:SI 1 r1 [orig:115 _6 ] [115])
+        (mem:SI (const:SI (plus:SI (label_ref 67)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1824 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 29 28 31 4 (set (reg:SI 3 r3 [orig:116 IRQn.0_7 ] [116])
+        (zero_extend:SI (mem/c:QI (plus:SI (reg/f:SI 7 r7)
+                    (const_int 7 [0x7])) [1 IRQn+0 S1 A8]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1824 906 {thumb2_zero_extendqisi2_v6}
+     (nil))
+(insn 31 29 32 4 (set (reg:SI 3 r3 [orig:118 _9 ] [118])
+        (and:SI (reg:SI 3 r3 [orig:117 _8 ] [117])
+            (const_int 15 [0xf]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1824 82 {*arm_andsi3_insn}
+     (nil))
+(insn 32 31 33 4 (parallel [
+            (set (reg:SI 3 r3 [orig:119 _10 ] [119])
+                (plus:SI (reg:SI 3 r3 [orig:118 _9 ] [118])
+                    (const_int -4 [0xfffffffffffffffc])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1824 917 {*thumb2_addsi_short}
+     (nil))
+(insn 33 32 34 4 (parallel [
+            (set (reg:SI 2 r2 [129])
+                (ashift:SI (reg:SI 2 r2 [orig:114 _5 ] [114])
+                    (const_int 4 [0x4])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1824 913 {*thumb2_shiftsi3_short}
+     (nil))
+(insn 34 33 35 4 (set (reg:SI 2 r2 [orig:120 _11 ] [120])
+        (zero_extend:SI (reg:QI 2 r2 [129]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1824 906 {thumb2_zero_extendqisi2_v6}
+     (nil))
+(insn 35 34 37 4 (set (reg/f:SI 3 r3 [130])
+        (plus:SI (reg:SI 3 r3 [orig:119 _10 ] [119])
+            (reg/f:SI 1 r1 [orig:115 _6 ] [115]))) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1824 4 {*arm_addsi3}
+     (nil))
+(insn 37 35 46 4 (set (mem/v/j:QI (plus:SI (reg/f:SI 3 r3 [130])
+                (const_int 24 [0x18])) [0 _6->SHP S1 A8])
+        (reg:QI 2 r2 [131])) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1824 192 {*arm_movqi_insn}
+     (nil))
+(code_label 46 37 44 5 4 (nil) [1 uses])
+(note 44 46 45 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+(insn 45 44 55 5 (const_int 0 [0]) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1826 236 {nop}
+     (nil))
+(note 55 45 56 5 NOTE_INSN_EPILOGUE_BEG)
+(insn/f 56 55 57 5 (parallel [
+            (set (reg/f:SI 7 r7)
+                (plus:SI (reg/f:SI 7 r7)
+                    (const_int 12 [0xc])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1826 917 {*thumb2_addsi_short}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 7 r7)
+            (plus:SI (reg/f:SI 7 r7)
+                (const_int 12 [0xc])))
+        (nil)))
+(insn 57 56 58 5 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1826 230 {blockage}
+     (nil))
+(insn/f 58 57 59 5 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1826 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 59 58 60 5 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1826 322 {force_register_use}
+     (nil))
+(insn/f 60 59 61 5 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [5  S4 A32])) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1826 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 61 60 62 5 (simple_return) "libraries/STM32L4xx_HAL/CMSIS/Include/core_cm4.h":1826 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 62 61 65)
+(code_label 65 62 66 6 (nil) [0 uses])
+(insn 66 65 67 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 67 66 68 5 (nil) [0 uses])
+(insn 68 67 69 (unspec_volatile [
+            (const_int -536813312 [0xffffffffe000e100])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 69 68 70 (unspec_volatile [
+            (const_int -536810240 [0xffffffffe000ed00])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 70 69 71 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 71 70 49)
+(note 49 71 0 NOTE_INSN_DELETED)
+
+;; Function reboot (reboot, funcdef_no=332, decl_uid=12591, cgraph_uid=334, symbol_order=334)
+
+(note 1 0 7 NOTE_INSN_DELETED)
+(note 7 1 14 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 14 7 15 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -8 [0xfffffffffffffff8]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+            (use (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":21 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -8 [0xfffffffffffffff8])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+                (set/f (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                            (const_int 4 [0x4])) [5  S4 A32])
+                    (reg:SI 14 lr))
+            ])
+        (nil)))
+(insn/f 15 14 16 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -8 [0xfffffffffffffff8]))) "libraries/HAL_Drivers/drv_common.c":21 4 {*arm_addsi3}
+     (nil))
+(insn 16 15 17 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/HAL_Drivers/drv_common.c":21 304 {stack_tie}
+     (nil))
+(insn/f 17 16 18 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/HAL_Drivers/drv_common.c":21 4 {*arm_addsi3}
+     (nil))
+(note 18 17 2 2 NOTE_INSN_PROLOGUE_END)
+(insn 2 18 5 2 (set (reg:SI 3 r3 [110])
+        (reg:SI 0 r0 [ argc ])) "libraries/HAL_Drivers/drv_common.c":21 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 5 2 4 2 (set (mem/f/c:SI (reg/f:SI 7 r7) [6 argv+0 S4 A32])
+        (reg:SI 1 r1 [ argv ])) "libraries/HAL_Drivers/drv_common.c":21 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 4 5 6 2 (set (mem/c:QI (plus:SI (reg/f:SI 7 r7)
+                (const_int 7 [0x7])) [0 argc+0 S1 A8])
+        (reg:QI 3 r3 [111])) "libraries/HAL_Drivers/drv_common.c":21 192 {*arm_movqi_insn}
+     (nil))
+(note 6 4 9 2 NOTE_INSN_FUNCTION_BEG)
+(call_insn 9 6 12 2 (parallel [
+            (call (mem:SI (symbol_ref:SI ("rt_hw_cpu_reset") [flags 0x41]  <function_decl 0x7f7f89f4f800 rt_hw_cpu_reset>) [0 rt_hw_cpu_reset S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":22 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(insn 12 9 19 2 (const_int 0 [0]) "libraries/HAL_Drivers/drv_common.c":23 236 {nop}
+     (nil))
+(note 19 12 20 2 NOTE_INSN_EPILOGUE_BEG)
+(insn/f 20 19 21 2 (parallel [
+            (set (reg/f:SI 7 r7)
+                (plus:SI (reg/f:SI 7 r7)
+                    (const_int 8 [0x8])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":23 917 {*thumb2_addsi_short}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 7 r7)
+            (plus:SI (reg/f:SI 7 r7)
+                (const_int 8 [0x8])))
+        (nil)))
+(insn 21 20 22 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/HAL_Drivers/drv_common.c":23 230 {blockage}
+     (nil))
+(insn/f 22 21 23 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/HAL_Drivers/drv_common.c":23 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 23 22 24 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/HAL_Drivers/drv_common.c":23 322 {force_register_use}
+     (nil))
+(jump_insn 24 23 25 2 (parallel [
+            (return)
+            (set/f (reg/f:SI 13 sp)
+                (plus:SI (reg/f:SI 13 sp)
+                    (const_int 8 [0x8])))
+            (set/f (reg/f:SI 7 r7)
+                (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32]))
+            (set/f (reg:SI 15 pc)
+                (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                        (const_int 4 [0x4])) [5  S4 A32]))
+        ]) "libraries/HAL_Drivers/drv_common.c":23 306 {*pop_multiple_with_writeback_and_return}
+     (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+        (nil))
+ -> return)
+(barrier 25 24 13)
+(note 13 25 0 NOTE_INSN_DELETED)
+
+;; Function rt_hw_systick_init (rt_hw_systick_init, funcdef_no=333, decl_uid=12597, cgraph_uid=335, symbol_order=338)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 22 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 22 3 23 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -8 [0xfffffffffffffff8]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+            (use (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":29 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -8 [0xfffffffffffffff8])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+                (set/f (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                            (const_int 4 [0x4])) [5  S4 A32])
+                    (reg:SI 14 lr))
+            ])
+        (nil)))
+(insn/f 23 22 24 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/HAL_Drivers/drv_common.c":29 4 {*arm_addsi3}
+     (nil))
+(note 24 23 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 24 5 2 NOTE_INSN_FUNCTION_BEG)
+(call_insn 5 2 6 2 (parallel [
+            (set (reg:SI 0 r0)
+                (call (mem:SI (symbol_ref:SI ("HAL_RCC_GetHCLKFreq") [flags 0x41]  <function_decl 0x7f7f898ef700 HAL_RCC_GetHCLKFreq>) [0 HAL_RCC_GetHCLKFreq S4 A32])
+                    (const_int 0 [0])))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":35 220 {*call_value_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(insn 6 5 7 2 (set (reg:SI 2 r2 [orig:110 _1 ] [110])
+        (reg:SI 0 r0)) "libraries/HAL_Drivers/drv_common.c":35 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg:SI 3 r3 [113])
+        (mem:SI (label_ref 31) [0  S4 A32])) "libraries/HAL_Drivers/drv_common.c":35 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (parallel [
+            (set (reg:SI 3 r3 [112])
+                (truncate:SI (lshiftrt:DI (mult:DI (zero_extend:DI (reg:SI 2 r2 [orig:110 _1 ] [110]))
+                            (zero_extend:DI (reg:SI 3 r3 [113])))
+                        (const_int 32 [0x20]))))
+            (clobber (reg:SI 2 r2 [114]))
+        ]) "libraries/HAL_Drivers/drv_common.c":35 68 {*umulsi3_highpart_v6}
+     (nil))
+(insn 9 8 10 2 (parallel [
+            (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+                (lshiftrt:SI (reg:SI 3 r3 [112])
+                    (const_int 6 [0x6])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":35 913 {*thumb2_shiftsi3_short}
+     (nil))
+(insn 10 9 11 2 (set (reg:SI 0 r0)
+        (reg:SI 3 r3 [orig:111 _2 ] [111])) "libraries/HAL_Drivers/drv_common.c":35 649 {*thumb2_movsi_vfp}
+     (nil))
+(call_insn 11 10 12 2 (parallel [
+            (set (reg:SI 0 r0)
+                (call (mem:SI (symbol_ref:SI ("HAL_SYSTICK_Config") [flags 0x41]  <function_decl 0x7f7f89938000 HAL_SYSTICK_Config>) [0 HAL_SYSTICK_Config S4 A32])
+                    (const_int 0 [0])))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":35 220 {*call_value_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (expr_list:SI (use (reg:SI 0 r0))
+            (nil))))
+(insn 12 11 13 2 (parallel [
+            (set (reg:SI 0 r0)
+                (const_int 4 [0x4]))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":38 916 {*thumb2_movsi_shortim}
+     (nil))
+(call_insn 13 12 14 2 (parallel [
+            (call (mem:SI (symbol_ref:SI ("HAL_SYSTICK_CLKSourceConfig") [flags 0x41]  <function_decl 0x7f7f89938700 HAL_SYSTICK_CLKSourceConfig>) [0 HAL_SYSTICK_CLKSourceConfig S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":38 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (expr_list:SI (use (reg:SI 0 r0))
+            (nil))))
+(insn 14 13 15 2 (parallel [
+            (set (reg:SI 1 r1)
+                (const_int 255 [0xff]))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":40 916 {*thumb2_movsi_shortim}
+     (nil))
+(insn 15 14 16 2 (set (reg:SI 0 r0)
+        (const_int -1 [0xffffffffffffffff])) "libraries/HAL_Drivers/drv_common.c":40 649 {*thumb2_movsi_vfp}
+     (nil))
+(call_insn 16 15 19 2 (parallel [
+            (call (mem:SI (symbol_ref:SI ("__NVIC_SetPriority") [flags 0x3]  <function_decl 0x7f7f89c58600 __NVIC_SetPriority>) [0 __NVIC_SetPriority S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":40 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (expr_list:QI (use (reg:SI 0 r0))
+            (expr_list:SI (use (reg:SI 1 r1))
+                (nil)))))
+(insn 19 16 25 2 (const_int 0 [0]) "libraries/HAL_Drivers/drv_common.c":41 236 {nop}
+     (nil))
+(note 25 19 26 2 NOTE_INSN_EPILOGUE_BEG)
+(jump_insn 26 25 27 2 (parallel [
+            (return)
+            (set/f (reg/f:SI 13 sp)
+                (plus:SI (reg/f:SI 13 sp)
+                    (const_int 8 [0x8])))
+            (set/f (reg/f:SI 7 r7)
+                (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32]))
+            (set/f (reg:SI 15 pc)
+                (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                        (const_int 4 [0x4])) [5  S4 A32]))
+        ]) "libraries/HAL_Drivers/drv_common.c":41 306 {*pop_multiple_with_writeback_and_return}
+     (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+        (nil))
+ -> return)
+(barrier 27 26 29)
+(code_label 29 27 30 10 (nil) [0 uses])
+(insn 30 29 31 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 31 30 32 9 (nil) [0 uses])
+(insn 32 31 33 (unspec_volatile [
+            (const_int 274877907 [0x10624dd3])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 33 32 34 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 34 33 21)
+(note 21 34 0 NOTE_INSN_DELETED)
+
+;; Function SysTick_Handler (SysTick_Handler, funcdef_no=334, decl_uid=12600, cgraph_uid=336, symbol_order=339)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 13 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 13 3 14 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -8 [0xfffffffffffffff8]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+            (use (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":48 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -8 [0xfffffffffffffff8])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+                (set/f (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                            (const_int 4 [0x4])) [5  S4 A32])
+                    (reg:SI 14 lr))
+            ])
+        (nil)))
+(insn/f 14 13 15 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/HAL_Drivers/drv_common.c":48 4 {*arm_addsi3}
+     (nil))
+(note 15 14 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 15 5 2 NOTE_INSN_FUNCTION_BEG)
+(call_insn 5 2 6 2 (parallel [
+            (call (mem:SI (symbol_ref:SI ("rt_interrupt_enter") [flags 0x41]  <function_decl 0x7f7f89f3f800 rt_interrupt_enter>) [0 rt_interrupt_enter S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":50 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(call_insn 6 5 7 2 (parallel [
+            (call (mem:SI (symbol_ref:SI ("HAL_IncTick") [flags 0x41]  <function_decl 0x7f7f89484400 HAL_IncTick>) [0 HAL_IncTick S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":52 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(call_insn 7 6 8 2 (parallel [
+            (call (mem:SI (symbol_ref:SI ("rt_tick_increase") [flags 0x41]  <function_decl 0x7f7f89f24200 rt_tick_increase>) [0 rt_tick_increase S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":53 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(call_insn 8 7 11 2 (parallel [
+            (call (mem:SI (symbol_ref:SI ("rt_interrupt_leave") [flags 0x41]  <function_decl 0x7f7f89f3f900 rt_interrupt_leave>) [0 rt_interrupt_leave S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":56 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(insn 11 8 16 2 (const_int 0 [0]) "libraries/HAL_Drivers/drv_common.c":57 236 {nop}
+     (nil))
+(note 16 11 17 2 NOTE_INSN_EPILOGUE_BEG)
+(jump_insn 17 16 18 2 (parallel [
+            (return)
+            (set/f (reg/f:SI 13 sp)
+                (plus:SI (reg/f:SI 13 sp)
+                    (const_int 8 [0x8])))
+            (set/f (reg/f:SI 7 r7)
+                (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32]))
+            (set/f (reg:SI 15 pc)
+                (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                        (const_int 4 [0x4])) [5  S4 A32]))
+        ]) "libraries/HAL_Drivers/drv_common.c":57 306 {*pop_multiple_with_writeback_and_return}
+     (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+        (nil))
+ -> return)
+(barrier 18 17 12)
+(note 12 18 0 NOTE_INSN_DELETED)
+
+;; Function HAL_GetTick (HAL_GetTick, funcdef_no=335, decl_uid=12261, cgraph_uid=337, symbol_order=340)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 23 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 23 3 24 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -8 [0xfffffffffffffff8]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+            (use (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":60 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -8 [0xfffffffffffffff8])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+                (set/f (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                            (const_int 4 [0x4])) [5  S4 A32])
+                    (reg:SI 14 lr))
+            ])
+        (nil)))
+(insn/f 24 23 25 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/HAL_Drivers/drv_common.c":60 4 {*arm_addsi3}
+     (nil))
+(note 25 24 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 25 5 2 NOTE_INSN_FUNCTION_BEG)
+(call_insn 5 2 6 2 (parallel [
+            (set (reg:SI 0 r0)
+                (call (mem:SI (symbol_ref:SI ("rt_tick_get") [flags 0x41]  <function_decl 0x7f7f89f24000 rt_tick_get>) [0 rt_tick_get S4 A32])
+                    (const_int 0 [0])))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":61 220 {*call_value_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(insn 6 5 7 2 (set (reg:SI 2 r2 [orig:110 _1 ] [110])
+        (reg:SI 0 r0)) "libraries/HAL_Drivers/drv_common.c":61 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg:SI 3 r3 [114])
+        (const_int 1000 [0x3e8])) "libraries/HAL_Drivers/drv_common.c":61 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mult:SI (reg:SI 3 r3 [114])
+            (reg:SI 2 r2 [orig:110 _1 ] [110]))) "libraries/HAL_Drivers/drv_common.c":61 45 {*arm_mulsi3_v6}
+     (nil))
+(insn 9 8 10 2 (set (reg:SI 2 r2 [116])
+        (mem:SI (label_ref 32) [0  S4 A32])) "libraries/HAL_Drivers/drv_common.c":61 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 10 9 11 2 (parallel [
+            (set (reg:SI 3 r3 [115])
+                (truncate:SI (lshiftrt:DI (mult:DI (zero_extend:DI (reg:SI 3 r3 [orig:111 _2 ] [111]))
+                            (zero_extend:DI (reg:SI 2 r2 [116])))
+                        (const_int 32 [0x20]))))
+            (clobber (reg:SI 2 r2 [118]))
+        ]) "libraries/HAL_Drivers/drv_common.c":61 68 {*umulsi3_highpart_v6}
+     (nil))
+(insn 11 10 18 2 (parallel [
+            (set (reg:SI 3 r3 [orig:112 _5 ] [112])
+                (lshiftrt:SI (reg:SI 3 r3 [115])
+                    (const_int 6 [0x6])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":61 913 {*thumb2_shiftsi3_short}
+     (nil))
+(insn 18 11 19 2 (set (reg/i:SI 0 r0)
+        (reg:SI 3 r3 [orig:113 <retval> ] [113])) "libraries/HAL_Drivers/drv_common.c":62 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 19 18 26 2 (use (reg/i:SI 0 r0)) "libraries/HAL_Drivers/drv_common.c":62 -1
+     (nil))
+(note 26 19 27 2 NOTE_INSN_EPILOGUE_BEG)
+(jump_insn 27 26 28 2 (parallel [
+            (return)
+            (set/f (reg/f:SI 13 sp)
+                (plus:SI (reg/f:SI 13 sp)
+                    (const_int 8 [0x8])))
+            (set/f (reg/f:SI 7 r7)
+                (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32]))
+            (set/f (reg:SI 15 pc)
+                (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                        (const_int 4 [0x4])) [5  S4 A32]))
+        ]) "libraries/HAL_Drivers/drv_common.c":62 306 {*pop_multiple_with_writeback_and_return}
+     (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+        (nil))
+ -> return)
+(barrier 28 27 30)
+(code_label 30 28 31 15 (nil) [0 uses])
+(insn 31 30 32 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 32 31 33 14 (nil) [0 uses])
+(insn 33 32 34 (unspec_volatile [
+            (const_int 274877907 [0x10624dd3])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 34 33 35 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 35 34 22)
+(note 22 35 0 NOTE_INSN_DELETED)
+
+;; Function HAL_SuspendTick (HAL_SuspendTick, funcdef_no=336, decl_uid=12269, cgraph_uid=338, symbol_order=341)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 9 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 9 3 10 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/HAL_Drivers/drv_common.c":65 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 10 9 11 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/HAL_Drivers/drv_common.c":65 4 {*arm_addsi3}
+     (nil))
+(note 11 10 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 11 7 2 NOTE_INSN_FUNCTION_BEG)
+(insn 7 2 12 2 (const_int 0 [0]) "libraries/HAL_Drivers/drv_common.c":66 236 {nop}
+     (nil))
+(note 12 7 13 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 13 12 14 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/HAL_Drivers/drv_common.c":66 230 {blockage}
+     (nil))
+(insn/f 14 13 15 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/HAL_Drivers/drv_common.c":66 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 15 14 16 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/HAL_Drivers/drv_common.c":66 322 {force_register_use}
+     (nil))
+(insn/f 16 15 17 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [5  S4 A32])) "libraries/HAL_Drivers/drv_common.c":66 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 17 16 18 2 (simple_return) "libraries/HAL_Drivers/drv_common.c":66 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 18 17 8)
+(note 8 18 0 NOTE_INSN_DELETED)
+
+;; Function HAL_ResumeTick (HAL_ResumeTick, funcdef_no=337, decl_uid=12271, cgraph_uid=339, symbol_order=342)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 9 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 9 3 10 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/HAL_Drivers/drv_common.c":69 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 10 9 11 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/HAL_Drivers/drv_common.c":69 4 {*arm_addsi3}
+     (nil))
+(note 11 10 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 11 7 2 NOTE_INSN_FUNCTION_BEG)
+(insn 7 2 12 2 (const_int 0 [0]) "libraries/HAL_Drivers/drv_common.c":70 236 {nop}
+     (nil))
+(note 12 7 13 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 13 12 14 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/HAL_Drivers/drv_common.c":70 230 {blockage}
+     (nil))
+(insn/f 14 13 15 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/HAL_Drivers/drv_common.c":70 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 15 14 16 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/HAL_Drivers/drv_common.c":70 322 {force_register_use}
+     (nil))
+(insn/f 16 15 17 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [5  S4 A32])) "libraries/HAL_Drivers/drv_common.c":70 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 17 16 18 2 (simple_return) "libraries/HAL_Drivers/drv_common.c":70 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 18 17 8)
+(note 8 18 0 NOTE_INSN_DELETED)
+
+;; Function HAL_Delay (HAL_Delay, funcdef_no=338, decl_uid=12259, cgraph_uid=340, symbol_order=343)
+
+(note 1 0 4 NOTE_INSN_DELETED)
+(note 4 1 14 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 14 4 15 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -8 [0xfffffffffffffff8]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+            (use (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":73 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -8 [0xfffffffffffffff8])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+                (set/f (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                            (const_int 4 [0x4])) [5  S4 A32])
+                    (reg:SI 14 lr))
+            ])
+        (nil)))
+(insn/f 15 14 16 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -8 [0xfffffffffffffff8]))) "libraries/HAL_Drivers/drv_common.c":73 4 {*arm_addsi3}
+     (nil))
+(insn 16 15 17 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/HAL_Drivers/drv_common.c":73 304 {stack_tie}
+     (nil))
+(insn/f 17 16 18 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/HAL_Drivers/drv_common.c":73 4 {*arm_addsi3}
+     (nil))
+(note 18 17 2 2 NOTE_INSN_PROLOGUE_END)
+(insn 2 18 3 2 (set (mem/v/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 Delay+0 S4 A32])
+        (reg:SI 0 r0 [ Delay ])) "libraries/HAL_Drivers/drv_common.c":73 649 {*thumb2_movsi_vfp}
+     (nil))
+(note 3 2 6 2 NOTE_INSN_FUNCTION_BEG)
+(insn 6 3 8 2 (set (reg:SI 3 r3 [orig:110 Delay.1_1 ] [110])
+        (mem/v/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 Delay+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":74 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 6 9 2 (set (reg:SI 0 r0)
+        (reg:SI 3 r3 [orig:111 Delay.2_2 ] [111])) "libraries/HAL_Drivers/drv_common.c":74 649 {*thumb2_movsi_vfp}
+     (nil))
+(call_insn 9 8 12 2 (parallel [
+            (set (reg:SI 0 r0)
+                (call (mem:SI (symbol_ref:SI ("rt_thread_mdelay") [flags 0x41]  <function_decl 0x7f7f89f26b00 rt_thread_mdelay>) [0 rt_thread_mdelay S4 A32])
+                    (const_int 0 [0])))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":74 220 {*call_value_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (expr_list:SI (use (reg:SI 0 r0))
+            (nil))))
+(insn 12 9 19 2 (const_int 0 [0]) "libraries/HAL_Drivers/drv_common.c":75 236 {nop}
+     (nil))
+(note 19 12 20 2 NOTE_INSN_EPILOGUE_BEG)
+(insn/f 20 19 21 2 (parallel [
+            (set (reg/f:SI 7 r7)
+                (plus:SI (reg/f:SI 7 r7)
+                    (const_int 8 [0x8])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":75 917 {*thumb2_addsi_short}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 7 r7)
+            (plus:SI (reg/f:SI 7 r7)
+                (const_int 8 [0x8])))
+        (nil)))
+(insn 21 20 22 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/HAL_Drivers/drv_common.c":75 230 {blockage}
+     (nil))
+(insn/f 22 21 23 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/HAL_Drivers/drv_common.c":75 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 23 22 24 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/HAL_Drivers/drv_common.c":75 322 {force_register_use}
+     (nil))
+(jump_insn 24 23 25 2 (parallel [
+            (return)
+            (set/f (reg/f:SI 13 sp)
+                (plus:SI (reg/f:SI 13 sp)
+                    (const_int 8 [0x8])))
+            (set/f (reg/f:SI 7 r7)
+                (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32]))
+            (set/f (reg:SI 15 pc)
+                (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                        (const_int 4 [0x4])) [5  S4 A32]))
+        ]) "libraries/HAL_Drivers/drv_common.c":75 306 {*pop_multiple_with_writeback_and_return}
+     (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+        (nil))
+ -> return)
+(barrier 25 24 13)
+(note 13 25 0 NOTE_INSN_DELETED)
+
+;; Function HAL_InitTick (HAL_InitTick, funcdef_no=339, decl_uid=12255, cgraph_uid=341, symbol_order=344)
+
+(note 1 0 4 NOTE_INSN_DELETED)
+(note 4 1 17 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 17 4 18 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/HAL_Drivers/drv_common.c":79 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 18 17 19 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -12 [0xfffffffffffffff4]))) "libraries/HAL_Drivers/drv_common.c":79 4 {*arm_addsi3}
+     (nil))
+(insn 19 18 20 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/HAL_Drivers/drv_common.c":79 304 {stack_tie}
+     (nil))
+(insn/f 20 19 21 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/HAL_Drivers/drv_common.c":79 4 {*arm_addsi3}
+     (nil))
+(note 21 20 2 2 NOTE_INSN_PROLOGUE_END)
+(insn 2 21 3 2 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 TickPriority+0 S4 A32])
+        (reg:SI 0 r0 [ TickPriority ])) "libraries/HAL_Drivers/drv_common.c":79 649 {*thumb2_movsi_vfp}
+     (nil))
+(note 3 2 6 2 NOTE_INSN_FUNCTION_BEG)
+(insn 6 3 13 2 (parallel [
+            (set (reg:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 0 [0]))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":81 916 {*thumb2_movsi_shortim}
+     (nil))
+(insn 13 6 14 2 (set (reg/i:SI 0 r0)
+        (reg:SI 3 r3 [orig:111 <retval> ] [111])) "libraries/HAL_Drivers/drv_common.c":82 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 14 13 22 2 (use (reg/i:SI 0 r0)) "libraries/HAL_Drivers/drv_common.c":82 -1
+     (nil))
+(note 22 14 23 2 NOTE_INSN_EPILOGUE_BEG)
+(insn/f 23 22 24 2 (parallel [
+            (set (reg/f:SI 7 r7)
+                (plus:SI (reg/f:SI 7 r7)
+                    (const_int 12 [0xc])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":82 917 {*thumb2_addsi_short}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 7 r7)
+            (plus:SI (reg/f:SI 7 r7)
+                (const_int 12 [0xc])))
+        (nil)))
+(insn 24 23 25 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/HAL_Drivers/drv_common.c":82 230 {blockage}
+     (nil))
+(insn/f 25 24 26 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/HAL_Drivers/drv_common.c":82 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 26 25 27 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/HAL_Drivers/drv_common.c":82 322 {force_register_use}
+     (nil))
+(insn/f 27 26 28 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [5  S4 A32])) "libraries/HAL_Drivers/drv_common.c":82 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 28 27 29 2 (simple_return) "libraries/HAL_Drivers/drv_common.c":82 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 29 28 16)
+(note 16 29 0 NOTE_INSN_DELETED)
+
+;; Function _Error_Handler (_Error_Handler, funcdef_no=340, decl_uid=6839, cgraph_uid=342, symbol_order=345)
+
+(note 1 0 5 NOTE_INSN_DELETED)
+(note 5 1 15 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 15 5 16 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/HAL_Drivers/drv_common.c":90 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 16 15 17 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -12 [0xfffffffffffffff4]))) "libraries/HAL_Drivers/drv_common.c":90 4 {*arm_addsi3}
+     (nil))
+(insn 17 16 18 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/HAL_Drivers/drv_common.c":90 304 {stack_tie}
+     (nil))
+(insn/f 18 17 19 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/HAL_Drivers/drv_common.c":90 4 {*arm_addsi3}
+     (nil))
+(note 19 18 2 2 NOTE_INSN_PROLOGUE_END)
+(insn 2 19 3 2 (set (mem/f/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [8 s+0 S4 A32])
+        (reg:SI 0 r0 [ s ])) "libraries/HAL_Drivers/drv_common.c":90 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 3 2 4 2 (set (mem/c:SI (reg/f:SI 7 r7) [10 num+0 S4 A32])
+        (reg:SI 1 r1 [ num ])) "libraries/HAL_Drivers/drv_common.c":90 649 {*thumb2_movsi_vfp}
+     (nil))
+(note 4 3 7 2 NOTE_INSN_FUNCTION_BEG)
+(code_label 7 4 6 3 22 (nil) [1 uses])
+(note 6 7 12 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+(jump_insn 12 6 13 3 (set (pc)
+        (label_ref 7)) "libraries/HAL_Drivers/drv_common.c":93 214 {*arm_jump}
+     (nil)
+ -> 7)
+(barrier 13 12 14)
+(note 14 13 0 NOTE_INSN_DELETED)
+
+;; Function rt_hw_us_delay (rt_hw_us_delay, funcdef_no=341, decl_uid=6444, cgraph_uid=343, symbol_order=346)
+
+(note 1 0 4 NOTE_INSN_DELETED)
+(note 4 1 60 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 60 4 61 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/HAL_Drivers/drv_common.c":105 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 61 60 62 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -36 [0xffffffffffffffdc]))) "libraries/HAL_Drivers/drv_common.c":105 4 {*arm_addsi3}
+     (nil))
+(insn 62 61 63 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/HAL_Drivers/drv_common.c":105 304 {stack_tie}
+     (nil))
+(insn/f 63 62 64 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/HAL_Drivers/drv_common.c":105 4 {*arm_addsi3}
+     (nil))
+(note 64 63 2 2 NOTE_INSN_PROLOGUE_END)
+(insn 2 64 3 2 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [10 us+0 S4 A32])
+        (reg:SI 0 r0 [ us ])) "libraries/HAL_Drivers/drv_common.c":105 649 {*thumb2_movsi_vfp}
+     (nil))
+(note 3 2 6 2 NOTE_INSN_FUNCTION_BEG)
+(insn 6 3 7 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 79) [0  S4 A32])) "libraries/HAL_Drivers/drv_common.c":107 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg:SI 3 r3 [117])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 8 [0x8])) [2 _1->VAL+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":107 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 28 [0x1c])) [10 start+0 S4 A32])
+        (reg:SI 3 r3 [117])) "libraries/HAL_Drivers/drv_common.c":107 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 9 8 10 2 (set (reg/f:SI 3 r3 [orig:111 _2 ] [111])
+        (mem:SI (label_ref 79) [0  S4 A32])) "libraries/HAL_Drivers/drv_common.c":108 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 10 9 11 2 (set (reg:SI 3 r3 [118])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:111 _2 ] [111])
+                (const_int 4 [0x4])) [2 _2->LOAD+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":108 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 11 10 12 2 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 24 [0x18])) [10 reload+0 S4 A32])
+        (reg:SI 3 r3 [118])) "libraries/HAL_Drivers/drv_common.c":108 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 11 13 2 (set (reg/f:SI 3 r3 [119])
+        (mem:SI (const:SI (plus:SI (label_ref 79)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/HAL_Drivers/drv_common.c":109 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 13 12 14 2 (set (reg:SI 3 r3 [orig:112 SystemCoreClock.3_3 ] [112])
+        (mem/c:SI (reg/f:SI 3 r3 [119]) [2 SystemCoreClock+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":109 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 14 13 15 2 (set (reg:SI 2 r2 [121])
+        (mem:SI (const:SI (plus:SI (label_ref 79)
+                    (const_int 8 [0x8]))) [0  S4 A32])) "libraries/HAL_Drivers/drv_common.c":109 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 15 14 16 2 (parallel [
+            (set (reg:SI 3 r3 [120])
+                (truncate:SI (lshiftrt:DI (mult:DI (zero_extend:DI (reg:SI 3 r3 [orig:112 SystemCoreClock.3_3 ] [112]))
+                            (zero_extend:DI (reg:SI 2 r2 [121])))
+                        (const_int 32 [0x20]))))
+            (clobber (reg:SI 2 r2 [134]))
+        ]) "libraries/HAL_Drivers/drv_common.c":109 68 {*umulsi3_highpart_v6}
+     (nil))
+(insn 16 15 17 2 (parallel [
+            (set (reg:SI 3 r3 [122])
+                (lshiftrt:SI (reg:SI 3 r3 [120])
+                    (const_int 18 [0x12])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":109 913 {*thumb2_shiftsi3_short}
+     (nil))
+(insn 17 16 45 2 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 20 [0x14])) [10 us_tick+0 S4 A32])
+        (reg:SI 3 r3 [122])) "libraries/HAL_Drivers/drv_common.c":109 649 {*thumb2_movsi_vfp}
+     (nil))
+(code_label 45 17 18 3 26 (nil) [1 uses])
+(note 18 45 19 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+(insn 19 18 20 3 (set (reg/f:SI 3 r3 [orig:113 _4 ] [113])
+        (mem:SI (label_ref 79) [0  S4 A32])) "libraries/HAL_Drivers/drv_common.c":111 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 20 19 21 3 (set (reg:SI 3 r3 [123])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:113 _4 ] [113])
+                (const_int 8 [0x8])) [2 _4->VAL+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":111 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 21 20 22 3 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 16 [0x10])) [10 now+0 S4 A32])
+        (reg:SI 3 r3 [123])) "libraries/HAL_Drivers/drv_common.c":111 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 22 21 23 3 (set (reg:SI 2 r2 [124])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 28 [0x1c])) [10 start+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":112 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 23 22 24 3 (set (reg:SI 3 r3 [125])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 16 [0x10])) [10 now+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":112 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 24 23 25 3 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 2 r2 [124])
+            (reg:SI 3 r3 [125]))) "libraries/HAL_Drivers/drv_common.c":112 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 25 24 26 3 (set (pc)
+        (if_then_else (leu (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 32)
+            (pc))) "libraries/HAL_Drivers/drv_common.c":112 204 {arm_cond_branch}
+     (nil)
+ -> 32)
+(note 26 25 27 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+(insn 27 26 28 4 (set (reg:SI 2 r2 [126])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 28 [0x1c])) [10 start+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":112 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 28 27 29 4 (set (reg:SI 3 r3 [127])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 16 [0x10])) [10 now+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":112 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 29 28 53 4 (parallel [
+            (set (reg:SI 3 r3 [orig:116 iftmp.4_7 ] [116])
+                (minus:SI (reg:SI 2 r2 [126])
+                    (reg:SI 3 r3 [127])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":112 918 {*thumb2_subsi_short}
+     (nil))
+(jump_insn 53 29 54 4 (set (pc)
+        (label_ref 39)) 214 {*arm_jump}
+     (nil)
+ -> 39)
+(barrier 54 53 32)
+(code_label 32 54 33 5 24 (nil) [1 uses])
+(note 33 32 34 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+(insn 34 33 35 5 (set (reg:SI 2 r2 [128])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 24 [0x18])) [10 reload+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":112 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 35 34 36 5 (set (reg:SI 3 r3 [129])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 28 [0x1c])) [10 start+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":112 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 36 35 37 5 (set (reg:SI 2 r2 [orig:114 _5 ] [114])
+        (plus:SI (reg:SI 2 r2 [128])
+            (reg:SI 3 r3 [129]))) "libraries/HAL_Drivers/drv_common.c":112 4 {*arm_addsi3}
+     (nil))
+(insn 37 36 38 5 (set (reg:SI 3 r3 [130])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 16 [0x10])) [10 now+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":112 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 38 37 39 5 (parallel [
+            (set (reg:SI 3 r3 [orig:116 iftmp.4_7 ] [116])
+                (minus:SI (reg:SI 2 r2 [orig:114 _5 ] [114])
+                    (reg:SI 3 r3 [130])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":112 918 {*thumb2_subsi_short}
+     (nil))
+(code_label 39 38 40 6 25 (nil) [1 uses])
+(note 40 39 41 6 [bb 6] NOTE_INSN_BASIC_BLOCK)
+(insn 41 40 42 6 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 12 [0xc])) [10 delta+0 S4 A32])
+        (reg:SI 3 r3 [orig:116 iftmp.4_7 ] [116])) "libraries/HAL_Drivers/drv_common.c":112 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 42 41 43 6 (set (reg:SI 3 r3 [131])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 20 [0x14])) [10 us_tick+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":113 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 43 42 44 6 (set (reg:SI 2 r2 [132])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [10 us+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":113 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 44 43 46 6 (set (reg:SI 3 r3 [orig:115 _6 ] [115])
+        (mult:SI (reg:SI 2 r2 [132])
+            (reg:SI 3 r3 [131]))) "libraries/HAL_Drivers/drv_common.c":113 45 {*arm_mulsi3_v6}
+     (nil))
+(insn 46 44 47 6 (set (reg:SI 2 r2 [133])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 12 [0xc])) [10 delta+0 S4 A32])) "libraries/HAL_Drivers/drv_common.c":113 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 47 46 48 6 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 2 r2 [133])
+            (reg:SI 3 r3 [orig:115 _6 ] [115]))) "libraries/HAL_Drivers/drv_common.c":113 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 48 47 49 6 (set (pc)
+        (if_then_else (ltu (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 45)
+            (pc))) "libraries/HAL_Drivers/drv_common.c":113 204 {arm_cond_branch}
+     (nil)
+ -> 45)
+(note 49 48 52 7 [bb 7] NOTE_INSN_BASIC_BLOCK)
+(insn 52 49 65 7 (const_int 0 [0]) "libraries/HAL_Drivers/drv_common.c":114 236 {nop}
+     (nil))
+(note 65 52 66 7 NOTE_INSN_EPILOGUE_BEG)
+(insn/f 66 65 67 7 (parallel [
+            (set (reg/f:SI 7 r7)
+                (plus:SI (reg/f:SI 7 r7)
+                    (const_int 36 [0x24])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":114 917 {*thumb2_addsi_short}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 7 r7)
+            (plus:SI (reg/f:SI 7 r7)
+                (const_int 36 [0x24])))
+        (nil)))
+(insn 67 66 68 7 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/HAL_Drivers/drv_common.c":114 230 {blockage}
+     (nil))
+(insn/f 68 67 69 7 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/HAL_Drivers/drv_common.c":114 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 69 68 70 7 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/HAL_Drivers/drv_common.c":114 322 {force_register_use}
+     (nil))
+(insn/f 70 69 71 7 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [5  S4 A32])) "libraries/HAL_Drivers/drv_common.c":114 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 71 70 72 7 (simple_return) "libraries/HAL_Drivers/drv_common.c":114 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 72 71 77)
+(code_label 77 72 78 28 (nil) [0 uses])
+(insn 78 77 79 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 79 78 80 27 (nil) [0 uses])
+(insn 80 79 81 (unspec_volatile [
+            (const_int -536813552 [0xffffffffe000e010])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 81 80 82 (unspec_volatile [
+            (symbol_ref:SI ("SystemCoreClock") [flags 0x40]  <var_decl 0x7f7f89c64c60 SystemCoreClock>)
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 82 81 83 (unspec_volatile [
+            (const_int 1125899907 [0x431bde83])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 83 82 84 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 84 83 59)
+(note 59 84 0 NOTE_INSN_DELETED)
+
+;; Function rt_hw_board_init (rt_hw_board_init, funcdef_no=342, decl_uid=12632, cgraph_uid=344, symbol_order=347)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 29 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 29 3 30 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -8 [0xfffffffffffffff8]))) [5  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+            (use (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":120 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -8 [0xfffffffffffffff8])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32])
+                    (reg/f:SI 7 r7))
+                (set/f (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                            (const_int 4 [0x4])) [5  S4 A32])
+                    (reg:SI 14 lr))
+            ])
+        (nil)))
+(insn/f 30 29 31 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -8 [0xfffffffffffffff8]))) "libraries/HAL_Drivers/drv_common.c":120 4 {*arm_addsi3}
+     (nil))
+(insn 31 30 32 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/HAL_Drivers/drv_common.c":120 304 {stack_tie}
+     (nil))
+(insn/f 32 31 33 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/HAL_Drivers/drv_common.c":120 4 {*arm_addsi3}
+     (nil))
+(note 33 32 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 33 5 2 NOTE_INSN_FUNCTION_BEG)
+(call_insn 5 2 6 2 (parallel [
+            (set (reg:SI 0 r0)
+                (call (mem:SI (symbol_ref:SI ("HAL_Init") [flags 0x41]  <function_decl 0x7f7f8947ff00 HAL_Init>) [0 HAL_Init S4 A32])
+                    (const_int 0 [0])))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":132 220 {*call_value_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(insn 6 5 7 2 (parallel [
+            (set (reg:SI 3 r3 [110])
+                (const_int 0 [0]))
+            (clobber (reg:CC 100 cc))
+        ]) 916 {*thumb2_movsi_shortim}
+     (nil))
+(insn 7 6 63 2 (set (mem/c:SI (reg/f:SI 7 r7) [2 priMask+0 S4 A32])
+        (reg:SI 3 r3 [110])) 649 {*thumb2_movsi_vfp}
+     (nil))
+(note 63 7 62 2 0x7f7f8961df00 NOTE_INSN_BLOCK_BEG)
+(note 62 63 8 2 0x7f7f8961df60 NOTE_INSN_BLOCK_BEG)
+(insn 8 62 9 2 (set (reg:SI 3 r3 [111])
+        (mem/c:SI (reg/f:SI 7 r7) [2 priMask+0 S4 A32])) "libraries/STM32L4xx_HAL/CMSIS/Include/cmsis_gcc.h":414 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 9 8 64 2 (parallel [
+            (asm_operands/v ("MSR primask, %0") ("") 0 [
+                    (reg:SI 3 r3 [111])
+                ]
+                 [
+                    (asm_input:SI ("r") libraries/STM32L4xx_HAL/CMSIS/Include/cmsis_gcc.h:414)
+                ]
+                 [] libraries/STM32L4xx_HAL/CMSIS/Include/cmsis_gcc.h:414)
+            (clobber (mem:BLK (scratch) [0  A8]))
+        ]) "libraries/STM32L4xx_HAL/CMSIS/Include/cmsis_gcc.h":414 -1
+     (nil))
+(note 64 9 65 2 0x7f7f8961df60 NOTE_INSN_BLOCK_END)
+(note 65 64 10 2 0x7f7f8961df00 NOTE_INSN_BLOCK_END)
+(call_insn 10 65 11 2 (parallel [
+            (call (mem:SI (symbol_ref:SI ("SystemClock_Config") [flags 0x41]  <function_decl 0x7f7f8948a700 SystemClock_Config>) [0 SystemClock_Config S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":137 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(insn 11 10 12 2 (parallel [
+            (set (reg:SI 3 r3 [112])
+                (const_int 1 [0x1]))
+            (clobber (reg:CC 100 cc))
+        ]) 916 {*thumb2_movsi_shortim}
+     (nil))
+(insn 12 11 67 2 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 priMask+0 S4 A32])
+        (reg:SI 3 r3 [112])) 649 {*thumb2_movsi_vfp}
+     (nil))
+(note 67 12 66 2 0x7f7f8961dde0 NOTE_INSN_BLOCK_BEG)
+(note 66 67 13 2 0x7f7f8961de40 NOTE_INSN_BLOCK_BEG)
+(insn 13 66 14 2 (set (reg:SI 3 r3 [113])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 priMask+0 S4 A32])) "libraries/STM32L4xx_HAL/CMSIS/Include/cmsis_gcc.h":414 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 14 13 68 2 (parallel [
+            (asm_operands/v ("MSR primask, %0") ("") 0 [
+                    (reg:SI 3 r3 [113])
+                ]
+                 [
+                    (asm_input:SI ("r") libraries/STM32L4xx_HAL/CMSIS/Include/cmsis_gcc.h:414)
+                ]
+                 [] libraries/STM32L4xx_HAL/CMSIS/Include/cmsis_gcc.h:414)
+            (clobber (mem:BLK (scratch) [0  A8]))
+        ]) "libraries/STM32L4xx_HAL/CMSIS/Include/cmsis_gcc.h":414 -1
+     (nil))
+(note 68 14 69 2 0x7f7f8961de40 NOTE_INSN_BLOCK_END)
+(note 69 68 15 2 0x7f7f8961dde0 NOTE_INSN_BLOCK_END)
+(call_insn 15 69 16 2 (parallel [
+            (call (mem:SI (symbol_ref:SI ("rt_hw_systick_init") [flags 0x3]  <function_decl 0x7f7f894aca00 rt_hw_systick_init>) [0 rt_hw_systick_init S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":141 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(insn 16 15 17 2 (set (reg:SI 1 r1)
+        (mem:SI (label_ref 44) [0  S4 A32])) "libraries/HAL_Drivers/drv_common.c":145 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 17 16 18 2 (set (reg:SI 0 r0)
+        (mem:SI (const:SI (plus:SI (label_ref 44)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/HAL_Drivers/drv_common.c":145 649 {*thumb2_movsi_vfp}
+     (nil))
+(call_insn 18 17 19 2 (parallel [
+            (call (mem:SI (symbol_ref:SI ("rt_system_heap_init") [flags 0x41]  <function_decl 0x7f7f89f2f900 rt_system_heap_init>) [0 rt_system_heap_init S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":145 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (expr_list:SI (use (reg:SI 0 r0))
+            (expr_list:SI (use (reg:SI 1 r1))
+                (nil)))))
+(call_insn 19 18 20 2 (parallel [
+            (set (reg:SI 0 r0)
+                (call (mem:SI (symbol_ref:SI ("rt_hw_pin_init") [flags 0x41]  <function_decl 0x7f7f8948a400 rt_hw_pin_init>) [0 rt_hw_pin_init S4 A32])
+                    (const_int 0 [0])))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":150 220 {*call_value_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(call_insn 20 19 21 2 (parallel [
+            (set (reg:SI 0 r0)
+                (call (mem:SI (symbol_ref:SI ("rt_hw_usart_init") [flags 0x41]  <function_decl 0x7f7f8948ae00 rt_hw_usart_init>) [0 rt_hw_usart_init S4 A32])
+                    (const_int 0 [0])))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":155 220 {*call_value_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(insn 21 20 22 2 (set (reg:SI 0 r0)
+        (mem:SI (const:SI (plus:SI (label_ref 44)
+                    (const_int 8 [0x8]))) [0  S4 A32])) "libraries/HAL_Drivers/drv_common.c":160 649 {*thumb2_movsi_vfp}
+     (nil))
+(call_insn 22 21 23 2 (parallel [
+            (set (reg:SI 0 r0)
+                (call (mem:SI (symbol_ref:SI ("rt_console_set_device") [flags 0x41]  <function_decl 0x7f7f89f42500 rt_console_set_device>) [0 rt_console_set_device S4 A32])
+                    (const_int 0 [0])))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":160 220 {*call_value_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (expr_list:SI (use (reg:SI 0 r0))
+            (nil))))
+(call_insn 23 22 26 2 (parallel [
+            (call (mem:SI (symbol_ref:SI ("rt_components_board_init") [flags 0x41]  <function_decl 0x7f7f89f3fe00 rt_components_board_init>) [0 rt_components_board_init S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/HAL_Drivers/drv_common.c":165 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(insn 26 23 34 2 (const_int 0 [0]) "libraries/HAL_Drivers/drv_common.c":167 236 {nop}
+     (nil))
+(note 34 26 35 2 NOTE_INSN_EPILOGUE_BEG)
+(insn/f 35 34 36 2 (parallel [
+            (set (reg/f:SI 7 r7)
+                (plus:SI (reg/f:SI 7 r7)
+                    (const_int 8 [0x8])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/HAL_Drivers/drv_common.c":167 917 {*thumb2_addsi_short}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 7 r7)
+            (plus:SI (reg/f:SI 7 r7)
+                (const_int 8 [0x8])))
+        (nil)))
+(insn 36 35 37 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/HAL_Drivers/drv_common.c":167 230 {blockage}
+     (nil))
+(insn/f 37 36 38 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/HAL_Drivers/drv_common.c":167 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 38 37 39 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/HAL_Drivers/drv_common.c":167 322 {force_register_use}
+     (nil))
+(jump_insn 39 38 40 2 (parallel [
+            (return)
+            (set/f (reg/f:SI 13 sp)
+                (plus:SI (reg/f:SI 13 sp)
+                    (const_int 8 [0x8])))
+            (set/f (reg/f:SI 7 r7)
+                (mem/c:SI (reg/f:SI 13 sp) [5  S4 A32]))
+            (set/f (reg:SI 15 pc)
+                (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                        (const_int 4 [0x4])) [5  S4 A32]))
+        ]) "libraries/HAL_Drivers/drv_common.c":167 306 {*pop_multiple_with_writeback_and_return}
+     (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+        (nil))
+ -> return)
+(barrier 40 39 42)
+(code_label 42 40 43 31 (nil) [0 uses])
+(insn 43 42 44 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 44 43 45 30 (nil) [0 uses])
+(insn 45 44 46 (unspec_volatile [
+            (const_int 536969216 [0x20018000])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 46 45 47 (unspec_volatile [
+            (symbol_ref:SI ("__bss_end") [flags 0x40]  <var_decl 0x7f7f89390cf0 __bss_end>)
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 47 46 48 (unspec_volatile [
+            (symbol_ref/f:SI ("*.LC0") [flags 0x2]  <var_decl 0x7f7f894cb900 *.LC0>)
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 48 47 49 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 49 48 28)
+(note 28 49 0 NOTE_INSN_DELETED)

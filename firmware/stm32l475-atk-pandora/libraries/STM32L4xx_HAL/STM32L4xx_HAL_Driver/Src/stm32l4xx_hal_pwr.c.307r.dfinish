@@ -1,0 +1,2118 @@
+
+;; Function HAL_PWR_DeInit (HAL_PWR_DeInit, funcdef_no=328, decl_uid=8797, cgraph_uid=330, symbol_order=330)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 23 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 23 3 24 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":88 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 24 23 25 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":88 4 {*arm_addsi3}
+     (nil))
+(note 25 24 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 25 5 2 NOTE_INSN_FUNCTION_BEG)
+(insn 5 2 6 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 39) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":89 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 6 5 7 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 56 [0x38])) [2 _1->APB1RSTR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":89 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+        (mem:SI (label_ref 39) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":89 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+        (ior:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int 268435456 [0x10000000]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":89 105 {*iorsi3_insn}
+     (nil))
+(insn 9 8 10 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+                (const_int 56 [0x38])) [2 _3->APB1RSTR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:113 _4 ] [113])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":89 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 10 9 11 2 (set (reg/f:SI 3 r3 [orig:114 _5 ] [114])
+        (mem:SI (label_ref 39) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":90 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 11 10 12 2 (set (reg:SI 3 r3 [orig:115 _6 ] [115])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:114 _5 ] [114])
+                (const_int 56 [0x38])) [2 _5->APB1RSTR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":90 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 11 13 2 (set (reg/f:SI 2 r2 [orig:116 _7 ] [116])
+        (mem:SI (label_ref 39) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":90 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 13 12 14 2 (set (reg:SI 3 r3 [orig:117 _8 ] [117])
+        (and:SI (reg:SI 3 r3 [orig:115 _6 ] [115])
+            (const_int -268435457 [0xffffffffefffffff]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":90 82 {*arm_andsi3_insn}
+     (nil))
+(insn 14 13 17 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:116 _7 ] [116])
+                (const_int 56 [0x38])) [2 _7->APB1RSTR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:117 _8 ] [117])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":90 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 17 14 26 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":91 236 {nop}
+     (nil))
+(note 26 17 27 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 27 26 28 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":91 230 {blockage}
+     (nil))
+(insn/f 28 27 29 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":91 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 29 28 30 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":91 322 {force_register_use}
+     (nil))
+(insn/f 30 29 31 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":91 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 31 30 32 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":91 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 32 31 37)
+(code_label 37 32 38 3 (nil) [0 uses])
+(insn 38 37 39 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 39 38 40 2 (nil) [0 uses])
+(insn 40 39 41 (unspec_volatile [
+            (const_int 1073876992 [0x40021000])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 41 40 42 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 42 41 22)
+(note 22 42 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_EnableBkUpAccess (HAL_PWR_EnableBkUpAccess, funcdef_no=329, decl_uid=8799, cgraph_uid=331, symbol_order=331)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 16 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 16 3 17 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":106 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 17 16 18 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":106 4 {*arm_addsi3}
+     (nil))
+(note 18 17 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 18 5 2 NOTE_INSN_FUNCTION_BEG)
+(insn 5 2 6 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":107 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 6 5 7 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110]) [2 _1->CR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":107 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":107 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+        (ior:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int 256 [0x100]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":107 105 {*iorsi3_insn}
+     (nil))
+(insn 9 8 12 2 (set (mem/v:SI (reg/f:SI 2 r2 [orig:112 _3 ] [112]) [2 _3->CR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:113 _4 ] [113])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":107 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 9 19 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":108 236 {nop}
+     (nil))
+(note 19 12 20 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 20 19 21 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":108 230 {blockage}
+     (nil))
+(insn/f 21 20 22 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":108 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 22 21 23 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":108 322 {force_register_use}
+     (nil))
+(insn/f 23 22 24 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":108 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 24 23 25 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":108 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 25 24 28)
+(code_label 28 25 29 6 (nil) [0 uses])
+(insn 29 28 30 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 30 29 31 5 (nil) [0 uses])
+(insn 31 30 32 (unspec_volatile [
+            (const_int 1073770496 [0x40007000])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 32 31 33 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 33 32 15)
+(note 15 33 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_DisableBkUpAccess (HAL_PWR_DisableBkUpAccess, funcdef_no=330, decl_uid=8801, cgraph_uid=332, symbol_order=332)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 16 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 16 3 17 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":116 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 17 16 18 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":116 4 {*arm_addsi3}
+     (nil))
+(note 18 17 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 18 5 2 NOTE_INSN_FUNCTION_BEG)
+(insn 5 2 6 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":117 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 6 5 7 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110]) [2 _1->CR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":117 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":117 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+        (and:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int -257 [0xfffffffffffffeff]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":117 82 {*arm_andsi3_insn}
+     (nil))
+(insn 9 8 12 2 (set (mem/v:SI (reg/f:SI 2 r2 [orig:112 _3 ] [112]) [2 _3->CR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:113 _4 ] [113])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":117 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 9 19 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":118 236 {nop}
+     (nil))
+(note 19 12 20 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 20 19 21 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":118 230 {blockage}
+     (nil))
+(insn/f 21 20 22 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":118 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 22 21 23 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":118 322 {force_register_use}
+     (nil))
+(insn/f 23 22 24 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":118 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 24 23 25 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":118 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 25 24 28)
+(code_label 28 25 29 9 (nil) [0 uses])
+(insn 29 28 30 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 30 29 31 8 (nil) [0 uses])
+(insn 31 30 32 (unspec_volatile [
+            (const_int 1073770496 [0x40007000])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 32 31 33 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 33 32 15)
+(note 15 33 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_ConfigPVD (HAL_PWR_ConfigPVD, funcdef_no=331, decl_uid=8803, cgraph_uid=333, symbol_order=333)
+
+(note 1 0 4 NOTE_INSN_DELETED)
+(note 4 1 115 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 115 4 116 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":313 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 116 115 117 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -12 [0xfffffffffffffff4]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":313 4 {*arm_addsi3}
+     (nil))
+(insn 117 116 118 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":313 304 {stack_tie}
+     (nil))
+(insn/f 118 117 119 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":313 4 {*arm_addsi3}
+     (nil))
+(note 119 118 2 2 NOTE_INSN_PROLOGUE_END)
+(insn 2 119 3 2 (set (mem/f/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [5 sConfigPVD+0 S4 A32])
+        (reg:SI 0 r0 [ sConfigPVD ])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":313 649 {*thumb2_movsi_vfp}
+     (nil))
+(note 3 2 6 2 NOTE_INSN_FUNCTION_BEG)
+(insn 6 3 7 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 148) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":319 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 4 [0x4])) [2 _1->CR2+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":319 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 2 r2 [orig:112 _3 ] [112])
+        (and:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int -15 [0xfffffffffffffff1]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":319 82 {*arm_andsi3_insn}
+     (nil))
+(insn 9 8 10 2 (set (reg/f:SI 3 r3 [158])
+        (mem/f/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [5 sConfigPVD+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":319 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 10 9 11 2 (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+        (mem:SI (reg/f:SI 3 r3 [158]) [2 sConfigPVD_52(D)->PVDLevel+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":319 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 11 10 12 2 (set (reg/f:SI 1 r1 [orig:114 _5 ] [114])
+        (mem:SI (label_ref 148) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":319 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 11 13 2 (parallel [
+            (set (reg:SI 3 r3 [orig:115 _6 ] [115])
+                (ior:SI (reg:SI 3 r3 [orig:113 _4 ] [113])
+                    (reg:SI 2 r2 [orig:112 _3 ] [112])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":319 912 {*thumb2_alusi3_short}
+     (nil))
+(insn 13 12 14 2 (set (mem/v:SI (plus:SI (reg/f:SI 1 r1 [orig:114 _5 ] [114])
+                (const_int 4 [0x4])) [2 _5->CR2+0 S4 A32])
+        (reg:SI 3 r3 [orig:115 _6 ] [115])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":319 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 14 13 15 2 (set (reg/f:SI 3 r3 [orig:116 _7 ] [116])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":322 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 15 14 16 2 (set (reg:SI 3 r3 [orig:117 _8 ] [117])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:116 _7 ] [116])
+                (const_int 4 [0x4])) [2 _7->EMR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":322 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 16 15 17 2 (set (reg/f:SI 2 r2 [orig:118 _9 ] [118])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":322 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 17 16 18 2 (set (reg:SI 3 r3 [orig:119 _10 ] [119])
+        (and:SI (reg:SI 3 r3 [orig:117 _8 ] [117])
+            (const_int -65537 [0xfffffffffffeffff]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":322 82 {*arm_andsi3_insn}
+     (nil))
+(insn 18 17 19 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:118 _9 ] [118])
+                (const_int 4 [0x4])) [2 _9->EMR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:119 _10 ] [119])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":322 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 19 18 20 2 (set (reg/f:SI 3 r3 [orig:120 _11 ] [120])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":323 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 20 19 21 2 (set (reg:SI 3 r3 [orig:121 _12 ] [121])
+        (mem/v:SI (reg/f:SI 3 r3 [orig:120 _11 ] [120]) [2 _11->IMR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":323 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 21 20 22 2 (set (reg/f:SI 2 r2 [orig:122 _13 ] [122])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":323 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 22 21 23 2 (set (reg:SI 3 r3 [orig:123 _14 ] [123])
+        (and:SI (reg:SI 3 r3 [orig:121 _12 ] [121])
+            (const_int -65537 [0xfffffffffffeffff]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":323 82 {*arm_andsi3_insn}
+     (nil))
+(insn 23 22 24 2 (set (mem/v:SI (reg/f:SI 2 r2 [orig:122 _13 ] [122]) [2 _13->IMR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:123 _14 ] [123])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":323 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 24 23 25 2 (set (reg/f:SI 3 r3 [orig:124 _15 ] [124])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":324 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 25 24 26 2 (set (reg:SI 3 r3 [orig:125 _16 ] [125])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:124 _15 ] [124])
+                (const_int 12 [0xc])) [2 _15->FTSR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":324 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 26 25 27 2 (set (reg/f:SI 2 r2 [orig:126 _17 ] [126])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":324 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 27 26 28 2 (set (reg:SI 3 r3 [orig:127 _18 ] [127])
+        (and:SI (reg:SI 3 r3 [orig:125 _16 ] [125])
+            (const_int -65537 [0xfffffffffffeffff]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":324 82 {*arm_andsi3_insn}
+     (nil))
+(insn 28 27 29 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:126 _17 ] [126])
+                (const_int 12 [0xc])) [2 _17->FTSR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:127 _18 ] [127])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":324 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 29 28 30 2 (set (reg/f:SI 3 r3 [orig:128 _19 ] [128])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":325 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 30 29 31 2 (set (reg:SI 3 r3 [orig:129 _20 ] [129])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:128 _19 ] [128])
+                (const_int 8 [0x8])) [2 _19->RTSR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":325 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 31 30 32 2 (set (reg/f:SI 2 r2 [orig:130 _21 ] [130])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":325 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 32 31 33 2 (set (reg:SI 3 r3 [orig:131 _22 ] [131])
+        (and:SI (reg:SI 3 r3 [orig:129 _20 ] [129])
+            (const_int -65537 [0xfffffffffffeffff]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":325 82 {*arm_andsi3_insn}
+     (nil))
+(insn 33 32 34 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:130 _21 ] [130])
+                (const_int 8 [0x8])) [2 _21->RTSR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:131 _22 ] [131])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":325 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 34 33 35 2 (set (reg/f:SI 3 r3 [159])
+        (mem/f/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [5 sConfigPVD+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":328 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 35 34 36 2 (set (reg:SI 3 r3 [orig:132 _23 ] [132])
+        (mem:SI (plus:SI (reg/f:SI 3 r3 [159])
+                (const_int 4 [0x4])) [2 sConfigPVD_52(D)->Mode+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":328 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 36 35 37 2 (set (reg:SI 3 r3 [orig:133 _24 ] [133])
+        (and:SI (reg:SI 3 r3 [orig:132 _23 ] [132])
+            (const_int 65536 [0x10000]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":328 82 {*arm_andsi3_insn}
+     (nil))
+(insn 37 36 38 2 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 3 r3 [orig:133 _24 ] [133])
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":328 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 38 37 39 2 (set (pc)
+        (if_then_else (eq (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 45)
+            (pc))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":328 204 {arm_cond_branch}
+     (nil)
+ -> 45)
+(note 39 38 40 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+(insn 40 39 41 3 (set (reg/f:SI 3 r3 [orig:134 _25 ] [134])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":330 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 41 40 42 3 (set (reg:SI 3 r3 [orig:135 _26 ] [135])
+        (mem/v:SI (reg/f:SI 3 r3 [orig:134 _25 ] [134]) [2 _25->IMR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":330 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 42 41 43 3 (set (reg/f:SI 2 r2 [orig:136 _27 ] [136])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":330 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 43 42 44 3 (set (reg:SI 3 r3 [orig:137 _28 ] [137])
+        (ior:SI (reg:SI 3 r3 [orig:135 _26 ] [135])
+            (const_int 65536 [0x10000]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":330 105 {*iorsi3_insn}
+     (nil))
+(insn 44 43 45 3 (set (mem/v:SI (reg/f:SI 2 r2 [orig:136 _27 ] [136]) [2 _27->IMR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:137 _28 ] [137])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":330 649 {*thumb2_movsi_vfp}
+     (nil))
+(code_label 45 44 46 4 11 (nil) [1 uses])
+(note 46 45 47 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+(insn 47 46 48 4 (set (reg/f:SI 3 r3 [160])
+        (mem/f/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [5 sConfigPVD+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":334 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 48 47 49 4 (set (reg:SI 3 r3 [orig:138 _29 ] [138])
+        (mem:SI (plus:SI (reg/f:SI 3 r3 [160])
+                (const_int 4 [0x4])) [2 sConfigPVD_52(D)->Mode+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":334 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 49 48 50 4 (set (reg:SI 3 r3 [orig:139 _30 ] [139])
+        (and:SI (reg:SI 3 r3 [orig:138 _29 ] [138])
+            (const_int 131072 [0x20000]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":334 82 {*arm_andsi3_insn}
+     (nil))
+(insn 50 49 51 4 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 3 r3 [orig:139 _30 ] [139])
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":334 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 51 50 52 4 (set (pc)
+        (if_then_else (eq (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 58)
+            (pc))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":334 204 {arm_cond_branch}
+     (nil)
+ -> 58)
+(note 52 51 53 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+(insn 53 52 54 5 (set (reg/f:SI 3 r3 [orig:140 _31 ] [140])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":336 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 54 53 55 5 (set (reg:SI 3 r3 [orig:141 _32 ] [141])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:140 _31 ] [140])
+                (const_int 4 [0x4])) [2 _31->EMR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":336 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 55 54 56 5 (set (reg/f:SI 2 r2 [orig:142 _33 ] [142])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":336 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 56 55 57 5 (set (reg:SI 3 r3 [orig:143 _34 ] [143])
+        (ior:SI (reg:SI 3 r3 [orig:141 _32 ] [141])
+            (const_int 65536 [0x10000]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":336 105 {*iorsi3_insn}
+     (nil))
+(insn 57 56 58 5 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:142 _33 ] [142])
+                (const_int 4 [0x4])) [2 _33->EMR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:143 _34 ] [143])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":336 649 {*thumb2_movsi_vfp}
+     (nil))
+(code_label 58 57 59 6 12 (nil) [1 uses])
+(note 59 58 60 6 [bb 6] NOTE_INSN_BASIC_BLOCK)
+(insn 60 59 61 6 (set (reg/f:SI 3 r3 [161])
+        (mem/f/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [5 sConfigPVD+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":340 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 61 60 62 6 (set (reg:SI 3 r3 [orig:144 _35 ] [144])
+        (mem:SI (plus:SI (reg/f:SI 3 r3 [161])
+                (const_int 4 [0x4])) [2 sConfigPVD_52(D)->Mode+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":340 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 62 61 63 6 (set (reg:SI 3 r3 [orig:145 _36 ] [145])
+        (and:SI (reg:SI 3 r3 [orig:144 _35 ] [144])
+            (const_int 1 [0x1]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":340 82 {*arm_andsi3_insn}
+     (nil))
+(insn 63 62 64 6 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 3 r3 [orig:145 _36 ] [145])
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":340 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 64 63 65 6 (set (pc)
+        (if_then_else (eq (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 71)
+            (pc))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":340 204 {arm_cond_branch}
+     (nil)
+ -> 71)
+(note 65 64 66 7 [bb 7] NOTE_INSN_BASIC_BLOCK)
+(insn 66 65 67 7 (set (reg/f:SI 3 r3 [orig:146 _37 ] [146])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":342 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 67 66 68 7 (set (reg:SI 3 r3 [orig:147 _38 ] [147])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:146 _37 ] [146])
+                (const_int 8 [0x8])) [2 _37->RTSR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":342 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 68 67 69 7 (set (reg/f:SI 2 r2 [orig:148 _39 ] [148])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":342 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 69 68 70 7 (set (reg:SI 3 r3 [orig:149 _40 ] [149])
+        (ior:SI (reg:SI 3 r3 [orig:147 _38 ] [147])
+            (const_int 65536 [0x10000]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":342 105 {*iorsi3_insn}
+     (nil))
+(insn 70 69 71 7 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:148 _39 ] [148])
+                (const_int 8 [0x8])) [2 _39->RTSR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:149 _40 ] [149])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":342 649 {*thumb2_movsi_vfp}
+     (nil))
+(code_label 71 70 72 8 13 (nil) [1 uses])
+(note 72 71 73 8 [bb 8] NOTE_INSN_BASIC_BLOCK)
+(insn 73 72 74 8 (set (reg/f:SI 3 r3 [162])
+        (mem/f/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [5 sConfigPVD+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":345 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 74 73 75 8 (set (reg:SI 3 r3 [orig:150 _41 ] [150])
+        (mem:SI (plus:SI (reg/f:SI 3 r3 [162])
+                (const_int 4 [0x4])) [2 sConfigPVD_52(D)->Mode+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":345 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 75 74 76 8 (set (reg:SI 3 r3 [orig:151 _42 ] [151])
+        (and:SI (reg:SI 3 r3 [orig:150 _41 ] [150])
+            (const_int 2 [0x2]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":345 82 {*arm_andsi3_insn}
+     (nil))
+(insn 76 75 77 8 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 3 r3 [orig:151 _42 ] [151])
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":345 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 77 76 78 8 (set (pc)
+        (if_then_else (eq (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 84)
+            (pc))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":345 204 {arm_cond_branch}
+     (nil)
+ -> 84)
+(note 78 77 79 9 [bb 9] NOTE_INSN_BASIC_BLOCK)
+(insn 79 78 80 9 (set (reg/f:SI 3 r3 [orig:152 _43 ] [152])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":347 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 80 79 81 9 (set (reg:SI 3 r3 [orig:153 _44 ] [153])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:152 _43 ] [152])
+                (const_int 12 [0xc])) [2 _43->FTSR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":347 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 81 80 82 9 (set (reg/f:SI 2 r2 [orig:154 _45 ] [154])
+        (mem:SI (const:SI (plus:SI (label_ref 148)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":347 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 82 81 83 9 (set (reg:SI 3 r3 [orig:155 _46 ] [155])
+        (ior:SI (reg:SI 3 r3 [orig:153 _44 ] [153])
+            (const_int 65536 [0x10000]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":347 105 {*iorsi3_insn}
+     (nil))
+(insn 83 82 84 9 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:154 _45 ] [154])
+                (const_int 12 [0xc])) [2 _45->FTSR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:155 _46 ] [155])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":347 649 {*thumb2_movsi_vfp}
+     (nil))
+(code_label 84 83 85 10 14 (nil) [1 uses])
+(note 85 84 86 10 [bb 10] NOTE_INSN_BASIC_BLOCK)
+(insn 86 85 93 10 (parallel [
+            (set (reg:SI 3 r3 [orig:156 _62 ] [156])
+                (const_int 0 [0]))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":350 916 {*thumb2_movsi_shortim}
+     (nil))
+(insn 93 86 94 10 (set (reg/i:SI 0 r0)
+        (reg:SI 3 r3 [orig:157 <retval> ] [157])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":351 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 94 93 120 10 (use (reg/i:SI 0 r0)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":351 -1
+     (nil))
+(note 120 94 121 10 NOTE_INSN_EPILOGUE_BEG)
+(insn/f 121 120 122 10 (parallel [
+            (set (reg/f:SI 7 r7)
+                (plus:SI (reg/f:SI 7 r7)
+                    (const_int 12 [0xc])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":351 917 {*thumb2_addsi_short}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 7 r7)
+            (plus:SI (reg/f:SI 7 r7)
+                (const_int 12 [0xc])))
+        (nil)))
+(insn 122 121 123 10 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":351 230 {blockage}
+     (nil))
+(insn/f 123 122 124 10 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":351 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 124 123 125 10 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":351 322 {force_register_use}
+     (nil))
+(insn/f 125 124 126 10 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":351 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 126 125 127 10 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":351 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 127 126 146)
+(code_label 146 127 147 17 (nil) [0 uses])
+(insn 147 146 148 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 148 147 149 16 (nil) [0 uses])
+(insn 149 148 150 (unspec_volatile [
+            (const_int 1073770496 [0x40007000])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 150 149 151 (unspec_volatile [
+            (const_int 1073808384 [0x40010400])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 151 150 152 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 152 151 114)
+(note 114 152 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_EnablePVD (HAL_PWR_EnablePVD, funcdef_no=332, decl_uid=8805, cgraph_uid=334, symbol_order=334)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 16 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 16 3 17 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":359 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 17 16 18 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":359 4 {*arm_addsi3}
+     (nil))
+(note 18 17 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 18 5 2 NOTE_INSN_FUNCTION_BEG)
+(insn 5 2 6 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":360 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 6 5 7 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 4 [0x4])) [2 _1->CR2+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":360 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":360 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+        (ior:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int 1 [0x1]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":360 105 {*iorsi3_insn}
+     (nil))
+(insn 9 8 12 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+                (const_int 4 [0x4])) [2 _3->CR2+0 S4 A32])
+        (reg:SI 3 r3 [orig:113 _4 ] [113])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":360 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 9 19 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":361 236 {nop}
+     (nil))
+(note 19 12 20 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 20 19 21 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":361 230 {blockage}
+     (nil))
+(insn/f 21 20 22 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":361 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 22 21 23 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":361 322 {force_register_use}
+     (nil))
+(insn/f 23 22 24 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":361 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 24 23 25 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":361 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 25 24 28)
+(code_label 28 25 29 20 (nil) [0 uses])
+(insn 29 28 30 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 30 29 31 19 (nil) [0 uses])
+(insn 31 30 32 (unspec_volatile [
+            (const_int 1073770496 [0x40007000])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 32 31 33 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 33 32 15)
+(note 15 33 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_DisablePVD (HAL_PWR_DisablePVD, funcdef_no=333, decl_uid=8807, cgraph_uid=335, symbol_order=335)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 16 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 16 3 17 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":368 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 17 16 18 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":368 4 {*arm_addsi3}
+     (nil))
+(note 18 17 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 18 5 2 NOTE_INSN_FUNCTION_BEG)
+(insn 5 2 6 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":369 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 6 5 7 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 4 [0x4])) [2 _1->CR2+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":369 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":369 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+        (and:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int -2 [0xfffffffffffffffe]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":369 82 {*arm_andsi3_insn}
+     (nil))
+(insn 9 8 12 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+                (const_int 4 [0x4])) [2 _3->CR2+0 S4 A32])
+        (reg:SI 3 r3 [orig:113 _4 ] [113])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":369 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 9 19 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":370 236 {nop}
+     (nil))
+(note 19 12 20 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 20 19 21 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":370 230 {blockage}
+     (nil))
+(insn/f 21 20 22 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":370 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 22 21 23 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":370 322 {force_register_use}
+     (nil))
+(insn/f 23 22 24 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":370 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 24 23 25 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":370 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 25 24 28)
+(code_label 28 25 29 23 (nil) [0 uses])
+(insn 29 28 30 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 30 29 31 22 (nil) [0 uses])
+(insn 31 30 32 (unspec_volatile [
+            (const_int 1073770496 [0x40007000])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 32 31 33 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 33 32 15)
+(note 15 33 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_EnableWakeUpPin (HAL_PWR_EnableWakeUpPin, funcdef_no=334, decl_uid=8809, cgraph_uid=336, symbol_order=336)
+
+(note 1 0 4 NOTE_INSN_DELETED)
+(note 4 1 32 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 32 4 33 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":393 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 33 32 34 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -12 [0xfffffffffffffff4]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":393 4 {*arm_addsi3}
+     (nil))
+(insn 34 33 35 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":393 304 {stack_tie}
+     (nil))
+(insn/f 35 34 36 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":393 4 {*arm_addsi3}
+     (nil))
+(note 36 35 2 2 NOTE_INSN_PROLOGUE_END)
+(insn 2 36 3 2 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 WakeUpPinPolarity+0 S4 A32])
+        (reg:SI 0 r0 [ WakeUpPinPolarity ])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":393 649 {*thumb2_movsi_vfp}
+     (nil))
+(note 3 2 6 2 NOTE_INSN_FUNCTION_BEG)
+(insn 6 3 7 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 51) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":398 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg:SI 2 r2 [orig:111 _2 ] [111])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 12 [0xc])) [2 _1->CR4+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":398 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [123])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 WakeUpPinPolarity+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":398 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 9 8 10 2 (set (reg:SI 3 r3 [orig:112 _3 ] [112])
+        (and:SI (reg:SI 3 r3 [123])
+            (const_int 31 [0x1f]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":398 82 {*arm_andsi3_insn}
+     (nil))
+(insn 10 9 11 2 (parallel [
+            (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+                (not:SI (reg:SI 3 r3 [orig:112 _3 ] [112])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":398 926 {*thumb2_one_cmplsi2_short}
+     (nil))
+(insn 11 10 12 2 (parallel [
+            (set (reg:SI 2 r2 [orig:114 _5 ] [114])
+                (and:SI (reg:SI 2 r2 [orig:111 _2 ] [111])
+                    (reg:SI 3 r3 [orig:113 _4 ] [113])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":398 912 {*thumb2_alusi3_short}
+     (nil))
+(insn 12 11 13 2 (set (reg:SI 3 r3 [124])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 WakeUpPinPolarity+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":398 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 13 12 14 2 (parallel [
+            (set (reg:SI 3 r3 [orig:115 _6 ] [115])
+                (lshiftrt:SI (reg:SI 3 r3 [124])
+                    (const_int 5 [0x5])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":398 913 {*thumb2_shiftsi3_short}
+     (nil))
+(insn 14 13 15 2 (set (reg/f:SI 1 r1 [orig:116 _7 ] [116])
+        (mem:SI (label_ref 51) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":398 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 15 14 16 2 (parallel [
+            (set (reg:SI 3 r3 [orig:117 _8 ] [117])
+                (ior:SI (reg:SI 3 r3 [orig:115 _6 ] [115])
+                    (reg:SI 2 r2 [orig:114 _5 ] [114])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":398 912 {*thumb2_alusi3_short}
+     (nil))
+(insn 16 15 17 2 (set (mem/v:SI (plus:SI (reg/f:SI 1 r1 [orig:116 _7 ] [116])
+                (const_int 12 [0xc])) [2 _7->CR4+0 S4 A32])
+        (reg:SI 3 r3 [orig:117 _8 ] [117])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":398 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 17 16 18 2 (set (reg/f:SI 3 r3 [orig:118 _9 ] [118])
+        (mem:SI (label_ref 51) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":401 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 18 17 19 2 (set (reg:SI 2 r2 [orig:119 _10 ] [119])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:118 _9 ] [118])
+                (const_int 8 [0x8])) [2 _9->CR3+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":401 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 19 18 20 2 (set (reg:SI 3 r3 [125])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 WakeUpPinPolarity+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":401 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 20 19 21 2 (set (reg:SI 3 r3 [orig:120 _11 ] [120])
+        (and:SI (reg:SI 3 r3 [125])
+            (const_int 31 [0x1f]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":401 82 {*arm_andsi3_insn}
+     (nil))
+(insn 21 20 22 2 (set (reg/f:SI 1 r1 [orig:121 _12 ] [121])
+        (mem:SI (label_ref 51) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":401 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 22 21 23 2 (parallel [
+            (set (reg:SI 3 r3 [orig:122 _13 ] [122])
+                (ior:SI (reg:SI 3 r3 [orig:120 _11 ] [120])
+                    (reg:SI 2 r2 [orig:119 _10 ] [119])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":401 912 {*thumb2_alusi3_short}
+     (nil))
+(insn 23 22 26 2 (set (mem/v:SI (plus:SI (reg/f:SI 1 r1 [orig:121 _12 ] [121])
+                (const_int 8 [0x8])) [2 _12->CR3+0 S4 A32])
+        (reg:SI 3 r3 [orig:122 _13 ] [122])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":401 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 26 23 37 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":404 236 {nop}
+     (nil))
+(note 37 26 38 2 NOTE_INSN_EPILOGUE_BEG)
+(insn/f 38 37 39 2 (parallel [
+            (set (reg/f:SI 7 r7)
+                (plus:SI (reg/f:SI 7 r7)
+                    (const_int 12 [0xc])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":404 917 {*thumb2_addsi_short}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 7 r7)
+            (plus:SI (reg/f:SI 7 r7)
+                (const_int 12 [0xc])))
+        (nil)))
+(insn 39 38 40 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":404 230 {blockage}
+     (nil))
+(insn/f 40 39 41 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":404 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 41 40 42 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":404 322 {force_register_use}
+     (nil))
+(insn/f 42 41 43 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":404 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 43 42 44 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":404 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 44 43 49)
+(code_label 49 44 50 26 (nil) [0 uses])
+(insn 50 49 51 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 51 50 52 25 (nil) [0 uses])
+(insn 52 51 53 (unspec_volatile [
+            (const_int 1073770496 [0x40007000])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 53 52 54 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 54 53 31)
+(note 31 54 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_DisableWakeUpPin (HAL_PWR_DisableWakeUpPin, funcdef_no=335, decl_uid=8811, cgraph_uid=337, symbol_order=337)
+
+(note 1 0 4 NOTE_INSN_DELETED)
+(note 4 1 20 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 20 4 21 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":414 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 21 20 22 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -12 [0xfffffffffffffff4]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":414 4 {*arm_addsi3}
+     (nil))
+(insn 22 21 23 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":414 304 {stack_tie}
+     (nil))
+(insn/f 23 22 24 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":414 4 {*arm_addsi3}
+     (nil))
+(note 24 23 2 2 NOTE_INSN_PROLOGUE_END)
+(insn 2 24 3 2 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 WakeUpPinx+0 S4 A32])
+        (reg:SI 0 r0 [ WakeUpPinx ])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":414 649 {*thumb2_movsi_vfp}
+     (nil))
+(note 3 2 6 2 NOTE_INSN_FUNCTION_BEG)
+(insn 6 3 7 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 37) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":417 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg:SI 2 r2 [orig:111 _2 ] [111])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 8 [0x8])) [2 _1->CR3+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":417 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [116])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 WakeUpPinx+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":417 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 9 8 10 2 (set (reg:SI 3 r3 [orig:112 _3 ] [112])
+        (and:SI (reg:SI 3 r3 [116])
+            (const_int 31 [0x1f]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":417 82 {*arm_andsi3_insn}
+     (nil))
+(insn 10 9 11 2 (parallel [
+            (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+                (not:SI (reg:SI 3 r3 [orig:112 _3 ] [112])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":417 926 {*thumb2_one_cmplsi2_short}
+     (nil))
+(insn 11 10 12 2 (set (reg/f:SI 1 r1 [orig:114 _5 ] [114])
+        (mem:SI (label_ref 37) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":417 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 11 13 2 (parallel [
+            (set (reg:SI 3 r3 [orig:115 _6 ] [115])
+                (and:SI (reg:SI 3 r3 [orig:113 _4 ] [113])
+                    (reg:SI 2 r2 [orig:111 _2 ] [111])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":417 912 {*thumb2_alusi3_short}
+     (nil))
+(insn 13 12 16 2 (set (mem/v:SI (plus:SI (reg/f:SI 1 r1 [orig:114 _5 ] [114])
+                (const_int 8 [0x8])) [2 _5->CR3+0 S4 A32])
+        (reg:SI 3 r3 [orig:115 _6 ] [115])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":417 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 16 13 25 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":418 236 {nop}
+     (nil))
+(note 25 16 26 2 NOTE_INSN_EPILOGUE_BEG)
+(insn/f 26 25 27 2 (parallel [
+            (set (reg/f:SI 7 r7)
+                (plus:SI (reg/f:SI 7 r7)
+                    (const_int 12 [0xc])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":418 917 {*thumb2_addsi_short}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 7 r7)
+            (plus:SI (reg/f:SI 7 r7)
+                (const_int 12 [0xc])))
+        (nil)))
+(insn 27 26 28 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":418 230 {blockage}
+     (nil))
+(insn/f 28 27 29 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":418 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 29 28 30 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":418 322 {force_register_use}
+     (nil))
+(insn/f 30 29 31 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":418 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 31 30 32 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":418 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 32 31 35)
+(code_label 35 32 36 29 (nil) [0 uses])
+(insn 36 35 37 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 37 36 38 28 (nil) [0 uses])
+(insn 38 37 39 (unspec_volatile [
+            (const_int 1073770496 [0x40007000])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 39 38 40 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 40 39 19)
+(note 19 40 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_EnterSLEEPMode (HAL_PWR_EnterSLEEPMode, funcdef_no=336, decl_uid=8814, cgraph_uid=338, symbol_order=338)
+
+(note 1 0 7 NOTE_INSN_DELETED)
+(note 7 1 69 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 69 7 70 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -8 [0xfffffffffffffff8]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+            (use (reg:SI 14 lr))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":446 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -8 [0xfffffffffffffff8])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+                (set/f (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                            (const_int 4 [0x4])) [3  S4 A32])
+                    (reg:SI 14 lr))
+            ])
+        (nil)))
+(insn/f 70 69 71 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -8 [0xfffffffffffffff8]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":446 4 {*arm_addsi3}
+     (nil))
+(insn 71 70 72 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":446 304 {stack_tie}
+     (nil))
+(insn/f 72 71 73 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":446 4 {*arm_addsi3}
+     (nil))
+(note 73 72 2 2 NOTE_INSN_PROLOGUE_END)
+(insn 2 73 3 2 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 Regulator+0 S4 A32])
+        (reg:SI 0 r0 [ Regulator ])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":446 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 3 2 5 2 (set (reg:SI 3 r3 [121])
+        (reg:SI 1 r1 [ SLEEPEntry ])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":446 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 5 3 6 2 (set (mem/c:QI (plus:SI (reg/f:SI 7 r7)
+                (const_int 3 [0x3])) [0 SLEEPEntry+0 S1 A8])
+        (reg:QI 3 r3 [122])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":446 192 {*arm_movqi_insn}
+     (nil))
+(note 6 5 9 2 NOTE_INSN_FUNCTION_BEG)
+(insn 9 6 10 2 (set (reg:SI 3 r3 [123])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 Regulator+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":452 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 10 9 11 2 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 3 r3 [123])
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":452 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 11 10 12 2 (set (pc)
+        (if_then_else (ne (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 27)
+            (pc))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":452 204 {arm_cond_branch}
+     (nil)
+ -> 27)
+(note 12 11 13 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+(insn 13 12 14 3 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 87) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":455 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 14 13 15 3 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 20 [0x14])) [2 _1->SR2+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":455 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 15 14 16 3 (set (reg:SI 3 r3 [orig:112 _3 ] [112])
+        (and:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int 512 [0x200]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":455 82 {*arm_andsi3_insn}
+     (nil))
+(insn 16 15 17 3 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 3 r3 [orig:112 _3 ] [112])
+            (const_int 512 [0x200]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":455 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 17 16 18 3 (set (pc)
+        (if_then_else (ne (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 36)
+            (pc))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":455 204 {arm_cond_branch}
+     (nil)
+ -> 36)
+(note 18 17 19 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+(call_insn 19 18 20 4 (parallel [
+            (set (reg:SI 0 r0)
+                (call (mem:SI (symbol_ref:SI ("HAL_PWREx_DisableLowPowerRunMode") [flags 0x41]  <function_decl 0x7f9d1b2c1f00 HAL_PWREx_DisableLowPowerRunMode>) [0 HAL_PWREx_DisableLowPowerRunMode S4 A32])
+                    (const_int 0 [0])))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":457 220 {*call_value_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(insn 20 19 22 4 (set (reg:SI 3 r3 [124])
+        (reg:SI 0 r0)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":457 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 22 20 23 4 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 3 r3 [orig:113 _4 ] [113])
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":457 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 23 22 59 4 (set (pc)
+        (if_then_else (eq (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 36)
+            (pc))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":457 204 {arm_cond_branch}
+     (nil)
+ -> 36)
+(note 59 23 60 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+(jump_insn 60 59 61 5 (set (pc)
+        (label_ref 57)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":459 214 {*arm_jump}
+     (nil)
+ -> 57)
+(barrier 61 60 27)
+(code_label 27 61 28 6 31 (nil) [1 uses])
+(note 28 27 29 6 [bb 6] NOTE_INSN_BASIC_BLOCK)
+(insn 29 28 30 6 (set (reg/f:SI 3 r3 [orig:114 _5 ] [114])
+        (mem:SI (label_ref 87) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":468 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 30 29 31 6 (set (reg:SI 3 r3 [orig:115 _6 ] [115])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:114 _5 ] [114])
+                (const_int 20 [0x14])) [2 _5->SR2+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":468 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 31 30 32 6 (set (reg:SI 3 r3 [orig:116 _7 ] [116])
+        (and:SI (reg:SI 3 r3 [orig:115 _6 ] [115])
+            (const_int 512 [0x200]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":468 82 {*arm_andsi3_insn}
+     (nil))
+(insn 32 31 33 6 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 3 r3 [orig:116 _7 ] [116])
+            (const_int 512 [0x200]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":468 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 33 32 34 6 (set (pc)
+        (if_then_else (eq (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 36)
+            (pc))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":468 204 {arm_cond_branch}
+     (nil)
+ -> 36)
+(note 34 33 35 7 [bb 7] NOTE_INSN_BASIC_BLOCK)
+(call_insn 35 34 36 7 (parallel [
+            (call (mem:SI (symbol_ref:SI ("HAL_PWREx_EnableLowPowerRunMode") [flags 0x41]  <function_decl 0x7f9d1b2c1e00 HAL_PWREx_EnableLowPowerRunMode>) [0 HAL_PWREx_EnableLowPowerRunMode S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":470 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (nil)))
+(code_label 36 35 37 8 32 (nil) [3 uses])
+(note 37 36 38 8 [bb 8] NOTE_INSN_BASIC_BLOCK)
+(insn 38 37 39 8 (set (reg/f:SI 3 r3 [orig:117 _8 ] [117])
+        (mem:SI (const:SI (plus:SI (label_ref 87)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":475 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 39 38 40 8 (set (reg:SI 3 r3 [orig:118 _9 ] [118])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:117 _8 ] [117])
+                (const_int 16 [0x10])) [2 _8->SCR+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":475 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 40 39 41 8 (set (reg/f:SI 2 r2 [orig:119 _10 ] [119])
+        (mem:SI (const:SI (plus:SI (label_ref 87)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":475 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 41 40 42 8 (set (reg:SI 3 r3 [orig:120 _11 ] [120])
+        (and:SI (reg:SI 3 r3 [orig:118 _9 ] [118])
+            (const_int -5 [0xfffffffffffffffb]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":475 82 {*arm_andsi3_insn}
+     (nil))
+(insn 42 41 43 8 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:119 _10 ] [119])
+                (const_int 16 [0x10])) [2 _10->SCR+0 S4 A32])
+        (reg:SI 3 r3 [orig:120 _11 ] [120])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":475 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 43 42 44 8 (set (reg:SI 3 r3 [125])
+        (zero_extend:SI (mem/c:QI (plus:SI (reg/f:SI 7 r7)
+                    (const_int 3 [0x3])) [0 SLEEPEntry+0 S1 A8]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":478 906 {thumb2_zero_extendqisi2_v6}
+     (nil))
+(insn 44 43 45 8 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 3 r3 [125])
+            (const_int 1 [0x1]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":478 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 45 44 46 8 (set (pc)
+        (if_then_else (ne (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 50)
+            (pc))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":478 204 {arm_cond_branch}
+     (nil)
+ -> 50)
+(note 46 45 47 9 [bb 9] NOTE_INSN_BASIC_BLOCK)
+(insn 47 46 62 9 (parallel [
+            (asm_input/v ("wfi") libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c:481)
+            (clobber (mem:BLK (scratch) [0  A8]))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":481 -1
+     (nil))
+(jump_insn 62 47 63 9 (set (pc)
+        (label_ref 57)) 214 {*arm_jump}
+     (nil)
+ -> 57)
+(barrier 63 62 50)
+(code_label 50 63 51 10 34 (nil) [1 uses])
+(note 51 50 52 10 [bb 10] NOTE_INSN_BASIC_BLOCK)
+(insn 52 51 53 10 (parallel [
+            (asm_input/v ("sev") libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c:486)
+            (clobber (mem:BLK (scratch) [0  A8]))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":486 -1
+     (nil))
+(insn 53 52 54 10 (parallel [
+            (asm_input/v ("wfe") libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c:487)
+            (clobber (mem:BLK (scratch) [0  A8]))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":487 -1
+     (nil))
+(insn 54 53 57 10 (parallel [
+            (asm_input/v ("wfe") libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c:488)
+            (clobber (mem:BLK (scratch) [0  A8]))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":488 -1
+     (nil))
+(code_label 57 54 58 11 30 (nil) [2 uses])
+(note 58 57 74 11 [bb 11] NOTE_INSN_BASIC_BLOCK)
+(note 74 58 75 11 NOTE_INSN_EPILOGUE_BEG)
+(insn/f 75 74 76 11 (parallel [
+            (set (reg/f:SI 7 r7)
+                (plus:SI (reg/f:SI 7 r7)
+                    (const_int 8 [0x8])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":491 917 {*thumb2_addsi_short}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 7 r7)
+            (plus:SI (reg/f:SI 7 r7)
+                (const_int 8 [0x8])))
+        (nil)))
+(insn 76 75 77 11 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":491 230 {blockage}
+     (nil))
+(insn/f 77 76 78 11 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":491 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 78 77 79 11 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":491 322 {force_register_use}
+     (nil))
+(jump_insn 79 78 80 11 (parallel [
+            (return)
+            (set/f (reg/f:SI 13 sp)
+                (plus:SI (reg/f:SI 13 sp)
+                    (const_int 8 [0x8])))
+            (set/f (reg/f:SI 7 r7)
+                (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32]))
+            (set/f (reg:SI 15 pc)
+                (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                        (const_int 4 [0x4])) [3  S4 A32]))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":491 306 {*pop_multiple_with_writeback_and_return}
+     (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+        (nil))
+ -> return)
+(barrier 80 79 85)
+(code_label 85 80 86 36 (nil) [0 uses])
+(insn 86 85 87 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 87 86 88 35 (nil) [0 uses])
+(insn 88 87 89 (unspec_volatile [
+            (const_int 1073770496 [0x40007000])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 89 88 90 (unspec_volatile [
+            (const_int -536810240 [0xffffffffe000ed00])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 90 89 91 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 91 90 68)
+(note 68 91 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_EnterSTOPMode (HAL_PWR_EnterSTOPMode, funcdef_no=337, decl_uid=8817, cgraph_uid=339, symbol_order=339)
+
+(note 1 0 7 NOTE_INSN_DELETED)
+(note 7 1 33 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 33 7 34 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -8 [0xfffffffffffffff8]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+            (use (reg:SI 14 lr))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":525 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -8 [0xfffffffffffffff8])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+                (set/f (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                            (const_int 4 [0x4])) [3  S4 A32])
+                    (reg:SI 14 lr))
+            ])
+        (nil)))
+(insn/f 34 33 35 2 (set (reg/f:SI 13 sp)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int -8 [0xfffffffffffffff8]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":525 4 {*arm_addsi3}
+     (nil))
+(insn 35 34 36 2 (set (mem:BLK (scratch) [0  A8])
+        (unspec:BLK [
+                (reg/f:SI 13 sp)
+                (reg/f:SI 7 r7)
+            ] UNSPEC_PRLG_STK)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":525 304 {stack_tie}
+     (nil))
+(insn/f 36 35 37 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":525 4 {*arm_addsi3}
+     (nil))
+(note 37 36 2 2 NOTE_INSN_PROLOGUE_END)
+(insn 2 37 3 2 (set (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 Regulator+0 S4 A32])
+        (reg:SI 0 r0 [ Regulator ])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":525 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 3 2 5 2 (set (reg:SI 3 r3 [110])
+        (reg:SI 1 r1 [ STOPEntry ])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":525 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 5 3 6 2 (set (mem/c:QI (plus:SI (reg/f:SI 7 r7)
+                (const_int 3 [0x3])) [0 STOPEntry+0 S1 A8])
+        (reg:QI 3 r3 [111])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":525 192 {*arm_movqi_insn}
+     (nil))
+(note 6 5 9 2 NOTE_INSN_FUNCTION_BEG)
+(insn 9 6 10 2 (set (reg:SI 3 r3 [112])
+        (mem/c:SI (plus:SI (reg/f:SI 7 r7)
+                (const_int 4 [0x4])) [2 Regulator+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":529 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 10 9 11 2 (set (reg:CC 100 cc)
+        (compare:CC (reg:SI 3 r3 [112])
+            (const_int 16384 [0x4000]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":529 196 {*arm_cmpsi_insn}
+     (nil))
+(jump_insn 11 10 12 2 (set (pc)
+        (if_then_else (ne (reg:CC 100 cc)
+                (const_int 0 [0]))
+            (label_ref 18)
+            (pc))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":529 204 {arm_cond_branch}
+     (nil)
+ -> 18)
+(note 12 11 13 3 [bb 3] NOTE_INSN_BASIC_BLOCK)
+(insn 13 12 14 3 (set (reg:SI 3 r3 [113])
+        (zero_extend:SI (mem/c:QI (plus:SI (reg/f:SI 7 r7)
+                    (const_int 3 [0x3])) [0 STOPEntry+0 S1 A8]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":531 906 {thumb2_zero_extendqisi2_v6}
+     (nil))
+(insn 14 13 15 3 (set (reg:SI 0 r0)
+        (reg:SI 3 r3 [113])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":531 649 {*thumb2_movsi_vfp}
+     (nil))
+(call_insn 15 14 27 3 (parallel [
+            (call (mem:SI (symbol_ref:SI ("HAL_PWREx_EnterSTOP1Mode") [flags 0x41]  <function_decl 0x7f9d1b2c3100 HAL_PWREx_EnterSTOP1Mode>) [0 HAL_PWREx_EnterSTOP1Mode S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":531 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (expr_list:QI (use (reg:SI 0 r0))
+            (nil))))
+(jump_insn 27 15 28 3 (set (pc)
+        (label_ref:SI 31)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":537 214 {*arm_jump}
+     (nil)
+ -> 31)
+(barrier 28 27 18)
+(code_label 18 28 19 4 38 (nil) [1 uses])
+(note 19 18 20 4 [bb 4] NOTE_INSN_BASIC_BLOCK)
+(insn 20 19 21 4 (set (reg:SI 3 r3 [114])
+        (zero_extend:SI (mem/c:QI (plus:SI (reg/f:SI 7 r7)
+                    (const_int 3 [0x3])) [0 STOPEntry+0 S1 A8]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":535 906 {thumb2_zero_extendqisi2_v6}
+     (nil))
+(insn 21 20 22 4 (set (reg:SI 0 r0)
+        (reg:SI 3 r3 [114])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":535 649 {*thumb2_movsi_vfp}
+     (nil))
+(call_insn 22 21 31 4 (parallel [
+            (call (mem:SI (symbol_ref:SI ("HAL_PWREx_EnterSTOP0Mode") [flags 0x41]  <function_decl 0x7f9d1b2c3000 HAL_PWREx_EnterSTOP0Mode>) [0 HAL_PWREx_EnterSTOP0Mode S4 A32])
+                (const_int 0 [0]))
+            (use (const_int 0 [0]))
+            (clobber (reg:SI 14 lr))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":535 219 {*call_symbol}
+     (nil)
+    (expr_list (clobber (reg:SI 12 ip))
+        (expr_list:QI (use (reg:SI 0 r0))
+            (nil))))
+(code_label 31 22 29 5 40 (nil) [1 uses])
+(note 29 31 30 5 [bb 5] NOTE_INSN_BASIC_BLOCK)
+(insn 30 29 38 5 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":537 236 {nop}
+     (nil))
+(note 38 30 39 5 NOTE_INSN_EPILOGUE_BEG)
+(insn/f 39 38 40 5 (parallel [
+            (set (reg/f:SI 7 r7)
+                (plus:SI (reg/f:SI 7 r7)
+                    (const_int 8 [0x8])))
+            (clobber (reg:CC 100 cc))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":537 917 {*thumb2_addsi_short}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 7 r7)
+            (plus:SI (reg/f:SI 7 r7)
+                (const_int 8 [0x8])))
+        (nil)))
+(insn 40 39 41 5 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":537 230 {blockage}
+     (nil))
+(insn/f 41 40 42 5 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":537 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 42 41 43 5 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":537 322 {force_register_use}
+     (nil))
+(jump_insn 43 42 44 5 (parallel [
+            (return)
+            (set/f (reg/f:SI 13 sp)
+                (plus:SI (reg/f:SI 13 sp)
+                    (const_int 8 [0x8])))
+            (set/f (reg/f:SI 7 r7)
+                (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32]))
+            (set/f (reg:SI 15 pc)
+                (mem/c:SI (plus:SI (reg/f:SI 13 sp)
+                        (const_int 4 [0x4])) [3  S4 A32]))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":537 306 {*pop_multiple_with_writeback_and_return}
+     (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+        (nil))
+ -> return)
+(barrier 44 43 32)
+(note 32 44 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_EnterSTANDBYMode (HAL_PWR_EnterSTANDBYMode, funcdef_no=338, decl_uid=8819, cgraph_uid=340, symbol_order=340)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 25 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 25 3 26 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":558 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 26 25 27 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":558 4 {*arm_addsi3}
+     (nil))
+(note 27 26 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 27 5 2 NOTE_INSN_FUNCTION_BEG)
+(insn 5 2 6 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 41) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":560 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 6 5 7 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110]) [2 _1->CR1+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":560 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg:SI 3 r3 [orig:112 _3 ] [112])
+        (and:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int -8 [0xfffffffffffffff8]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":560 82 {*arm_andsi3_insn}
+     (nil))
+(insn 8 7 9 2 (set (reg/f:SI 2 r2 [orig:113 _4 ] [113])
+        (mem:SI (label_ref 41) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":560 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 9 8 10 2 (set (reg:SI 3 r3 [orig:114 _5 ] [114])
+        (ior:SI (reg:SI 3 r3 [orig:112 _3 ] [112])
+            (const_int 3 [0x3]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":560 105 {*iorsi3_insn}
+     (nil))
+(insn 10 9 11 2 (set (mem/v:SI (reg/f:SI 2 r2 [orig:113 _4 ] [113]) [2 _4->CR1+0 S4 A32])
+        (reg:SI 3 r3 [orig:114 _5 ] [114])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":560 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 11 10 12 2 (set (reg/f:SI 3 r3 [orig:115 _6 ] [115])
+        (mem:SI (const:SI (plus:SI (label_ref 41)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":563 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 11 13 2 (set (reg:SI 3 r3 [orig:116 _7 ] [116])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:115 _6 ] [115])
+                (const_int 16 [0x10])) [2 _6->SCR+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":563 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 13 12 14 2 (set (reg/f:SI 2 r2 [orig:117 _8 ] [117])
+        (mem:SI (const:SI (plus:SI (label_ref 41)
+                    (const_int 4 [0x4]))) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":563 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 14 13 15 2 (set (reg:SI 3 r3 [orig:118 _9 ] [118])
+        (ior:SI (reg:SI 3 r3 [orig:116 _7 ] [116])
+            (const_int 4 [0x4]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":563 105 {*iorsi3_insn}
+     (nil))
+(insn 15 14 16 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:117 _8 ] [117])
+                (const_int 16 [0x10])) [2 _8->SCR+0 S4 A32])
+        (reg:SI 3 r3 [orig:118 _9 ] [118])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":563 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 16 15 19 2 (parallel [
+            (asm_input/v ("wfi") libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c:570)
+            (clobber (mem:BLK (scratch) [0  A8]))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":570 -1
+     (nil))
+(insn 19 16 28 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":571 236 {nop}
+     (nil))
+(note 28 19 29 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 29 28 30 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":571 230 {blockage}
+     (nil))
+(insn/f 30 29 31 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":571 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 31 30 32 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":571 322 {force_register_use}
+     (nil))
+(insn/f 32 31 33 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":571 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 33 32 34 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":571 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 34 33 39)
+(code_label 39 34 40 43 (nil) [0 uses])
+(insn 40 39 41 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 41 40 42 42 (nil) [0 uses])
+(insn 42 41 43 (unspec_volatile [
+            (const_int 1073770496 [0x40007000])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 43 42 44 (unspec_volatile [
+            (const_int -536810240 [0xffffffffe000ed00])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 44 43 45 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 45 44 24)
+(note 24 45 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_EnableSleepOnExit (HAL_PWR_EnableSleepOnExit, funcdef_no=339, decl_uid=8821, cgraph_uid=341, symbol_order=341)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 16 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 16 3 17 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":584 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 17 16 18 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":584 4 {*arm_addsi3}
+     (nil))
+(note 18 17 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 18 5 2 NOTE_INSN_FUNCTION_BEG)
+(insn 5 2 6 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":586 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 6 5 7 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 16 [0x10])) [2 _1->SCR+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":586 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":586 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+        (ior:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int 2 [0x2]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":586 105 {*iorsi3_insn}
+     (nil))
+(insn 9 8 12 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+                (const_int 16 [0x10])) [2 _3->SCR+0 S4 A32])
+        (reg:SI 3 r3 [orig:113 _4 ] [113])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":586 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 9 19 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":587 236 {nop}
+     (nil))
+(note 19 12 20 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 20 19 21 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":587 230 {blockage}
+     (nil))
+(insn/f 21 20 22 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":587 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 22 21 23 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":587 322 {force_register_use}
+     (nil))
+(insn/f 23 22 24 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":587 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 24 23 25 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":587 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 25 24 28)
+(code_label 28 25 29 46 (nil) [0 uses])
+(insn 29 28 30 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 30 29 31 45 (nil) [0 uses])
+(insn 31 30 32 (unspec_volatile [
+            (const_int -536810240 [0xffffffffe000ed00])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 32 31 33 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 33 32 15)
+(note 15 33 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_DisableSleepOnExit (HAL_PWR_DisableSleepOnExit, funcdef_no=340, decl_uid=8823, cgraph_uid=342, symbol_order=342)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 16 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 16 3 17 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":597 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 17 16 18 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":597 4 {*arm_addsi3}
+     (nil))
+(note 18 17 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 18 5 2 NOTE_INSN_FUNCTION_BEG)
+(insn 5 2 6 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":599 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 6 5 7 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 16 [0x10])) [2 _1->SCR+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":599 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":599 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+        (and:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int -3 [0xfffffffffffffffd]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":599 82 {*arm_andsi3_insn}
+     (nil))
+(insn 9 8 12 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+                (const_int 16 [0x10])) [2 _3->SCR+0 S4 A32])
+        (reg:SI 3 r3 [orig:113 _4 ] [113])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":599 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 9 19 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":600 236 {nop}
+     (nil))
+(note 19 12 20 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 20 19 21 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":600 230 {blockage}
+     (nil))
+(insn/f 21 20 22 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":600 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 22 21 23 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":600 322 {force_register_use}
+     (nil))
+(insn/f 23 22 24 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":600 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 24 23 25 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":600 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 25 24 28)
+(code_label 28 25 29 49 (nil) [0 uses])
+(insn 29 28 30 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 30 29 31 48 (nil) [0 uses])
+(insn 31 30 32 (unspec_volatile [
+            (const_int -536810240 [0xffffffffe000ed00])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 32 31 33 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 33 32 15)
+(note 15 33 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_EnableSEVOnPend (HAL_PWR_EnableSEVOnPend, funcdef_no=341, decl_uid=8825, cgraph_uid=343, symbol_order=343)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 16 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 16 3 17 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":611 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 17 16 18 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":611 4 {*arm_addsi3}
+     (nil))
+(note 18 17 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 18 5 2 NOTE_INSN_FUNCTION_BEG)
+(insn 5 2 6 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":613 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 6 5 7 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 16 [0x10])) [2 _1->SCR+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":613 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":613 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+        (ior:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int 16 [0x10]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":613 105 {*iorsi3_insn}
+     (nil))
+(insn 9 8 12 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+                (const_int 16 [0x10])) [2 _3->SCR+0 S4 A32])
+        (reg:SI 3 r3 [orig:113 _4 ] [113])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":613 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 9 19 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":614 236 {nop}
+     (nil))
+(note 19 12 20 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 20 19 21 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":614 230 {blockage}
+     (nil))
+(insn/f 21 20 22 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":614 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 22 21 23 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":614 322 {force_register_use}
+     (nil))
+(insn/f 23 22 24 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":614 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 24 23 25 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":614 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 25 24 28)
+(code_label 28 25 29 52 (nil) [0 uses])
+(insn 29 28 30 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 30 29 31 51 (nil) [0 uses])
+(insn 31 30 32 (unspec_volatile [
+            (const_int -536810240 [0xffffffffe000ed00])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 32 31 33 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 33 32 15)
+(note 15 33 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_DisableSEVOnPend (HAL_PWR_DisableSEVOnPend, funcdef_no=342, decl_uid=8827, cgraph_uid=344, symbol_order=344)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 16 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 16 3 17 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":624 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 17 16 18 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":624 4 {*arm_addsi3}
+     (nil))
+(note 18 17 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 18 5 2 NOTE_INSN_FUNCTION_BEG)
+(insn 5 2 6 2 (set (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":626 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 6 5 7 2 (set (reg:SI 3 r3 [orig:111 _2 ] [111])
+        (mem/v:SI (plus:SI (reg/f:SI 3 r3 [orig:110 _1 ] [110])
+                (const_int 16 [0x10])) [2 _1->SCR+0 S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":626 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 7 6 8 2 (set (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+        (mem:SI (label_ref 30) [0  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":626 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 8 7 9 2 (set (reg:SI 3 r3 [orig:113 _4 ] [113])
+        (and:SI (reg:SI 3 r3 [orig:111 _2 ] [111])
+            (const_int -17 [0xffffffffffffffef]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":626 82 {*arm_andsi3_insn}
+     (nil))
+(insn 9 8 12 2 (set (mem/v:SI (plus:SI (reg/f:SI 2 r2 [orig:112 _3 ] [112])
+                (const_int 16 [0x10])) [2 _3->SCR+0 S4 A32])
+        (reg:SI 3 r3 [orig:113 _4 ] [113])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":626 649 {*thumb2_movsi_vfp}
+     (nil))
+(insn 12 9 19 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":627 236 {nop}
+     (nil))
+(note 19 12 20 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 20 19 21 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":627 230 {blockage}
+     (nil))
+(insn/f 21 20 22 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":627 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 22 21 23 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":627 322 {force_register_use}
+     (nil))
+(insn/f 23 22 24 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":627 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 24 23 25 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":627 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 25 24 28)
+(code_label 28 25 29 55 (nil) [0 uses])
+(insn 29 28 30 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_ALIGN) 310 {align_4}
+     (nil))
+(code_label 30 29 31 54 (nil) [0 uses])
+(insn 31 30 32 (unspec_volatile [
+            (const_int -536810240 [0xffffffffe000ed00])
+        ] VUNSPEC_POOL_4) 315 {consttable_4}
+     (nil))
+(insn 32 31 33 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_POOL_END) 312 {consttable_end}
+     (nil))
+(barrier 33 32 15)
+(note 15 33 0 NOTE_INSN_DELETED)
+
+;; Function HAL_PWR_PVDCallback (HAL_PWR_PVDCallback, funcdef_no=343, decl_uid=8829, cgraph_uid=345, symbol_order=345)
+
+(note 1 0 3 NOTE_INSN_DELETED)
+(note 3 1 9 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(insn/f 9 3 10 2 (parallel [
+            (set (mem/c:BLK (pre_modify:SI (reg/f:SI 13 sp)
+                        (plus:SI (reg/f:SI 13 sp)
+                            (const_int -4 [0xfffffffffffffffc]))) [3  A8])
+                (unspec:BLK [
+                        (reg/f:SI 7 r7)
+                    ] UNSPEC_PUSH_MULT))
+        ]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":638 303 {*push_multi}
+     (expr_list:REG_FRAME_RELATED_EXPR (sequence [
+                (set/f (reg/f:SI 13 sp)
+                    (plus:SI (reg/f:SI 13 sp)
+                        (const_int -4 [0xfffffffffffffffc])))
+                (set/f (mem/c:SI (reg/f:SI 13 sp) [3  S4 A32])
+                    (reg/f:SI 7 r7))
+            ])
+        (nil)))
+(insn/f 10 9 11 2 (set (reg/f:SI 7 r7)
+        (plus:SI (reg/f:SI 13 sp)
+            (const_int 0 [0]))) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":638 4 {*arm_addsi3}
+     (nil))
+(note 11 10 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 11 7 2 NOTE_INSN_FUNCTION_BEG)
+(insn 7 2 12 2 (const_int 0 [0]) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":642 236 {nop}
+     (nil))
+(note 12 7 13 2 NOTE_INSN_EPILOGUE_BEG)
+(insn 13 12 14 2 (unspec_volatile [
+            (const_int 0 [0])
+        ] VUNSPEC_BLOCKAGE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":642 230 {blockage}
+     (nil))
+(insn/f 14 13 15 2 (set (reg/f:SI 13 sp)
+        (reg/f:SI 7 r7)) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":642 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (reg/f:SI 7 r7))
+        (nil)))
+(insn 15 14 16 2 (unspec:SI [
+            (reg/f:SI 13 sp)
+        ] UNSPEC_REGISTER_USE) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":642 322 {force_register_use}
+     (nil))
+(insn/f 16 15 17 2 (set (reg/f:SI 7 r7)
+        (mem:SI (post_inc:SI (reg/f:SI 13 sp)) [3  S4 A32])) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":642 649 {*thumb2_movsi_vfp}
+     (expr_list:REG_CFA_ADJUST_CFA (set (reg/f:SI 13 sp)
+            (plus:SI (reg/f:SI 13 sp)
+                (const_int 4 [0x4])))
+        (expr_list:REG_CFA_RESTORE (reg/f:SI 7 r7)
+            (nil))))
+(jump_insn 17 16 18 2 (simple_return) "libraries/STM32L4xx_HAL/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c":642 909 {*thumb2_return}
+     (nil)
+ -> simple_return)
+(barrier 18 17 8)
+(note 8 18 0 NOTE_INSN_DELETED)
