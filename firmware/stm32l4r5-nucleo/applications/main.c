@@ -52,7 +52,8 @@
 #define DEVICE_SECRET            "Pj6cJVeDiMX2l3YldpEIdszEbXIaTkl6"
 #endif
 
-#define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}\x1A"
+/* not need \x1A */
+#define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}"
 
 #define MQTT_TOPIC_HELLO         "/"PRODUCT_KEY"/"DEVICE_NAME"/user/hello"
 #define MQTT_TOPIC_UPLOAD        "/sys/"PRODUCT_KEY"/"DEVICE_NAME"/thing/event/property/post"
