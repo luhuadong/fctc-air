@@ -37,6 +37,8 @@
 #define GP2Y10_AOUT_PIN          GET_PIN(C, 3)   /* A2 */
 
 #define SGP30_I2C_BUS_NAME       "i2c1"
+#define SGP30_I2C_ADDRESS        0x58
+
 #define BC28_AT_CLIENT_NAME      "uart3"
 #define NET_DEVICE_NAME          "bc28"
 /* End of User Modified Part */
@@ -593,6 +595,7 @@ static int rt_hw_sgp30_port(void)
     
     cfg.intf.type = RT_SENSOR_INTF_I2C;
     cfg.intf.dev_name = SGP30_I2C_BUS_NAME;
+    cfg.intf.user_data = (void *)SGP30_I2C_ADDRESS;
     rt_hw_sgp30_init("sg3", &cfg);
     
     return RT_EOK;
