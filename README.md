@@ -26,6 +26,7 @@ git submodule update
 | NUCLEO-L4R5ZI | STM32L4R5ZIT6 | 2MB | 640KB | [details](https://www.st.com/en/evaluation-tools/nucleo-l4r5zi.html) |
 | NUCLEO-F767ZI | STM32F767ZIT6 | 2MB | 512KB | [details](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html) |
 | AT-START-F403A | AT32F403AVGT7 | 1MB | 96KB | [details](https://blog.csdn.net/lu_embedded/article/details/105816401) |
+| ...... |  |  |  |  |
 
 
 
@@ -41,6 +42,7 @@ git submodule update
 | SGP30 | Sensirion | SGP30 | [sgp30](https://github.com/luhuadong/rtt-sgp30) |
 | CCS811 | AMS | CCS811 | [ccs811](https://github.com/luhuadong/rtt-ccs811) |
 | BME280 | Bosch | BME280 | [bme280](https://github.com/RT-Thread-packages/bme280) |
+| BME680 | Bosch | BME680 | [bme680](https://github.com/luhuadong/rtt-bme680) |
 
 
 
