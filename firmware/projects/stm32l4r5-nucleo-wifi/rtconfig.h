@@ -74,6 +74,12 @@
 
 /* Device virtual file system */
 
+#define RT_USING_DFS
+#define DFS_USING_WORKDIR
+#define DFS_FILESYSTEMS_MAX 2
+#define DFS_FILESYSTEM_TYPES_MAX 2
+#define DFS_FD_MAX 16
+#define RT_USING_DFS_DEVFS
 
 /* Device Drivers */
 
@@ -84,7 +90,12 @@
 #define RT_SYSTEM_WORKQUEUE_PRIORITY 23
 #define RT_USING_SERIAL
 #define RT_SERIAL_RB_BUFSZ 64
+#define RT_USING_I2C
+#define RT_USING_I2C_BITOPS
 #define RT_USING_PIN
+#define RT_USING_ADC
+#define RT_USING_SENSOR
+#define RT_USING_SENSOR_CMD
 
 /* Using USB */
 
@@ -92,6 +103,7 @@
 /* POSIX layer and C standard library */
 
 #define RT_USING_LIBC
+#define RT_USING_POSIX
 
 /* Network */
 
@@ -102,7 +114,7 @@
 /* protocol stack implement */
 
 #define SAL_USING_AT
-#define SAL_SOCKETS_NUM 16
+#define SAL_USING_POSIX
 
 /* Network interface device */
 
@@ -138,6 +150,8 @@
 
 /* IoT - internet of things */
 
+#define PKG_USING_CJSON
+#define PKG_USING_CJSON_V102
 
 /* Wi-Fi */
 
@@ -149,8 +163,8 @@
 #define PKG_USING_AT_DEVICE
 #define AT_DEVICE_USING_ESP8266
 #define AT_DEVICE_ESP8266_SAMPLE
-#define ESP8266_SAMPLE_WIFI_SSID "iPhone"
-#define ESP8266_SAMPLE_WIFI_PASSWORD "ooopppuuukkk"
+#define ESP8266_SAMPLE_WIFI_SSID "FCTC_89"
+#define ESP8266_SAMPLE_WIFI_PASSWORD "Lu15899962740"
 #define ESP8266_SAMPLE_CLIENT_NAME "uart3"
 #define ESP8266_SAMPLE_RECV_BUFF_LEN 512
 #define PKG_USING_AT_DEVICE_LATEST_VERSION
@@ -158,6 +172,49 @@
 
 /* IoT Cloud */
 
+#define PKG_USING_ALI_IOTKIT
+#define PKG_USING_ALI_IOTKIT_PRODUCT_KEY "a1p8Pngb3oY"
+#define PKG_USING_ALI_IOTKIT_PRODUCT_SECRET ""
+#define PKG_USING_ALI_IOTKIT_DEVICE_NAME "D001"
+#define PKG_USING_ALI_IOTKIT_DEVICE_SECRET "06a4e5195240d18c691cef531ecc99d8"
+#define PKG_ALI_IOTKIT_SELECT_ITEM
+#define PLATFORM_HAS_STDINT
+#define PLATFORM_HAS_DYNMEM
+#define PLATFORM_HAS_OS
+#define INFRA_STRING
+#define INFRA_NET
+#define INFRA_LIST
+#define INFRA_LOG_NETWORK_PAYLOAD
+#define INFRA_LOG
+
+/* Log Configurations */
+
+#define INFRA_LOG_MUTE_FLW
+#define INFRA_LOG_MUTE_DBG
+#define INFRA_LOG_MUTE_INF
+#define INFRA_LOG_MUTE_WRN
+#define INFRA_LOG_MUTE_CRT
+#define INFRA_TIMER
+#define INFRA_CJSON
+#define INFRA_SHA256
+#define INFRA_REPORT
+#define INFRA_COMPAT
+#define INFRA_CLASSIC
+#define DEV_SIGN
+#define MQTT_COMM_ENABLED
+
+/* MQTT Configurations */
+
+#define MQTT_DEFAULT_IMPL
+#define MQTT_DIRECT
+#define DEVICE_MODEL_CLASSIC
+#define LOG_REPORT_TO_CLOUD
+#define DEVICE_MODEL_ENABLED
+
+/* Device Model Configurations */
+
+#define PKG_USING_ALI_IOTKIT_V30001
+#define PKG_ALI_IOTKIT_VER_NUM 0x30001
 
 /* security packages */
 
@@ -176,6 +233,28 @@
 
 /* peripheral libraries and drivers */
 
+#define PKG_USING_SENSORS_DRIVERS
+#define PKG_USING_DHTXX
+#define PKG_USING_DHTXX_TYPE_DHT22
+#define PKG_USING_DHTXX_LATEST_VERSION
+#define PKG_DHTXX_VER_NUM 0x99999
+#define PKG_USING_GP2Y10
+#define PKG_USING_GP2Y10_ADC_DEV_NAME "adc1"
+#define PKG_USING_GP2Y10_ADC_DEV_CHANNEL 4
+#define PKG_USING_GP2Y10_CONVERT_BITS 12
+#define PKG_USING_GP2Y10_VOLTAGE_RATIO 11
+#define PKG_USING_GP2Y10_SOFT_FILTER
+#define PKG_USING_GP2Y10_LATEST_VERSION
+#define PKG_USING_SGP30
+#define PKG_USING_SGP30_I2C_ADDR
+#define PKG_USING_SGP30_I2C_ADDRESS 0x58
+#define PKG_USING_SGP30_LATEST_VERSION
+#define PKG_USING_LITTLED
+#define PKG_USING_LITTLED_PERIOD 1000
+#define PKG_USING_LITTLED_PULSE 500
+#define PKG_USING_LITTLED_BELL_TIME 50000
+#define PKG_USING_LITTLED_BEEP_COUNT 3
+#define PKG_USING_LITTLED_LATEST_VERSION
 
 /* miscellaneous packages */
 
@@ -199,6 +278,12 @@
 #define BSP_USING_UART
 #define BSP_USING_LPUART1
 #define BSP_USING_UART3
+#define BSP_USING_ADC
+#define BSP_USING_ADC1
+#define BSP_USING_I2C
+#define BSP_USING_I2C1
+#define BSP_I2C1_SCL_PIN 24
+#define BSP_I2C1_SDA_PIN 25
 
 /* Board extended module Drivers */
 

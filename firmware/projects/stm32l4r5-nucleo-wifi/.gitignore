@@ -14,6 +14,12 @@ build
 Debug
 documentation/html
 packages/at_device*
+packages/ali-iotkit*
+packages/cJSON*
+packages/dhtxx*
+packages/gp2y10*
+packages/sgp30*
+packages/littled*
 *~
 *.o
 *.obj
