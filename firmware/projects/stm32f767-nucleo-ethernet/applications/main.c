@@ -22,7 +22,7 @@
 #include "ali_mqtt.h"
 
 #define DBG_TAG                  "main"
-#define DBG_LVL                  DBG_LOG
+#define DBG_LVL                  DBG_ERROR
 #include <rtdbg.h>
 
 #define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}"
@@ -45,8 +45,7 @@
 #define BC28_AT_CLIENT_NAME      "uart3"         /* No BC28 */
 #define NET_DEVICE_NAME          "e0"
 
-
-#define DELAY_TIME_DEFAULT       5000
+#define DELAY_TIME_DEFAULT       (6*1000)
 
 #define SENSOR_TEMP              (0)
 #define SENSOR_HUMI              (1)
@@ -491,7 +490,7 @@ int main(void)
     if(eco2_thread) rt_thread_startup(eco2_thread);
 
     if(sync_thread) rt_thread_startup(sync_thread);
-    //if(upload_thread) rt_thread_startup(upload_thread);
+    if(upload_thread) rt_thread_startup(upload_thread);
 
     return RT_EOK;
 }
