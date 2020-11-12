@@ -1,12 +1,11 @@
 /*
- * Copyright (c) 2006-2018, RT-Thread Development Team
+ * Copyright (c) 2006-2020, RT-Thread Development Team
  *
  * SPDX-License-Identifier: Apache-2.0
  *
  * Change Logs:
  * Date           Author       Notes
- * 2018-11-06     SummerGift   first version
- * 2019-1-10      e31207077    add stm32f767-st-nucleo bsp
+ * 2020-11-06     luhuadong   first version
  */
 
 #include <rtthread.h>
@@ -19,7 +18,12 @@
 #include <dhtxx.h>
 #include <gp2y10.h>
 #include <sgp30.h>
+#include <ccs811.h>
 #include "ali_mqtt.h"
+
+#define DBG_TAG                  "main"
+#define DBG_LVL                  DBG_LOG
+#include <rtdbg.h>
 
 #define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}"
 
@@ -37,11 +41,12 @@
 #define GP2Y10_AOUT_PIN          GET_PIN(C, 3)   /* A2 : ADC1_IN13 */
 
 #define SGP30_I2C_BUS_NAME       "i2c1"          /* SCL: PB8(24), SDA: PB9(25) */
+#define CCS811_I2C_BUS_NAME      "i2c1"
 #define BC28_AT_CLIENT_NAME      "uart3"         /* No BC28 */
 #define NET_DEVICE_NAME          "e0"
 
 
-#define DELAY_TIME_DEFAULT       3000
+#define DELAY_TIME_DEFAULT       5000
 
 #define SENSOR_TEMP              (0)
 #define SENSOR_HUMI              (1)
@@ -149,13 +154,13 @@ static void sync(const rt_uint8_t tag, const rt_int32_t data)
 static void upload_thread_entry(void *parameter)
 {
     void *pclient = NULL;
-    int   res = 0;
+    //int   res = 0;
     struct netdev *dev;
 
     dev = netdev_get_by_name(NET_DEVICE_NAME);
     if (dev == RT_NULL)
     {
-        rt_kprintf("(upload) Can't find %s device.\n", NET_DEVICE_NAME);
+        LOG_E("(upload) Can't find %s device.\n", NET_DEVICE_NAME);
         return;
     }
 
@@ -163,16 +168,16 @@ static void upload_thread_entry(void *parameter)
     {
         rt_thread_mdelay(1000);
     }
-    rt_kprintf("(upload) %s is connected to internet.\n", NET_DEVICE_NAME);
+    LOG_I("(upload) %s is connected to internet.\n", NET_DEVICE_NAME);
 
     pclient = ali_mqtt_create();
     if (pclient == RT_NULL)
     {
         LED_BLINK_FAST(led_warning);
-        rt_kprintf("(upload) init mqtt network failed.\n");
+        LOG_E("(upload) init mqtt network failed.\n");
         return;
     }
-    rt_kprintf("(upload) init mqtt network ok.\n");
+    LOG_I("(upload) init mqtt network ok.\n");
 
 #if 0
     res = example_subscribe(pclient);
@@ -211,7 +216,7 @@ static void sync_thread_entry(void *parameter)
 
     int count = 0;
     rt_uint32_t recved;
-    rt_uint32_t sensor_event = EVENT_FLAG_TEMP | EVENT_FLAG_HUMI | EVENT_FLAG_DUST | 
+    rt_uint32_t sensor_event = EVENT_FLAG_TEMP | EVENT_FLAG_HUMI | /* EVENT_FLAG_DUST | */
                                EVENT_FLAG_TVOC | EVENT_FLAG_ECO2;
 
     /* clear sensor event */
@@ -251,21 +256,21 @@ static void sync_thread_entry(void *parameter)
     }
 }
 
-static void read_temp_entry(void *parameter)
+static void read_sensor_entry(void *parameter)
 {
-    rt_device_t temp_dev = RT_NULL;
+    rt_device_t sensor = RT_NULL;
     struct rt_sensor_data sensor_data;
 
-    temp_dev = rt_device_find(parameter);
-    if (!temp_dev) 
+    sensor = rt_device_find(parameter);
+    if (!sensor) 
     {
-        rt_kprintf("(Temp) Can't find %s device.\n", parameter);
+        LOG_E("Can not find %s device.", parameter);
         return;
     }
 
-    if (rt_device_open(temp_dev, RT_DEVICE_FLAG_RDWR)) 
+    if (rt_device_open(sensor, RT_DEVICE_FLAG_RDWR)) 
     {
-        rt_kprintf("(Temp) Open %s device failed.\n", parameter);
+        LOG_E("Open %s device failed.", parameter);
         return;
     }
 
@@ -273,54 +278,42 @@ static void read_temp_entry(void *parameter)
 
     while(1)
     {
-        if (1 != rt_device_read(temp_dev, 0, &sensor_data, 1)) 
+        if (1 != rt_device_read(sensor, 0, &sensor_data, 1)) 
         {
-            //LED_BEEP(led_warning);
-            rt_kprintf("(Temp) Read %s data failed.\n", parameter);
-        } else 
+            LOG_E("(Temp) Read %s data failed.", parameter);
+            rt_thread_mdelay(DELAY_TIME_DEFAULT);
+        }
+
+        if (sensor_data.type == RT_SENSOR_CLASS_TEMP)
         {
-            //rt_kprintf("[%d] Temp: %d\n", sensor_data.timestamp, sensor_data.data.temp);
+            LOG_D("[%d] Temp: %d'C", sensor_data.timestamp, sensor_data.data.temp/10);
             sync(SENSOR_TEMP, sensor_data.data.temp);
         }
-        rt_thread_mdelay(DELAY_TIME_DEFAULT);
-    }
-    rt_device_close(temp_dev);
-}
-
-static void read_humi_entry(void *parameter)
-{
-    rt_device_t humi_dev = RT_NULL;
-    struct rt_sensor_data sensor_data;
-
-    humi_dev = rt_device_find(parameter);
-    if (!humi_dev) 
-    {
-        rt_kprintf("(Humi) Can't find %s device.\n", parameter);
-        return;
-    }
-
-    if (rt_device_open(humi_dev, RT_DEVICE_FLAG_RDWR)) 
-    {
-        rt_kprintf("(Humi) Open %s device failed.\n", parameter);
-        return;
-    }
-
-    rt_thread_mdelay(2000);  /* 越过2s不稳定期 */
-
-    while (1)
-    {
-        if (1 != rt_device_read(humi_dev, 0, &sensor_data, 1)) 
+        else if (sensor_data.type == RT_SENSOR_CLASS_HUMI)
         {
-            //LED_BEEP(led_warning);
-            rt_kprintf("(Humi) Read %s data failed.\n", parameter);
-        } else
-        {
-            //rt_kprintf("[%d] Humi: %d\n", sensor_data.timestamp, sensor_data.data.humi);
+            LOG_D("[%d] Humi: %d%%", sensor_data.timestamp, sensor_data.data.humi/10);
             sync(SENSOR_HUMI, sensor_data.data.humi);
         }
+        else if (sensor_data.type == RT_SENSOR_CLASS_DUST)
+        {
+            LOG_D("[%d] Dust: %d", sensor_data.timestamp, sensor_data.data.dust);
+            sync(SENSOR_DUST, sensor_data.data.dust);
+        }
+        else if (sensor_data.type == RT_SENSOR_CLASS_TVOC)
+        {
+            LOG_D("[%d] TVOC: %d ppb", sensor_data.timestamp, sensor_data.data.tvoc);
+            sync(SENSOR_TVOC, sensor_data.data.tvoc);
+        }
+        else if (sensor_data.type == RT_SENSOR_CLASS_ECO2)
+        {
+            LOG_D("[%d] eCO2: %d ppm", sensor_data.timestamp, sensor_data.data.eco2);
+            sync(SENSOR_ECO2, sensor_data.data.eco2);
+        }
+
         rt_thread_mdelay(DELAY_TIME_DEFAULT);
     }
-    rt_device_close(humi_dev);
+
+    rt_device_close(sensor);
 }
 
 static void read_dust_entry(void *parameter)
@@ -331,13 +324,13 @@ static void read_dust_entry(void *parameter)
     dust_dev = rt_device_find(parameter);
     if (dust_dev == RT_NULL)
     {
-        rt_kprintf("(Dust) Can't find %s device.\n", parameter);
+        LOG_E("(Dust) Can't find %s device.\n", parameter);
         return;
     }
 
     if (rt_device_open(dust_dev, RT_DEVICE_FLAG_RDWR)) 
     {
-        rt_kprintf("(Dust) Open %s device failed.\n", parameter);
+        LOG_E("(Dust) Open %s device failed.\n", parameter);
         return;
     }
 
@@ -345,10 +338,10 @@ static void read_dust_entry(void *parameter)
     {
         if (1 != rt_device_read(dust_dev, 0, &sensor_data, 1))
         {
-            rt_kprintf("(Dust) Read %s data failed.\n", parameter);
+            LOG_E("(Dust) Read %s data failed.\n", parameter);
         } else
         {
-            //rt_kprintf("[%d] Dust: %d\n", sensor_data.timestamp, sensor_data.data.dust);
+            LOG_D("[%d] Dust: %d\n", sensor_data.timestamp, sensor_data.data.dust);
             sync(SENSOR_DUST, sensor_data.data.dust);
         }
         rt_thread_mdelay(DELAY_TIME_DEFAULT);
@@ -365,13 +358,13 @@ static void read_tvoc_entry(void *parameter)
     tvoc_dev = rt_device_find(parameter);
     if (!tvoc_dev) 
     {
-        rt_kprintf("(TVOC) Can't find %s device.\n", parameter);
+        LOG_E("(TVOC) Can't find %s device.\n", parameter);
         return;
     }
 
     if (rt_device_open(tvoc_dev, RT_DEVICE_FLAG_RDWR)) 
     {
-        rt_kprintf("(TVOC) Open %s device failed.\n", parameter);
+        LOG_E("(TVOC) Open %s device failed.\n", parameter);
         return;
     }
 
@@ -379,10 +372,10 @@ static void read_tvoc_entry(void *parameter)
     {
         if (1 != rt_device_read(tvoc_dev, 0, &sensor_data, 1)) 
         {
-            rt_kprintf("(TVOC) Read %s data failed.\n", parameter);
+            LOG_E("(TVOC) Read %s data failed.\n", parameter);
         } else
         {
-            //rt_kprintf("[%d] TVOC: %d\n", sensor_data.timestamp, sensor_data.data.tvoc);
+            LOG_D("[%d] TVOC: %d\n", sensor_data.timestamp, sensor_data.data.tvoc);
             sync(SENSOR_TVOC, sensor_data.data.tvoc);
         }
 
@@ -411,13 +404,13 @@ static void read_eco2_entry(void *parameter)
     eco2_dev = rt_device_find(parameter);
     if (!eco2_dev) 
     {
-        rt_kprintf("(eCO2) Can't find %s device.\n", parameter);
+        LOG_E("(eCO2) Can't find %s device.\n", parameter);
         return;
     }
 
     if (rt_device_open(eco2_dev, RT_DEVICE_FLAG_RDWR)) 
     {
-        rt_kprintf("(eCO2) Open %s device failed.\n", parameter);
+        LOG_E("(eCO2) Open %s device failed.\n", parameter);
         return;
     }
 
@@ -425,10 +418,10 @@ static void read_eco2_entry(void *parameter)
     {
         if (1 != rt_device_read(eco2_dev, 0, &sensor_data, 1)) 
         {
-            rt_kprintf("(eCO2) Read %s data failed.\n", parameter);
+            LOG_E("(eCO2) Read %s data failed.\n", parameter);
         } else
         {
-            //rt_kprintf("[%d] eCO2: %d\n", sensor_data.timestamp, sensor_data.data.eco2);
+            LOG_D("[%d] eCO2: %d\n", sensor_data.timestamp, sensor_data.data.eco2);
             sync(SENSOR_ECO2, sensor_data.data.eco2);
         }
         rt_thread_mdelay(1000);
@@ -481,11 +474,11 @@ int main(void)
         return -1;
     }
 
-    temp_thread = rt_thread_create("temp_th", read_temp_entry, "temp_dh2", 1024, 10, 5);
-    humi_thread = rt_thread_create("humi_th", read_humi_entry, "humi_dh2", 1024, 10, 5);
-    dust_thread = rt_thread_create("dust_th", read_dust_entry, "dust_gp2", 1024, 15, 5);
-    tvoc_thread = rt_thread_create("tvoc_th", read_tvoc_entry, "tvoc_sg3", 1024, 16, 5);
-    eco2_thread = rt_thread_create("eco2_th", read_eco2_entry, "eco2_sg3", 1024, 16, 5);
+    temp_thread = rt_thread_create("temp_th", read_sensor_entry, "temp_dht", 1024, 10, 5);
+    humi_thread = rt_thread_create("humi_th", read_sensor_entry, "humi_dht", 1024, 10, 5);
+    dust_thread = rt_thread_create("dust_th", read_sensor_entry, "dust_gp2", 1024, 15, 5);
+    tvoc_thread = rt_thread_create("tvoc_th", read_sensor_entry, "tvoc_cs8", 1024, 16, 5);
+    eco2_thread = rt_thread_create("eco2_th", read_sensor_entry, "eco2_cs8", 1024, 16, 5);
 
     sync_thread = rt_thread_create("sync", sync_thread_entry, RT_NULL, 1024, 15, 5);
     upload_thread = rt_thread_create("upload", upload_thread_entry, RT_NULL, 4096, 5, 5);
@@ -493,55 +486,27 @@ int main(void)
     /* start up all user thread */
     if(temp_thread) rt_thread_startup(temp_thread);
     if(humi_thread) rt_thread_startup(humi_thread);
-    if(dust_thread) rt_thread_startup(dust_thread);
+    //if(dust_thread) rt_thread_startup(dust_thread);
     if(tvoc_thread) rt_thread_startup(tvoc_thread);
     if(eco2_thread) rt_thread_startup(eco2_thread);
 
     if(sync_thread) rt_thread_startup(sync_thread);
-    if(upload_thread) rt_thread_startup(upload_thread);
+    //if(upload_thread) rt_thread_startup(upload_thread);
 
     return RT_EOK;
-
-#if 0
-    int count = 1;
-    /* set LED1 pin mode to output */
-    rt_pin_mode(LED1_PIN, PIN_MODE_OUTPUT);
-    rt_pin_mode(LED2_PIN, PIN_MODE_OUTPUT);
-    rt_pin_mode(LED3_PIN, PIN_MODE_OUTPUT);
-
-    user_key_init();
-
-    while (count++)
-    {
-        rt_pin_write(LED1_PIN, PIN_HIGH);
-        rt_pin_write(LED2_PIN, PIN_HIGH);
-        rt_pin_write(LED3_PIN, PIN_HIGH);
-        rt_thread_mdelay(500);
-        rt_pin_write(LED1_PIN, PIN_LOW);
-        rt_pin_write(LED2_PIN, PIN_LOW);
-        rt_pin_write(LED3_PIN, PIN_LOW);
-        rt_thread_mdelay(500);
-    }
-
-    return RT_EOK;
-#endif
 }
 
-static int rt_hw_dht22_port(void)
+static int rt_hw_dht_port(void)
 {
-    //struct dht_info info;
     struct rt_sensor_config cfg;
-
-    //info.type = DHT22;
-    //info.pin  = DHT22_DATA_PIN;
     
     cfg.intf.type = RT_SENSOR_INTF_ONEWIRE;
-    cfg.intf.user_data = (void *)DHT22_DATA_PIN;
-    rt_hw_dht_init("dh2", &cfg);
+    cfg.intf.user_data = (void *)DHT11_DATA_PIN;
+    rt_hw_dht_init("dht", &cfg);
     
     return RT_EOK;
 }
-INIT_COMPONENT_EXPORT(rt_hw_dht22_port);
+INIT_COMPONENT_EXPORT(rt_hw_dht_port);
 
 static int rt_hw_gp2y10_port(void)
 {
@@ -557,8 +522,9 @@ static int rt_hw_gp2y10_port(void)
 
     return RT_EOK;
 }
-INIT_COMPONENT_EXPORT(rt_hw_gp2y10_port);
+//INIT_COMPONENT_EXPORT(rt_hw_gp2y10_port);
 
+#if 0
 static int rt_hw_sgp30_port(void)
 {
     struct rt_sensor_config cfg;
@@ -570,3 +536,16 @@ static int rt_hw_sgp30_port(void)
     return RT_EOK;
 }
 INIT_COMPONENT_EXPORT(rt_hw_sgp30_port);
+#else
+static int rt_hw_ccs811_port(void)
+{
+    struct rt_sensor_config cfg;
+    
+    cfg.intf.type = RT_SENSOR_INTF_I2C;
+    cfg.intf.dev_name = CCS811_I2C_BUS_NAME;
+    rt_hw_ccs811_init("cs8", &cfg);
+    
+    return RT_EOK;
+}
+INIT_COMPONENT_EXPORT(rt_hw_ccs811_port);
+#endif

@@ -19,6 +19,7 @@ packages/cJSON*
 packages/dhtxx*
 packages/gp2y10*
 packages/sgp30*
+packages/ccs811*
 packages/littled*
 *~
 *.o

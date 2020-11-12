@@ -25,6 +25,11 @@
   "name": "SGP30"
  }, 
  {
+  "path": "/packages/peripherals/sensors/ccs811", 
+  "ver": "latest", 
+  "name": "CCS811"
+ }, 
+ {
   "path": "/packages/peripherals/littled", 
   "ver": "latest", 
   "name": "LITTLED"
