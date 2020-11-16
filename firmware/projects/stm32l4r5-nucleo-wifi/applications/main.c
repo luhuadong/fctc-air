@@ -21,6 +21,10 @@
 #include "ali_mqtt.h"
 #include "ssd1306.h"
 
+#define DBG_TAG                  "main"
+#define DBG_LVL                  DBG_LOG
+#include <rtdbg.h>
+
 #define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}"
 
 /* User Modified Part */
@@ -40,7 +44,7 @@
 #define BC28_AT_CLIENT_NAME      "uart3"         /* No BC28 */
 #define NET_DEVICE_NAME          "esp0"
 
-#define DELAY_TIME_DEFAULT       3000
+#define DELAY_TIME_DEFAULT       6000
 
 #define SENSOR_TEMP              (0)
 #define SENSOR_HUMI              (1)
@@ -269,7 +273,9 @@ static void sync_thread_entry(void *parameter)
             rt_kprintf("[%03d] Temp: %s C, Humi: %s%, Dust:%4d ug/m3, TVOC:%4d ppb, eCO2:%4d ppm\n", 
                         ++count, temp_str, humi_str, air[2], air[3], air[4]);
 
-            //update_ssd1306();
+            LOG_D("update_ssd1306() ==>");
+            update_ssd1306();
+            LOG_D("<== update_ssd1306()");
 
             if (count%10 == 0)
             {
@@ -415,7 +421,7 @@ static void read_tvoc_entry(void *parameter)
             sync(SENSOR_TVOC, sensor_data.data.tvoc);
         }
 
-#if 1
+#if 0
         count++;
         if (count == 15)
         {
@@ -478,6 +484,9 @@ int main(void)
 
     user_key_init();
     ssd1306_Init();
+    update_ssd1306();
+    rt_thread_mdelay(2000);
+    update_ssd1306();
 
     led_normal = led_register(LED1_PIN, PIN_HIGH);
     led_upload = led_register(LED2_PIN, PIN_HIGH);
@@ -517,7 +526,7 @@ int main(void)
     tvoc_thread = rt_thread_create("tvoc_th", read_tvoc_entry, "tvoc_sg3", 1024, 16, 5);
     eco2_thread = rt_thread_create("eco2_th", read_eco2_entry, "eco2_sg3", 1024, 16, 5);
 
-    sync_thread = rt_thread_create("sync", sync_thread_entry, RT_NULL, 1024, 15, 5);
+    sync_thread = rt_thread_create("sync", sync_thread_entry, RT_NULL, 2048, 15, 5);
     upload_thread = rt_thread_create("upload", upload_thread_entry, RT_NULL, 4096, 5, 5);
 
     /* start up all user thread */
