@@ -19,6 +19,7 @@
 #include <gp2y10.h>
 #include <sgp30.h>
 #include "ali_mqtt.h"
+#include "ssd1306.h"
 
 #define JSON_DATA_PACK_STR       "{\"id\":\"125\",\"version\":\"1.0\",\"params\":{\"Temp\":%s,\"Humi\":%s,\"Dust\":%d,\"TVOC\":%d,\"eCO2\":%d},\"method\":\"thing.event.property.post\"}"
 
@@ -116,6 +117,34 @@ static void user_key_init()
     /* Why can not use PIN_IRQ_MODE_FALLING ??? */
     rt_pin_attach_irq(USER_BTN_PIN, PIN_IRQ_MODE_RISING, user_key_cb, RT_NULL);
     rt_pin_irq_enable(USER_BTN_PIN, PIN_IRQ_ENABLE);
+}
+
+static void update_ssd1306()
+{
+    ssd1306_DrawRectangle(1, 1, SSD1306_WIDTH-1, SSD1306_HEIGHT-1, White);
+    ssd1306_Line(SSD1306_WIDTH/3, 1, SSD1306_WIDTH/3, SSD1306_HEIGHT-1, White);
+    ssd1306_Line(SSD1306_WIDTH/3*2, 1, SSD1306_WIDTH/3*2, SSD1306_HEIGHT-1, White);
+    ssd1306_Line(1, SSD1306_HEIGHT/2, SSD1306_WIDTH-1, SSD1306_HEIGHT/2, White);
+
+    ssd1306_SetCursor(10, 14);
+    ssd1306_WriteString("25C", Font_6x8, White);
+
+    ssd1306_SetCursor(54, 14);
+    ssd1306_WriteString("50%", Font_6x8, White);
+
+    ssd1306_SetCursor(96, 14);
+    ssd1306_WriteString("32", Font_6x8, White);
+
+    ssd1306_SetCursor(10, 44);
+    ssd1306_WriteString("7", Font_6x8, White);
+
+    ssd1306_SetCursor(54, 44);
+    ssd1306_WriteString("408", Font_6x8, White);
+
+    ssd1306_SetCursor(96, 44);
+    ssd1306_WriteString("0", Font_6x8, White);
+
+    ssd1306_UpdateScreen();
 }
 
 static char *int10_to_str(const rt_int32_t num, char *str)
@@ -239,6 +268,8 @@ static void sync_thread_entry(void *parameter)
 
             rt_kprintf("[%03d] Temp: %s C, Humi: %s%, Dust:%4d ug/m3, TVOC:%4d ppb, eCO2:%4d ppm\n", 
                         ++count, temp_str, humi_str, air[2], air[3], air[4]);
+
+            //update_ssd1306();
 
             if (count%10 == 0)
             {
@@ -446,6 +477,7 @@ int main(void)
     /* initialization */
 
     user_key_init();
+    ssd1306_Init();
 
     led_normal = led_register(LED1_PIN, PIN_HIGH);
     led_upload = led_register(LED2_PIN, PIN_HIGH);
@@ -499,30 +531,6 @@ int main(void)
     if(upload_thread) rt_thread_startup(upload_thread);
 
     return RT_EOK;
-
-#if 0
-    int count = 1;
-    /* set LED1 pin mode to output */
-    rt_pin_mode(LED1_PIN, PIN_MODE_OUTPUT);
-    rt_pin_mode(LED2_PIN, PIN_MODE_OUTPUT);
-    rt_pin_mode(LED3_PIN, PIN_MODE_OUTPUT);
-
-    user_key_init();
-
-    while (count++)
-    {
-        rt_pin_write(LED1_PIN, PIN_HIGH);
-        rt_pin_write(LED2_PIN, PIN_HIGH);
-        rt_pin_write(LED3_PIN, PIN_HIGH);
-        rt_thread_mdelay(500);
-        rt_pin_write(LED1_PIN, PIN_LOW);
-        rt_pin_write(LED2_PIN, PIN_LOW);
-        rt_pin_write(LED3_PIN, PIN_LOW);
-        rt_thread_mdelay(500);
-    }
-
-    return RT_EOK;
-#endif
 }
 
 static int rt_hw_dht22_port(void)

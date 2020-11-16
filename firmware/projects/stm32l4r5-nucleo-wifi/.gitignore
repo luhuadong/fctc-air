@@ -20,6 +20,7 @@ packages/dhtxx*
 packages/gp2y10*
 packages/sgp30*
 packages/littled*
+packages/ssd1306*
 *~
 *.o
 *.obj

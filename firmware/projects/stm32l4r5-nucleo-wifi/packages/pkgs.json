@@ -33,5 +33,10 @@
   "path": "/packages/peripherals/littled", 
   "ver": "latest", 
   "name": "LITTLED"
+ }, 
+ {
+  "path": "/packages/peripherals/ssd1306", 
+  "ver": "latest", 
+  "name": "SSD1306"
  }
 ]
