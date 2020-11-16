@@ -123,30 +123,24 @@ static void user_key_init()
     rt_pin_irq_enable(USER_BTN_PIN, PIN_IRQ_ENABLE);
 }
 
-static void update_ssd1306()
+static void update_ssd1306(int *data, rt_uint16_t size)
 {
+    char str1[128] = {0};
+    char str2[128] = {0};
+
+    rt_sprintf(str1, "%4d  %4d  %4d", data[0]/10, data[1]/10, data[2]);
+    rt_sprintf(str2, "%4d  %4d  %4d", data[3], data[4], data[5]);
+
+    ssd1306_SetCursor(4, 14);
+    ssd1306_WriteString(str1, Font_7x10, White);
+
+    ssd1306_SetCursor(4, 44);
+    ssd1306_WriteString(str2, Font_7x10, White);
+
     ssd1306_DrawRectangle(1, 1, SSD1306_WIDTH-1, SSD1306_HEIGHT-1, White);
     ssd1306_Line(SSD1306_WIDTH/3, 1, SSD1306_WIDTH/3, SSD1306_HEIGHT-1, White);
     ssd1306_Line(SSD1306_WIDTH/3*2, 1, SSD1306_WIDTH/3*2, SSD1306_HEIGHT-1, White);
     ssd1306_Line(1, SSD1306_HEIGHT/2, SSD1306_WIDTH-1, SSD1306_HEIGHT/2, White);
-
-    ssd1306_SetCursor(10, 14);
-    ssd1306_WriteString("25C", Font_6x8, White);
-
-    ssd1306_SetCursor(54, 14);
-    ssd1306_WriteString("50%", Font_6x8, White);
-
-    ssd1306_SetCursor(96, 14);
-    ssd1306_WriteString("32", Font_6x8, White);
-
-    ssd1306_SetCursor(10, 44);
-    ssd1306_WriteString("7", Font_6x8, White);
-
-    ssd1306_SetCursor(54, 44);
-    ssd1306_WriteString("408", Font_6x8, White);
-
-    ssd1306_SetCursor(96, 44);
-    ssd1306_WriteString("0", Font_6x8, White);
 
     ssd1306_UpdateScreen();
 }
@@ -235,7 +229,7 @@ static void upload_thread_entry(void *parameter)
 static void sync_thread_entry(void *parameter)
 {
     struct sensor_msg msg;
-    rt_int32_t air[5] = {0};
+    rt_int32_t air[6] = {0};
     char temp_str[8] = {0};
     char humi_str[8] = {0};
     char buf[512] = {0};
@@ -273,9 +267,8 @@ static void sync_thread_entry(void *parameter)
             rt_kprintf("[%03d] Temp: %s C, Humi: %s%, Dust:%4d ug/m3, TVOC:%4d ppb, eCO2:%4d ppm\n", 
                         ++count, temp_str, humi_str, air[2], air[3], air[4]);
 
-            LOG_D("update_ssd1306() ==>");
-            update_ssd1306();
-            LOG_D("<== update_ssd1306()");
+            LOG_D("update_ssd1306() ...");
+            update_ssd1306(air, sizeof(air));
 
             if (count%10 == 0)
             {
@@ -484,9 +477,6 @@ int main(void)
 
     user_key_init();
     ssd1306_Init();
-    update_ssd1306();
-    rt_thread_mdelay(2000);
-    update_ssd1306();
 
     led_normal = led_register(LED1_PIN, PIN_HIGH);
     led_upload = led_register(LED2_PIN, PIN_HIGH);
