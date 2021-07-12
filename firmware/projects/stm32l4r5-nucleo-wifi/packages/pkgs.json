@@ -1,42 +1,42 @@
 [
  {
-  "path": "/packages/iot/cJSON", 
-  "ver": "v1.0.2", 
-  "name": "CJSON"
- }, 
+  "name": "CJSON",
+  "path": "/packages/iot/cJSON",
+  "ver": "v1.0.2"
+ },
  {
-  "path": "/packages/iot/at_device", 
-  "ver": "latest", 
-  "name": "AT_DEVICE"
- }, 
+  "name": "AT_DEVICE",
+  "path": "/packages/iot/at_device",
+  "ver": "latest"
+ },
  {
-  "path": "/packages/iot/iot_cloud/ali-iotkit", 
-  "ver": "v3.0.1", 
-  "name": "ALI_IOTKIT"
- }, 
+  "name": "ALI_IOTKIT",
+  "path": "/packages/iot/iot_cloud/ali-iotkit",
+  "ver": "v3.0.1"
+ },
  {
-  "path": "/packages/peripherals/sensors/dhtxx", 
-  "ver": "latest", 
-  "name": "DHTXX"
- }, 
+  "name": "DHTXX",
+  "path": "/packages/peripherals/sensors/dhtxx",
+  "ver": "latest"
+ },
  {
-  "path": "/packages/peripherals/sensors/gp2y10", 
-  "ver": "latest", 
-  "name": "GP2Y10"
- }, 
+  "name": "GP2Y10",
+  "path": "/packages/peripherals/sensors/gp2y10",
+  "ver": "latest"
+ },
  {
-  "path": "/packages/peripherals/sensors/sgp30", 
-  "ver": "latest", 
-  "name": "SGP30"
- }, 
+  "name": "SGP30",
+  "path": "/packages/peripherals/sensors/sgp30",
+  "ver": "latest"
+ },
  {
-  "path": "/packages/peripherals/littled", 
-  "ver": "latest", 
-  "name": "LITTLED"
- }, 
+  "name": "LITTLED",
+  "path": "/packages/peripherals/littled",
+  "ver": "latest"
+ },
  {
-  "path": "/packages/peripherals/ssd1306", 
-  "ver": "latest", 
-  "name": "SSD1306"
+  "name": "SSD1306",
+  "path": "/packages/peripherals/ssd1306",
+  "ver": "latest"
  }
 ]
